@@ -6,8 +6,16 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2F17BF362D5A356B00659BF7 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 2F17BF352D5A356B00659BF7 /* FirebaseAuth */; };
+		2F17BF382D5A356B00659BF7 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 2F17BF372D5A356B00659BF7 /* FirebaseFirestore */; };
+		2F17BF3C2D5A356B00659BF7 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 2F17BF3B2D5A356B00659BF7 /* FirebaseStorage */; };
+		2F8F28C02D5A3BC800FD3807 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2F8F28BF2D5A3BC800FD3807 /* GoogleService-Info.plist */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		2F17BEDF2D5A2DB700659BF7 /* LoveAnimals.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoveAnimals.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F8F28912D5A382100FD3807 /* LoveAnimals.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoveAnimals.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F8F28BF2D5A3BC800FD3807 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -23,6 +31,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F17BF3C2D5A356B00659BF7 /* FirebaseStorage in Frameworks */,
+				2F17BF362D5A356B00659BF7 /* FirebaseAuth in Frameworks */,
+				2F17BF382D5A356B00659BF7 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,16 +44,9 @@
 			isa = PBXGroup;
 			children = (
 				2F17BEE12D5A2DB700659BF7 /* LoveAnimals */,
-				2F17BEE02D5A2DB700659BF7 /* Products */,
+				2F8F28912D5A382100FD3807 /* LoveAnimals.app */,
+				2F8F28BF2D5A3BC800FD3807 /* GoogleService-Info.plist */,
 			);
-			sourceTree = "<group>";
-		};
-		2F17BEE02D5A2DB700659BF7 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2F17BEDF2D5A2DB700659BF7 /* LoveAnimals.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,9 +69,12 @@
 			);
 			name = LoveAnimals;
 			packageProductDependencies = (
+				2F17BF352D5A356B00659BF7 /* FirebaseAuth */,
+				2F17BF372D5A356B00659BF7 /* FirebaseFirestore */,
+				2F17BF3B2D5A356B00659BF7 /* FirebaseStorage */,
 			);
 			productName = LoveAnimals;
-			productReference = 2F17BEDF2D5A2DB700659BF7 /* LoveAnimals.app */;
+			productReference = 2F8F28912D5A382100FD3807 /* LoveAnimals.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -94,8 +101,11 @@
 			);
 			mainGroup = 2F17BED62D5A2DB700659BF7;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2F17BF342D5A356B00659BF7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 2F17BEE02D5A2DB700659BF7 /* Products */;
+			productRefGroup = 2F17BED62D5A2DB700659BF7;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -109,6 +119,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F8F28C02D5A3BC800FD3807 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,6 +333,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2F17BF342D5A356B00659BF7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.8.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2F17BF352D5A356B00659BF7 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2F17BF342D5A356B00659BF7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		2F17BF372D5A356B00659BF7 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2F17BF342D5A356B00659BF7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		2F17BF3B2D5A356B00659BF7 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2F17BF342D5A356B00659BF7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2F17BED72D5A2DB700659BF7 /* Project object */;
 }

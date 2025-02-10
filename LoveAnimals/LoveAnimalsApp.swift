@@ -6,12 +6,20 @@
 //
 
 import SwiftUI
+import Firebase
 
 @main
-struct LoveAnimalsApp: App {
+struct TierheimApp: App {
+    @StateObject var authViewModel = AuthViewModel()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoginView()
         }
+        .environmentObject(authViewModel)
     }
+    
+    init() {
+        FirebaseApp.configure()
+    }
+    
 }
