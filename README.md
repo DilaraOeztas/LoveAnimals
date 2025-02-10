@@ -17,7 +17,7 @@ LoveAnimals erleichtert die Vermittlung von Tieren. Tierheime können ihre Tiere
 ## 🔧 Installation
 1. Klone das TierheimApp Repository mit Git
    ```bash
-   git clone https://github.com/SI-Classroom-Batch-022/LoveAnimals.git
+   git clone https://github.com/DilaraOeztas/LoveAnimals.git
 2. Öffne das Projekt in Xcode
 3. Starte die App im Simulator oder auf einem physischen Gerät
 
