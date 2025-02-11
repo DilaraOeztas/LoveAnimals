@@ -94,6 +94,7 @@ struct LoginView: View {
         }
         .padding(.bottom, 100)
     }
+    
 }
 
 #Preview {
