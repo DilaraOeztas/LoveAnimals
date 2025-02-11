@@ -8,55 +8,52 @@
 import SwiftUI
 
 struct RegisterView: View {
-    @State private var email = ""
-    @State private var password = ""
-    @EnvironmentObject var authViewModel: AuthViewModel
-    
+    @State private var isUser = false
+    @State private var isTierheim = false
+
     var body: some View {
-        VStack {
-            Text("Registrieren")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding()
-            
-            TextField("E-Mail", text: $email)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            SecureField("Passwort", text: $password)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            if let errorMessage = authViewModel.errorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.red)
-                    .padding()
-            }
-            
-            Button(action: {
-                authViewModel.register(email: email, password: password) { success in
-                    if success {
-                        print("Registrierung erfolgreich!")
-                    }
-                }
-            }) {
-                Text("Registrieren")
+        NavigationStack {
+            VStack(spacing: 20) {
+
+                Text("Bitte auswählen:")
                     .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(width: 200, height: 50)
-                    .background(Color.green)
-                    .cornerRadius(10)
+
+                Button(action: {
+                    isUser = true
+                }) {
+                    Text("Ich möchte ein Tier adoptieren")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .background(Color.customBrown)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .padding(.horizontal)
+                }
+                .navigationDestination(isPresented: $isUser) {
+                    UserRegisterView()
+                }
+
+                Button(action: {
+                    isTierheim = true
+                }) {
+                    Text("Ich bin ein Tierheim")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .background(Color.customLightBrown)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .padding(.horizontal)
+                }
+                .navigationDestination(isPresented: $isTierheim) {
+                    TierheimRegisterView()
+                }
             }
-            .padding()
-            
-            NavigationLink("Bereits ein Konto? Jetzt anmelden!", destination: LoginView())
-                .padding()
         }
-        .padding()
     }
 }
 
+
+
 #Preview {
     RegisterView()
-        .environmentObject(AuthViewModel())
 }
