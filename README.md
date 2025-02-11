@@ -4,12 +4,12 @@
 LoveAnimals erleichtert die Vermittlung von Tieren. Tierheime können ihre Tiere ganz einfach & unkompliziert online stellen, während User nach Tieren in ihrer Nähe suchen, liken und mit Tierheimen in Kontakt treten können. Zusätzlich ermöglicht die App eine digitale Dokumentenverwaltung, eine einfache Terminbuchung für ein persönliches Kennenlernen und eine Spendenfunktion, um Tierheime finanziell zu unterstützen.
 
 ## 📌 Index
-- [📸 Screenshots](screenshots)
-- [🔧 Installation](installation)
-- [🚀 Funktionen](funktionen)
-- [🏗️ Technologien](technologien)
-- [🎯 Zukünftige Features](zukünftige-features)
-- [✉️ Kontakt](kontakt)
+- [📸 Screenshots](#-screenshots)
+- [🔧 Installation](#-installation)
+- [🚀 Funktionen](#-funktionen)
+- [🏗️ Technologien](#-technologien)
+- [🎯 Zukünftige Features](#-zukünftige-features)
+- [✍🏼 Kontakt](#-kontakt)
 
 ## 📸 Screenshots
 - **Hier Screenshots einfügen**
@@ -44,5 +44,5 @@ LoveAnimals erleichtert die Vermittlung von Tieren. Tierheime können ihre Tiere
 - **🔔 Push-Benachrichtigungen** für neue Tiere
 - **🐕 KI-gestützte Tierempfehlungen**
 
-## ✉️ Kontakt
+## ✍🏼 Kontakt
 - [**Dilara Öztas**](https://github.com/DilaraOeztas) - Entwicklerin
