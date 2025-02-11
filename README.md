@@ -1,5 +1,5 @@
-# LoveAnimals
-#### Dein Herz sucht, unsere App findet - ein zu Hause für jedes Tier
+<img src="https://github.com/user-attachments/assets/272fabf2-aca6-4db0-982c-3e9481877f1e" alt="Logo" width="350" height="300">
+
 ## Projektbeschreibung
 LoveAnimals erleichtert die Vermittlung von Tieren. Tierheime können ihre Tiere ganz einfach & unkompliziert online stellen, während User nach Tieren in ihrer Nähe suchen, liken und mit Tierheimen in Kontakt treten können. Zusätzlich ermöglicht die App eine digitale Dokumentenverwaltung, eine einfache Terminbuchung für ein persönliches Kennenlernen und eine Spendenfunktion, um Tierheime finanziell zu unterstützen.
 
