@@ -18,12 +18,12 @@ struct LoginView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Image("AppLogo4")
+                Image("AppLogo")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 350, height: 350)
                 
-                VStack(spacing: 1) {
+                VStack {
                     TextField("E-Mail", text: $email)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
