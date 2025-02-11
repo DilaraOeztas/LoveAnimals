@@ -22,9 +22,9 @@ LoveAnimals erleichtert die Vermittlung von Tieren. Tierheime können ihre Tiere
 3. Starte die App im Simulator oder auf einem physischen Gerät
 
 ## 🚀 Funktionen
-- **🐶 Tier hinzufügen:** Tierheime können Tiere online stellen und bearbeiten
+- **🐶 Tiere einstellen:** Tierheime können Tiere online stellen und bearbeiten
 - **📍 Umkreissuche:** User können nach Tieren in ihrer Nähe suchen
-- **❤️ Like-Funktion:** User können Tiere liken
+- **❤️ Favorisieren:** User können Tiere und Tierheime favorisieren
 - **💬 Chat-Funktion:** User können ganz einfach Kontkat zum Tierheim aufnehmen
 - **📄 Dokumente:** Wichtige Unterlagen können digital verwaltet & versendet werden
 - **💳 Zahlungsmethoden:** Tierheime legen fest, ob Barzahlung oder Online-Überweisung möglich ist
