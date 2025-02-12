@@ -10,10 +10,19 @@ import Firebase
 
 @main
 struct TierheimApp: App {
-    @StateObject var authViewModel = AuthViewModel()
+    @StateObject private var authViewModel = AuthViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            LoginView()
+            if let user = authViewModel.fireUser {
+                if user.hasCompletedProfile {
+                    HomeView()
+                } else {
+                    UserDetailsView()
+                }
+            } else {
+                LoginView()
+            }
         }
         .environmentObject(authViewModel)
     }

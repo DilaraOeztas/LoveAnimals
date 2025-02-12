@@ -63,20 +63,8 @@ struct LoginView: View {
             }
             VStack {
                 Button(action: {
-                    authViewModel.login(email: email, password: password) { success in
-                        if success {
-                            print("Login erfolgreich!")
-                            
-                            if remeberMe {
-                                UserDefaults.standard.set(email, forKey: "savedEmail")
-                                UserDefaults.standard.set(password, forKey: "savedPassword")
-                                UserDefaults.standard.set(true, forKey: "remeberMe")
-                            } else {
-                                UserDefaults.standard.removeObject(forKey: "savedEmail")
-                                UserDefaults.standard.removeObject(forKey: "savedPassword")
-                                UserDefaults.standard.set(false, forKey: "remeberMe")
-                            }
-                        }
+                    Task {
+                        await authViewModel.login(email: email, password: password)
                     }
                 }) {
                     Text("Anmelden")
