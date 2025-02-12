@@ -15,7 +15,7 @@ LoveAnimals erleichtert die Vermittlung von Tieren. Tierheime können ihre Tiere
 - **Hier Screenshots einfügen**
 
 ## 🔧 Installation
-1. Klone das TierheimApp Repository mit Git
+1. Klone das LoveAnimals Repository mit Git
    ```bash
    git clone https://github.com/DilaraOeztas/LoveAnimals.git
 2. Öffne das Projekt in Xcode
@@ -25,7 +25,7 @@ LoveAnimals erleichtert die Vermittlung von Tieren. Tierheime können ihre Tiere
 - **🐶 Tiere einstellen:** Tierheime können Tiere online stellen und bearbeiten
 - **📍 Umkreissuche:** User können nach Tieren in ihrer Nähe suchen
 - **❤️ Favorisieren:** User können Tiere und Tierheime favorisieren
-- **💬 Chat-Funktion:** User können ganz einfach Kontkat zum Tierheim aufnehmen
+- **💬 Chat-Funktion:** User können ganz einfach Kontakt zum Tierheim aufnehmen
 - **📄 Dokumente:** Wichtige Unterlagen können digital verwaltet & versendet werden
 - **💳 Zahlungsmethoden:** Tierheime legen fest, ob Barzahlung oder Online-Überweisung möglich ist
 - **📅 Terminbuchung:** User können direkt online einen Besuchstermin vereinbaren
