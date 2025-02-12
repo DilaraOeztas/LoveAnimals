@@ -19,54 +19,55 @@ struct UserDetailsView: View {
     @State private var hasChildren = false
     @State private var numberOfChildren = ""
     @State private var childrenAges = ""
-
+    
     @State private var showProfessionOptions = false
     @State private var showHousingOptions = false
     @State private var showFamilyOptions = false
     @State private var showSkipAlert = false
-
+    
     let professionOptions = ["Student", "Angestellter", "Selbstständig", "Arbeiter", "Beamter", "Rentner", "Sonstiges"]
     let housingOptions = ["Mietwohnung", "Eigentumswohnung", "Haus", "WG", "Sonstiges"]
     let familyOptions = ["Single", "Verheiratet", "Sonstiges"]
-
-
+    
+    
     var body: some View {
+        NavigationStack {
             VStack(spacing: 20) {
                 Text("Erzähle uns mehr über dich")
                     .font(.title)
                     .fontWeight(.bold)
                     .padding(.top, 10)
-
+                
                 dropdownSection(title: "Beruf", selectedOption: $selectedProfession, showOptions: $showProfessionOptions, options: professionOptions)
-
+                
                 dropdownSection(title: "Wohnsituation", selectedOption: $selectedHousing, showOptions: $showHousingOptions, options: housingOptions)
-
+                
                 Toggle("Haben Sie einen Garten?", isOn: $hasGarden)
                     .padding(.horizontal)
-
+                
                 dropdownSection(title: "Familienstand", selectedOption: $selectedFamily, showOptions: $showFamilyOptions, options: familyOptions)
-
+                
                 Toggle("Haben Sie Kinder?", isOn: $hasChildren)
                     .padding(.horizontal)
-
+                
                 if hasChildren {
                     VStack(alignment: .leading) {
                         Text("Wie viele Kinder haben Sie?")
                             .font(.headline)
                             .foregroundColor(.gray)
-
+                        
                         TextField("Anzahl der Kinder", text: $numberOfChildren)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .keyboardType(.numberPad)
                             .padding(.top, 5)
                     }
                     .padding(.horizontal)
-
+                    
                     VStack(alignment: .leading) {
                         Text("Wie alt sind Ihre Kinder?")
                             .font(.headline)
                             .foregroundColor(.gray)
-
+                        
                         TextField("Alter der Kinder (z. B. 3, 5, 8)", text: $childrenAges)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .keyboardType(.numbersAndPunctuation)
@@ -87,7 +88,7 @@ struct UserDetailsView: View {
                         .padding(.horizontal)
                 }
                 .padding(.bottom, 10)
-
+                
                 Button(action: {
                     showSkipAlert = true
                 }) {
@@ -110,17 +111,17 @@ struct UserDetailsView: View {
                 .navigationDestination(isPresented: $authViewModel.navigateToHome) {
                     HomeView()
                 }
-                
             }
+        }
     }
-
+    
     @ViewBuilder
     func dropdownSection(title: String, selectedOption: Binding<String>, showOptions: Binding<Bool>, options: [String]) -> some View {
         VStack(alignment: .leading) {
             Text(title)
                 .font(.headline)
                 .foregroundColor(.gray)
-
+            
             HStack {
                 Text(selectedOption.wrappedValue)
                     .foregroundColor(.black)
@@ -133,7 +134,7 @@ struct UserDetailsView: View {
             .padding()
             .background(Color.gray.opacity(0.2))
             .cornerRadius(8)
-
+            
             if showOptions.wrappedValue {
                 VStack(spacing: 10) {
                     ForEach(options, id: \.self) { option in
@@ -157,13 +158,13 @@ struct UserDetailsView: View {
         }
         .padding(.horizontal)
     }
-
+    
     func saveUserDetails() {
         guard let userID = Auth.auth().currentUser?.uid else {
             print("Fehler: Kein eingeloggter User gefunden.")
             return
         }
-
+        
         var userDetails: [String: Any] = [
             "userID": userID,
             "profession": selectedProfession,
@@ -173,12 +174,12 @@ struct UserDetailsView: View {
             "hasChildren": hasChildren,
             "updatedAt": Timestamp()
         ]
-
+        
         if hasChildren {
             userDetails["numberOfChildren"] = numberOfChildren
             userDetails["childrenAges"] = childrenAges
         }
-
+        
         let db = Firestore.firestore()
         db.collection("users").document(userID).setData(userDetails, merge: true) { error in
             if let error = error {

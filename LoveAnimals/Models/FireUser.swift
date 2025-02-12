@@ -15,5 +15,5 @@ struct FireUser: Codable, Identifiable {
     var email: String
     var birthdate: Date
     var signedUpOn: Date
-    var hasCompletedProfile: Bool
+    //var hasCompletedProfile: Bool
 }

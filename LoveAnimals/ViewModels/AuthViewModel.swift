@@ -49,7 +49,7 @@ final class AuthViewModel: ObservableObject {
             user = result.user
             errorMessage = nil
             guard let email = result.user.email else { fatalError("Found a user without an email.") }
-            createUser(userID: userID!, firstName: firstName, lastName: lastName, email: email, birthdate: Date(), signedUpOn: .now)
+            createUser(userID: userID!, firstName: firstName, lastName: lastName, email: email, birthdate: Date(), signedUpOn: Date())
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -77,7 +77,7 @@ final class AuthViewModel: ObservableObject {
     }
     
     func createUser(userID: String, firstName: String, lastName: String, email: String, birthdate: Date, signedUpOn: Date) {
-        let user = FireUser(id: userID, firstName: firstName, lastName: lastName, email: email, birthdate: Date(), signedUpOn: Date(), hasCompletedProfile: false)
+        let user = FireUser(id: userID, firstName: firstName, lastName: lastName, email: email, birthdate: Date(), signedUpOn: Date())
         do {
             try AuthManager.shared.database.collection("users").document(userID).setData(from: user)
             fetchUser(userID: userID)

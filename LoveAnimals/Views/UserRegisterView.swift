@@ -29,18 +29,18 @@ struct UserRegisterView: View {
         let ageComponents = calendar.dateComponents([.year], from: birthdate, to: today)
         return ageComponents.year ?? 0 >= 18
     }
-   
+    
     
     
     var body: some View {
         
-            VStack {
-                Text("Registrierung")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding(.top, 30)
-                    .padding(.bottom, 40)
-                ScrollView {
+        VStack {
+            Text("Registrierung")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding(.top, 30)
+                .padding(.bottom, 40)
+            ScrollView {
                 VStack(spacing: 20) {
                     HStack {
                         TextField("Vorname", text: $firstName)
@@ -115,83 +115,82 @@ struct UserRegisterView: View {
                     }
                     .padding(.horizontal)
                     .padding(.top, 5)
-                }
-                
-                HStack {
-                    TextField("PLZ", text: $postalCode)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .frame(width: 100)
-                        .padding(.horizontal)
                     
-                    TextField("Wohnort", text: $city)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.horizontal)
-                }
-                .padding(.top, 15)
-                .padding(.bottom, 15)
-                
-                VStack(alignment: .leading, spacing: 20) {
-                    Text("In welchem Umkreis möchtest du nach Tierheimen suchen?")
-                        .lineLimit(nil)
-                        .multilineTextAlignment(.leading)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.subheadline)
-                        .padding(.horizontal)
                     
-                    Slider(value: $searchRadius, in: 1...100, step: 1)
-                        .padding(.horizontal)
-                    
-                    Text("\(Int(searchRadius)) km Umkreis")
-                        .font(.headline)
-                        .padding(.horizontal)
-                }
-                Spacer()
-                    .padding(.top, 20)
-                
-                Button(action: {
-                    Task {
-                        await authViewModel.register(
-                            firstName: firstName,
-                            lastName: lastName,
-                            email: email,
-                            password: password,
-                            birthdate: birthdate,
-                            signedUpOn: Date()
-                        )
-                        navigateToUserDetails = true
+                    HStack {
+                        TextField("PLZ", text: $postalCode)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .frame(width: 100)
+                            .padding(.horizontal)
+                        
+                        TextField("Wohnort", text: $city)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding(.horizontal)
                     }
-                }) {
-                    Text("Weiter")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity, minHeight: 50)
-                        .background(Color.brown)
-                        .cornerRadius(10)
-                        .padding(.horizontal)
+                    .padding(.top, 15)
+                    .padding(.bottom, 15)
+                    
+                    VStack(alignment: .leading, spacing: 20) {
+                        Text("In welchem Umkreis möchtest du nach Tierheimen suchen?")
+                            .lineLimit(nil)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.subheadline)
+                            .padding(.horizontal)
+                        
+                        Slider(value: $searchRadius, in: 1...100, step: 1)
+                            .padding(.horizontal)
+                        
+                        Text("\(Int(searchRadius)) km Umkreis")
+                            .font(.headline)
+                            .padding(.horizontal)
+                    }
+                    
+                    Spacer()
+                        .padding(.top, 20)
+                    
+                    Button(action: {
+                        Task {
+                            await authViewModel.register(
+                                firstName: firstName,
+                                lastName: lastName,
+                                email: email,
+                                password: password,
+                                birthdate: birthdate,
+                                signedUpOn: Date()
+                            )
+                            navigateToUserDetails = true
+                        }
+                    }) {
+                        Text("Weiter")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity, minHeight: 50)
+                            .background(Color.brown)
+                            .cornerRadius(10)
+                            .padding(.horizontal)
+                    }
+                    .padding(.bottom, 20)
+                    .navigationDestination(isPresented: $navigateToUserDetails) {
+                        UserDetailsView()
+                    }
+                    
+                    Button(action: {
+                        navigateToLogin = true
+                    }) {
+                        Text("Bereits ein Konto? Hier einloggen")
+                            .foregroundColor(.blue)
+                            .underline()
+                    }
+                    .padding(.bottom, 40)
+                    .navigationDestination(isPresented: $navigateToLogin){
+                        LoginView()
+                    }
                 }
-                .padding(.bottom, 20)
-                .navigationDestination(isPresented: $navigateToUserDetails) {
-                    UserDetailsView()
-                }
-                
-                Button(action: {
-                    navigateToLogin = true
-                }) {
-                    Text("Bereits ein Konto? Hier einloggen")
-                        .foregroundColor(.blue)
-                        .underline()
-                }
-                .padding(.bottom, 40)
-                .navigationDestination(isPresented: $navigateToLogin){
-                    LoginView()
-                }
-                .navigationBarBackButtonHidden(true)
-                
             }
-                
-            
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

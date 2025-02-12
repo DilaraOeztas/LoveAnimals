@@ -14,20 +14,12 @@ struct TierheimApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if let user = authViewModel.fireUser {
-                if user.hasCompletedProfile {
-                    HomeView()
-                } else {
-                    UserDetailsView()
-                }
-            } else {
-                LoginView()
-            }
+            MainView()
         }
-        .environmentObject(authViewModel)
     }
     
     init() {
+        FirebaseConfiguration.shared.setLoggerLevel(.min)
         FirebaseApp.configure()
     }
     
