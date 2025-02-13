@@ -42,11 +42,15 @@ struct UserRegisterView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
                         .autocorrectionDisabled(true)
+                        .textInputAutocapitalization(.never)
+                        .keyboardType(.asciiCapable)
                     
                     TextField("Nachname", text: $lastName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
                         .autocorrectionDisabled(true)
+                        .textInputAutocapitalization(.never)
+                        .keyboardType(.asciiCapable)
                 }
                 VStack(alignment: .leading, spacing: 20) {
                     HStack {
@@ -78,6 +82,7 @@ struct UserRegisterView: View {
                     .padding(.horizontal)
                     .autocorrectionDisabled(true)
                     .textInputAutocapitalization(.never)
+                    .keyboardType(.emailAddress)
                 
                 Group {
                     if showPassword {
@@ -97,6 +102,9 @@ struct UserRegisterView: View {
                     }
                 }
                 .padding(.horizontal)
+                .autocorrectionDisabled(true)
+                .textInputAutocapitalization(.never)
+                .keyboardType(.asciiCapable)
                 
                 HStack {
                     Button(action: {
@@ -115,11 +123,16 @@ struct UserRegisterView: View {
                 HStack {
                     TextField("PLZ", text: $postalCode)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .autocorrectionDisabled(true)
+                        .keyboardType(.asciiCapableNumberPad)
                         .frame(width: 100)
                         .padding(.horizontal)
                     
                     TextField("Wohnort", text: $city)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .autocorrectionDisabled(true)
+                        .textInputAutocapitalization(.never)
+                        .keyboardType(.asciiCapable)
                         .padding(.horizontal)
                 }
                 

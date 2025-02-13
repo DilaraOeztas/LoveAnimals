@@ -27,6 +27,9 @@ struct LoginView: View {
                     TextField("E-Mail", text: $email)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
+                        .autocorrectionDisabled(true)
+                        .textInputAutocapitalization(.never)
+                        .keyboardType(.emailAddress)
 
                     ZStack(alignment: .trailing) {
                         if ispasswordVisible {
@@ -44,6 +47,9 @@ struct LoginView: View {
                         }
                     }
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .autocorrectionDisabled(true)
+                    .textInputAutocapitalization(.never)
+                    .keyboardType(.asciiCapable)
                     .padding()
 
                     Toggle(isOn: $remeberMe) {

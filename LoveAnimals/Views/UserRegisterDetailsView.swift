@@ -19,12 +19,12 @@ struct UserRegisterDetailsView: View {
     @State private var hasChildren = false
     @State private var numberOfChildren = ""
     @State private var childrenAges = ""
-
     @State private var showProfessionOptions = false
     @State private var showHousingOptions = false
     @State private var showFamilyOptions = false
     @State private var showSkipAlert = false
-
+    @State private var scrollToID: UUID? = nil
+    
     let professionOptions = [
         "Student",
         "Angestellter",
@@ -34,7 +34,7 @@ struct UserRegisterDetailsView: View {
         "Rentner",
         "Sonstiges"
     ]
-
+    
     let housingOptions = [
         "Mietwohnung",
         "Eigentumswohnung",
@@ -42,119 +42,145 @@ struct UserRegisterDetailsView: View {
         "WG",
         "Sonstiges"
     ]
-
+    
     let familyOptions = [
         "Single",
         "Verheiratet",
         "Sonstiges"
     ]
-
-
+    
+    
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
-                Text("Erzähle uns mehr über dich")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .padding(.top, 10)
-
-                dropdownSection(
-                    title: "Beruf",
-                    selectedOption: $selectedProfession,
-                    showOptions: $showProfessionOptions,
-                    options: professionOptions)
-
-                dropdownSection(
-                    title: "Wohnsituation",
-                    selectedOption: $selectedHousing,
-                    showOptions: $showHousingOptions,
-                    options: housingOptions)
-
-                Toggle("Haben Sie einen Garten?", isOn: $hasGarden)
-                    .padding(.horizontal)
-
-                dropdownSection(
-                    title: "Familienstand",
-                    selectedOption: $selectedFamily,
-                    showOptions: $showFamilyOptions,
-                    options: familyOptions)
-
-                Toggle("Haben Sie Kinder?", isOn: $hasChildren)
-                    .padding(.horizontal)
-
-                if hasChildren {
-                    VStack(alignment: .leading) {
-                        Text("Wie viele Kinder haben Sie?")
-                            .font(.headline)
-                            .foregroundColor(.gray)
-
-                        TextField("Anzahl der Kinder", text: $numberOfChildren)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .keyboardType(.numberPad)
-                            .padding(.top, 5)
+            GeometryReader { geometry in
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            Text("Erzähle uns mehr über dich")
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .padding(.top, 10)
+                            
+                            dropdownSection(
+                                title: "Beruf",
+                                selectedOption: $selectedProfession,
+                                showOptions: $showProfessionOptions,
+                                options: professionOptions)
+                            
+                            dropdownSection(
+                                title: "Wohnsituation",
+                                selectedOption: $selectedHousing,
+                                showOptions: $showHousingOptions,
+                                options: housingOptions)
+                            
+                            Toggle("Haben Sie einen Garten?", isOn: $hasGarden)
+                                .padding(.horizontal)
+                            
+                            dropdownSection(
+                                title: "Familienstand",
+                                selectedOption: $selectedFamily,
+                                showOptions: $showFamilyOptions,
+                                options: familyOptions)
+                            
+                            Toggle("Haben Sie Kinder?", isOn: $hasChildren)
+                                .padding(.horizontal)
+                                .onChange(of: hasChildren) { _, newValue in
+                                    withAnimation {
+                                        if newValue {
+                                            scrollToID = UUID()
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                                withAnimation {
+                                                    proxy.scrollTo(scrollToID, anchor: .top)
+                                                }
+                                            }
+                                        }
+                                        
+                                    }
+                                }
+                            
+                            if hasChildren {
+                                VStack(alignment: .leading) {
+                                    Text("Wie viele Kinder haben Sie?")
+                                        .font(.headline)
+                                        .foregroundColor(.gray)
+                                    
+                                    TextField("Anzahl der Kinder", text: $numberOfChildren)
+                                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                                        .autocorrectionDisabled(true)
+                                        .keyboardType(.numberPad)
+                                        .padding(.top, 5)
+                                }
+                                .padding(.horizontal)
+                                
+                                VStack(alignment: .leading) {
+                                    Text("Wie alt sind Ihre Kinder?")
+                                        .font(.headline)
+                                        .foregroundColor(.gray)
+                                    
+                                    TextField("Alter der Kinder (z.B.: 3, 5, 8)", text: $childrenAges)
+                                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                                        .autocorrectionDisabled(true)
+                                        .keyboardType(.numbersAndPunctuation)
+                                        .padding(.top, 5)
+                                }
+                                .padding(.horizontal)
+                                .id(scrollToID)
+                            }
+                            
+                            
+                            Button(action: {
+                                authViewModel.navigateToHome = true
+                            }) {
+                                Text("Speichern & Weiter")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity, minHeight: 50)
+                                    .background(Color.brown)
+                                    .cornerRadius(10)
+                                    .padding(.horizontal)
+                            }
+                            .padding(.top, 30)
+                            .padding(.bottom, 10)
+                            
+                            Button(action: {
+                                showSkipAlert = true
+                            }) {
+                                Text("Überspringen")
+                                    .font(.headline)
+                                    .foregroundColor(.gray)
+                                    .underline()
+                            }
+                            .alert(isPresented: $showSkipAlert) {
+                                Alert(
+                                    title: Text("Möchtest du wirklich überspringen?"),
+                                    // swiftlint:disable:next line_length
+                                    message: Text("Diese Angaben sind für eine erfolgreiche Adoption wichtig. Du kannst sie später in den Profileinstellungen ergänzen."),
+                                    primaryButton: .destructive(Text("Überspringen")) {
+                                        authViewModel.navigateToHome = true
+                                    },
+                                    secondaryButton: .cancel(Text("Abbrechen"))
+                                )
+                            }
+                            .padding(.bottom, 20)
+                            
+                            .navigationDestination(isPresented: $authViewModel.navigateToHome) {
+                                HomeView()
+                            }
+                        }
+                        Spacer()
                     }
-                    .padding(.horizontal)
-
-                    VStack(alignment: .leading) {
-                        Text("Wie alt sind Ihre Kinder?")
-                            .font(.headline)
-                            .foregroundColor(.gray)
-
-                        TextField("Alter der Kinder (z.B.: 3, 5, 8)", text: $childrenAges)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .keyboardType(.numbersAndPunctuation)
-                            .padding(.top, 5)
-                    }
-                    .padding(.horizontal)
-                }
-
-                Button(action: {
-                    authViewModel.navigateToHome = true
-                }) {
-                    Text("Speichern & Weiter")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity, minHeight: 50)
-                        .background(Color.brown)
-                        .cornerRadius(10)
-                        .padding(.horizontal)
-                }
-                .padding(.bottom, 10)
-
-                Button(action: {
-                    showSkipAlert = true
-                }) {
-                    Text("Überspringen")
-                        .font(.headline)
-                        .foregroundColor(.gray)
-                        .underline()
-                }
-                .alert(isPresented: $showSkipAlert) {
-                    Alert(
-                        title: Text("Möchtest du wirklich überspringen?"),
-                        // swiftlint:disable:next line_length
-                        message: Text("Diese Angaben sind für eine erfolgreiche Adoption wichtig. Du kannst sie später in den Profileinstellungen ergänzen."),
-                        primaryButton: .destructive(Text("Überspringen")) {
-                            authViewModel.navigateToHome = true
-                        },
-                        secondaryButton: .cancel(Text("Abbrechen"))
-                    )
-                }
-                .padding(.bottom, 20)
-                .navigationDestination(isPresented: $authViewModel.navigateToHome) {
-                    HomeView()
                 }
             }
         }
     }
-
+    
     @ViewBuilder
     func dropdownSection(title: String, selectedOption: Binding<String>, showOptions: Binding<Bool>, options: [String]) -> some View {
         VStack(alignment: .leading) {
             Text(title)
                 .font(.headline)
                 .foregroundStyle(.gray)
-
+            
             HStack {
                 Text(selectedOption.wrappedValue)
                     .foregroundStyle(.black)
@@ -167,7 +193,7 @@ struct UserRegisterDetailsView: View {
             .padding()
             .background(Color.gray.opacity(0.2))
             .cornerRadius(8)
-
+            
             if showOptions.wrappedValue {
                 VStack(spacing: 10) {
                     ForEach(options, id: \.self) { option in
@@ -183,9 +209,9 @@ struct UserRegisterDetailsView: View {
                                     systemName: selectedOption.wrappedValue == option ?
                                     "largecircle.fill.circle" : "circle"
                                 )
-                                    .foregroundStyle(
-                                        selectedOption.wrappedValue == option ? .brown : .gray
-                                    )
+                                .foregroundStyle(
+                                    selectedOption.wrappedValue == option ? .brown : .gray
+                                )
                             }
                         }
                         .padding(.horizontal)
@@ -196,13 +222,13 @@ struct UserRegisterDetailsView: View {
         }
         .padding(.horizontal)
     }
-
+    
     func saveUserDetails() {
         guard let userID = Auth.auth().currentUser?.uid else {
             print("Fehler: Kein eingeloggter User gefunden.")
             return
         }
-
+        
         var userDetails: [String: Any] = [
             "userID": userID,
             "profession": selectedProfession,
@@ -212,12 +238,12 @@ struct UserRegisterDetailsView: View {
             "hasChildren": hasChildren,
             "updatedAt": Timestamp()
         ]
-
+        
         if hasChildren {
             userDetails["numberOfChildren"] = numberOfChildren
             userDetails["childrenAges"] = childrenAges
         }
-
+        
         let db = Firestore.firestore()
         db.collection("users").document(userID).setData(userDetails, merge: true) { error in
             if let error = error {
