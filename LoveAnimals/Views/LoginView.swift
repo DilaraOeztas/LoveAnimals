@@ -12,9 +12,9 @@ struct LoginView: View {
     @State private var password = UserDefaults.standard.string(forKey: "savedPassword") ?? ""
     @State private var remeberMe = UserDefaults.standard.bool(forKey: "remeberMe")
     @State private var ispasswordVisible = false
-    
+
     @EnvironmentObject var authViewModel: AuthViewModel
-    
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -22,31 +22,30 @@ struct LoginView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 350, height: 350)
-                
+
                 VStack {
                     TextField("E-Mail", text: $email)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
-                    
+
                     ZStack(alignment: .trailing) {
                         if ispasswordVisible {
                             TextField("Passwort", text: $password)
-                            
+
                         } else {
                             SecureField("Passwort", text: $password)
-                            
+
                         }
                         Button(action: {
                             ispasswordVisible.toggle()
                         }) {
                             Image(systemName: ispasswordVisible ? "eye.slash.fill" : "eye.fill")
-                                .foregroundStyle(.gray)
-                                .padding(.trailing, 10)
+                                .foregroundStyle(.gray).padding(.trailing, 10)
                         }
                     }
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
-                    
+
                     Toggle(isOn: $remeberMe) {
                         Text("Daten merken")
                             .font(.subheadline)
@@ -54,7 +53,7 @@ struct LoginView: View {
                     .padding(.horizontal, 20)
                     .padding(.top, 10)
                 }
-                
+
                 if let errorMessage = authViewModel.errorMessage {
                     Text(errorMessage)
                         .foregroundColor(.red)
@@ -76,13 +75,13 @@ struct LoginView: View {
                 }
             }
             .padding(.top, 20)
-            
+
             NavigationLink("Noch kein Account? Jetzt registrieren!", destination: RegisterView())
                 .padding(.top, 20)
         }
         .padding(.bottom, 100)
     }
-    
+
 }
 
 #Preview {

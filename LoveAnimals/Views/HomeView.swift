@@ -10,16 +10,16 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var navigateToLogin = false
-    
+
     var body: some View {
         NavigationStack {
             VStack {
                 Text("Willkommen in der HomeView!")
                     .font(.largeTitle)
                     .padding()
-                
+
                 Spacer()
-                
+
                 Button(action: {
                     authViewModel.logout()
                     navigateToLogin = true
@@ -36,7 +36,7 @@ struct HomeView: View {
                 .navigationDestination(isPresented: $navigateToLogin) {
                     LoginView()
                 }
-            
+
             }
         }
     }

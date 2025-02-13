@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct MainView: View {
-    
+
     @StateObject private var authViewModel = AuthViewModel()
-    
+
     var body: some View {
         Group {
             if authViewModel.isUserSignedIn {
@@ -21,7 +21,7 @@ struct MainView: View {
         }
         .environmentObject(authViewModel)
     }
-    
+
 }
 
 #Preview {

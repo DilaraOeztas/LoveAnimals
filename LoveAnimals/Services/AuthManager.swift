@@ -9,11 +9,10 @@ import FirebaseAuth
 import FirebaseFirestore
 
 final class AuthManager {
-    
+
     static let shared = AuthManager()
     private init() {}
-    
+
     let auth = Auth.auth()
     let database = Firestore.firestore()
 }
-

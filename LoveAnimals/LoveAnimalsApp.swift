@@ -11,16 +11,16 @@ import Firebase
 @main
 struct TierheimApp: App {
     @StateObject private var authViewModel = AuthViewModel()
-    
+
     var body: some Scene {
         WindowGroup {
             MainView()
         }
     }
-    
+
     init() {
         FirebaseConfiguration.shared.setLoggerLevel(.min)
         FirebaseApp.configure()
     }
-    
+
 }
