@@ -9,6 +9,7 @@ import SwiftUI
 
 struct UserRegisterView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @StateObject private var keyboardObersver = KeyboardObserver()
     @State private var firstName = ""
     @State private var lastName = ""
     @State private var birthdate: Date = Calendar.current.date(
@@ -188,11 +189,13 @@ struct UserRegisterView: View {
                     LoginView()
                 }
             }
+            .padding(.bottom, keyboardObersver.isKeyboardVisible ? 300 : 20)
         }
         .ignoresSafeArea(.keyboard)
         .padding(.top, 20)
         .navigationTitle("Registrierung")
         .navigationBarBackButtonHidden(true)
+        
     }
 }
 
