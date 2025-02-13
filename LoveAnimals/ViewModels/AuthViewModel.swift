@@ -37,9 +37,6 @@ final class AuthViewModel: ObservableObject {
 
     private func checkAuth() {
         user = auth.currentUser
-        if let uid = user?.uid {
-            fetchUser(userID: uid)
-        }
     }
 
 
@@ -64,15 +61,37 @@ final class AuthViewModel: ObservableObject {
     }
 
     func login(email: String, password: String) async {
+        if email.isEmpty && password.isEmpty {
+            errorMessage = "Bitte geben Sie Ihre E-Mail-Adresse und Ihr Passwort ein."
+            return
+        } else if email.isEmpty {
+            errorMessage = "Bitte geben Sie Ihre E-Mail-Adresse ein."
+            return
+        } else if password.isEmpty {
+            errorMessage = "Bitte geben Sie Ihr Passwort ein."
+            return
+        }
+
         do {
             let result = try await auth.signIn(withEmail: email, password: password)
             user = result.user
             errorMessage = nil
-            fetchUser(userID: result.user.uid)
+            saveLoginData(email: email, password: password)
         } catch {
             errorMessage = error.localizedDescription
         }
     }
+    
+    
+    
+        
+    
+    
+    
+    
+    
+    
+    
 
     func logout() {
         do {
@@ -113,5 +132,27 @@ final class AuthViewModel: ObservableObject {
                 print(error.localizedDescription)
             }
         }
+    }
+    
+    func saveLoginData(email: String, password: String) {
+        let rememberMe = UserDefaults.standard.bool(forKey: "rememberMe")
+        if rememberMe {
+            UserDefaults.standard.set(email, forKey: "savedEmail")
+            UserDefaults.standard.set(password, forKey: "savedPassword")
+        } else {
+            UserDefaults.standard.removeObject(forKey: "savedEmail")
+            UserDefaults.standard.removeObject(forKey: "savedPassword")
+        }
+    }
+    
+    func loadLoginData() -> (email: String, password: String, rememberMe: Bool) {
+        let email = UserDefaults.standard.string(forKey: "savedEmail") ?? ""
+        let password = UserDefaults.standard.string(forKey: "savedPassword") ?? ""
+        let rememberMe = UserDefaults.standard.bool(forKey: "rememberMe")
+        return (email, password, rememberMe)
+    }
+    
+    func setRememberMe(_ remember: Bool) {
+        UserDefaults.standard.set(remember, forKey: "rememberMe")
     }
 }

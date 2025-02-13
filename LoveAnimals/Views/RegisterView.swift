@@ -12,7 +12,6 @@ struct RegisterView: View {
     @State private var isTierheim = false
 
     var body: some View {
-        NavigationStack {
             VStack(spacing: 20) {
 
                 Text("Bitte auswählen:")
@@ -48,7 +47,6 @@ struct RegisterView: View {
                     TierheimRegisterView()
                 }
             }
-        }
     }
 }
 

@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 
-struct UserDetailsView: View {
+struct UserRegisterDetailsView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedProfession = "Beruf auswählen"
@@ -231,6 +231,6 @@ struct UserDetailsView: View {
 }
 
 #Preview {
-    UserDetailsView()
+    UserRegisterDetailsView()
         .environmentObject(AuthViewModel())
 }

@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State private var email = UserDefaults.standard.string(forKey: "savedEmail") ?? ""
-    @State private var password = UserDefaults.standard.string(forKey: "savedPassword") ?? ""
-    @State private var remeberMe = UserDefaults.standard.bool(forKey: "remeberMe")
+    @State private var email: String = ""
+    @State private var password: String = ""
+    @State private var remeberMe: Bool = false
     @State private var ispasswordVisible = false
 
     @EnvironmentObject var authViewModel: AuthViewModel
@@ -52,6 +52,9 @@ struct LoginView: View {
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 10)
+                    .onChange(of: remeberMe) { oldValue, newValue in
+                        authViewModel.setRememberMe(newValue)
+                    }
                 }
 
                 if let errorMessage = authViewModel.errorMessage {
@@ -80,8 +83,15 @@ struct LoginView: View {
                 .padding(.top, 20)
         }
         .padding(.bottom, 100)
+        .onAppear  {
+            let savedData = authViewModel.loadLoginData()
+            DispatchQueue.main.async {
+                email = savedData.email
+                password = savedData.password
+                remeberMe = savedData.rememberMe
+            }
+        }
     }
-
 }
 
 #Preview {
