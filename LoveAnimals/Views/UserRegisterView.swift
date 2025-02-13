@@ -153,17 +153,8 @@ struct UserRegisterView: View {
                 
                 
                 Button(action: {
-                    Task {
-                        await authViewModel.register(
-                            firstName: firstName,
-                            lastName: lastName,
-                            email: email,
-                            password: password,
-                            birthdate: birthdate,
-                            signedUpOn: Date()
-                        )
-                        navigateToUserDetails = true
-                    }
+                    navigateToUserDetails = true
+                    
                 }) {
                     Text("Weiter")
                         .font(.headline)
@@ -174,7 +165,7 @@ struct UserRegisterView: View {
                         .padding(.horizontal)
                 }
                 .navigationDestination(isPresented: $navigateToUserDetails) {
-                    UserRegisterDetailsView()
+                    UserRegisterDetailsView(firstName: firstName, lastName: lastName, birthdate: Date(), email: email, password: password)
                 }
                 
                 Button(action: {

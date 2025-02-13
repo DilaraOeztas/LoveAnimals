@@ -24,6 +24,13 @@ struct UserRegisterDetailsView: View {
     @State private var showFamilyOptions = false
     @State private var showSkipAlert = false
     @State private var scrollToID: UUID? = nil
+    @State private var navigateToHome: Bool = false
+    
+    var firstName: String
+    var lastName: String
+    var birthdate: Date
+    var email: String
+    var password: String
     
     let professionOptions = [
         "Student",
@@ -129,7 +136,17 @@ struct UserRegisterDetailsView: View {
                             
                             
                             Button(action: {
-                                authViewModel.navigateToHome = true
+                                Task {
+                                    await authViewModel.register(
+                                        firstName: firstName,
+                                        lastName: lastName,
+                                        email: email,
+                                        password: password,
+                                        birthdate: birthdate,
+                                        signedUpOn: Date()
+                                    )
+                                    navigateToHome = true
+                                }
                             }) {
                                 Text("Speichern & Weiter")
                                     .font(.headline)
@@ -156,14 +173,25 @@ struct UserRegisterDetailsView: View {
                                     // swiftlint:disable:next line_length
                                     message: Text("Diese Angaben sind für eine erfolgreiche Adoption wichtig. Du kannst sie später in den Profileinstellungen ergänzen."),
                                     primaryButton: .destructive(Text("Überspringen")) {
-                                        authViewModel.navigateToHome = true
+                                        Task {
+                                            await authViewModel.register(
+                                                firstName: firstName,
+                                                lastName: lastName,
+                                                email: email,
+                                                password: password,
+                                                birthdate: birthdate,
+                                                signedUpOn: Date()
+                                            )
+                                            navigateToHome = true
+                                        }
+                                       
                                     },
                                     secondaryButton: .cancel(Text("Abbrechen"))
                                 )
                             }
                             .padding(.bottom, 20)
                             
-                            .navigationDestination(isPresented: $authViewModel.navigateToHome) {
+                            .navigationDestination(isPresented: $navigateToHome) {
                                 HomeView()
                             }
                         }
@@ -250,13 +278,13 @@ struct UserRegisterDetailsView: View {
                 print("Fehler beim Speichern der Daten: \(error.localizedDescription)")
             } else {
                 print("Daten erfolgreich gespeichert!")
-                authViewModel.navigateToHome = true
+                navigateToHome = true
             }
         }
     }
 }
 
 #Preview {
-    UserRegisterDetailsView()
+    UserRegisterDetailsView(firstName: "test", lastName: "test", birthdate: Date(), email: "test@test.com", password: "test12345")
         .environmentObject(AuthViewModel())
 }

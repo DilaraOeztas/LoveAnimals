@@ -16,7 +16,6 @@ final class AuthViewModel: ObservableObject {
     @Published var user: FirebaseAuth.User?
     @Published var fireUser: FireUser?
     @Published var errorMessage: String?
-    @Published var navigateToHome: Bool = false
 
     var isUserSignedIn: Bool {
         user != nil
@@ -81,7 +80,6 @@ final class AuthViewModel: ObservableObject {
             errorMessage = error.localizedDescription
         }
     }
-    
     
     func logout() {
         do {
