@@ -97,6 +97,13 @@ struct LoginView: View {
                 remeberMe = savedData.rememberMe
             }
         }
+        .simultaneousGesture(
+            TapGesture().onEnded {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            }
+        )
+        .padding(.top, 10)
+        .safeAreaInset(edge: .top) { Color.clear.frame(height: 0)}
     }
 }
 

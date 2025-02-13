@@ -10,13 +10,15 @@
 //struct KeyboardDismissModifier: ViewModifier {
 //    func body(content: Content) -> some View {
 //        content
-//            .onTapGesture {
-//                UIApplication.shared.sendAction(#selector(UIResponder.resolveInstanceMethod(_:)), to: nil, from: nil, for: nil)
-//            }
+//            .gesture(
+//                TapGesture().onEnded {
+//                    UIApplication.shared.hideKeyboard()
+//                }
+//            )
 //    }
 //}
 //
-//
+//// **Extension für einfachere Nutzung in Views**
 //extension View {
 //    func dismissKeyboardOnTap() -> some View {
 //        self.modifier(KeyboardDismissModifier())
