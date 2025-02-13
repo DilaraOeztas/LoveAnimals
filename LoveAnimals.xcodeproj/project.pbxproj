@@ -62,7 +62,6 @@
 				2F17BEDB2D5A2DB700659BF7 /* Sources */,
 				2F17BEDC2D5A2DB700659BF7 /* Frameworks */,
 				2F17BEDD2D5A2DB700659BF7 /* Resources */,
-				2FA8EB5A2D5DF1370069A1F5 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -129,27 +128,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		2FA8EB5A2D5DF1370069A1F5 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${SRCROOT}/.swiftlint-output",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]\nthen\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif command -v swiftlint >/dev/null 2>&1\nthen\n    swiftlint --fix && swiftlint\n    touch \"${SRCROOT}/.swiftlint-output\"\nelse\n    echo \"warning: `swiftlint` command not found - See https://github.com/realm/SwiftLint#installation for installation instructions.\"\nfi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2F17BEDB2D5A2DB700659BF7 /* Sources */ = {

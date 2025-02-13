@@ -100,7 +100,7 @@ struct UserRegisterDetailsView: View {
                             .font(.headline)
                             .foregroundColor(.gray)
 
-                        TextField("Alter der Kinder (z. B. 3, 5, 8)", text: $childrenAges)
+                        TextField("Alter der Kinder (z.B.: 3, 5, 8)", text: $childrenAges)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .keyboardType(.numbersAndPunctuation)
                             .padding(.top, 5)

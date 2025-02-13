@@ -36,154 +36,149 @@ struct UserRegisterView: View {
     var body: some View {
         
         ScrollView {
-            HStack {
-                TextField("Vorname", text: $firstName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
-                    .autocorrectionDisabled(true)
-                
-                TextField("Nachname", text: $lastName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
-                    .autocorrectionDisabled(true)
-            }
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(spacing: 20) {
                 HStack {
-                    Text("Geburtsdatum")
+                    TextField("Vorname", text: $firstName)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.horizontal)
+                        .autocorrectionDisabled(true)
                     
-                    Spacer()
-                    DatePicker("Wähle dein Geburtsdatum",
-                               selection: $birthdate,
-                               in: ...Date(),
-                               displayedComponents: .date)
-                    .datePickerStyle(.compact)
-                    .labelsHidden()
-                    .environment(\.locale, Locale(identifier: "de_DE"))
-                    .onChange(of: birthdate) { _, _ in
-                        isTooYoung = !isOldEnough
+                    TextField("Nachname", text: $lastName)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.horizontal)
+                        .autocorrectionDisabled(true)
+                }
+                VStack(alignment: .leading, spacing: 20) {
+                    HStack {
+                        Text("Geburtsdatum")
+                        
+                        Spacer()
+                        DatePicker("Wähle dein Geburtsdatum",
+                                   selection: $birthdate,
+                                   in: ...Date(),
+                                   displayedComponents: .date)
+                        .datePickerStyle(.compact)
+                        .labelsHidden()
+                        .environment(\.locale, Locale(identifier: "de_DE"))
+                        .onChange(of: birthdate) { _, _ in
+                            isTooYoung = !isOldEnough
+                        }
+                    }
+                    if isTooYoung {
+                        Text("Du musst mindestens 18 Jahre alt sein")
+                            .foregroundColor(.red)
+                            .font(.subheadline)
+                    }
+                    
+                }
+                .padding(.horizontal)
+                
+                TextField("E-Mail", text: $email)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal)
+                    .autocorrectionDisabled(true)
+                    .textInputAutocapitalization(.never)
+                
+                Group {
+                    if showPassword {
+                        TextField("Passwort", text: $password)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                    } else {
+                        SecureField("Passwort", text: $password)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                    }
+                    
+                    if showPassword {
+                        TextField("Passwort bestätigen", text: $confirmPassword)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                    } else {
+                        SecureField("Passwort bestätigen", text: $confirmPassword)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
                     }
                 }
-                
-                if isTooYoung {
-                    Text("Du musst mindestens 18 Jahre alt sein")
-                        .foregroundColor(.red)
-                        .font(.subheadline)
-                }
-                
-            }
-            .padding(.horizontal)
-            
-            TextField("E-Mail", text: $email)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.horizontal)
-                .autocorrectionDisabled(true)
-                .textInputAutocapitalization(.never)
-            
-            Group {
-                if showPassword {
-                    TextField("Passwort", text: $password)
+                
+                HStack {
+                    Button(action: {
+                        showPassword.toggle()
+                    }) {
+                        Image(systemName: showPassword ? "checkmark.square" : "square")
+                            .foregroundStyle(showPassword ? .black : .black)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    Text("Passwort anzeigen")
+                        .font(.subheadline)
+                    Spacer()
+                }
+                .padding(.horizontal)
+                
+                HStack {
+                    TextField("PLZ", text: $postalCode)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-                } else {
-                    SecureField("Passwort", text: $password)
+                        .frame(width: 100)
+                        .padding(.horizontal)
+                    
+                    TextField("Wohnort", text: $city)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.horizontal)
                 }
                 
-                if showPassword {
-                    TextField("Passwort bestätigen", text: $confirmPassword)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                } else {
-                    SecureField("Passwort bestätigen", text: $confirmPassword)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("In welchem Umkreis möchtest du nach Tierheimen suchen?")
+                        .font(.subheadline)
+                        .padding(.horizontal)
+                    
+                    Slider(value: $searchRadius, in: 1...100, step: 1)
+                        .padding(.horizontal)
+                    
+                    Text("\(Int(searchRadius)) km Umkreis")
+                        .font(.headline)
+                        .padding(.horizontal)
                 }
-            }
-            .padding(.horizontal)
-            
-            HStack {
+                    .padding(.bottom, 20)
+                
+                
                 Button(action: {
-                    showPassword.toggle()
+                    Task {
+                        await authViewModel.register(
+                            firstName: firstName,
+                            lastName: lastName,
+                            email: email,
+                            password: password,
+                            birthdate: birthdate,
+                            signedUpOn: Date()
+                        )
+                        navigateToUserDetails = true
+                    }
                 }) {
-                    Image(systemName: showPassword ? "checkmark.square" : "square")
-                        .foregroundStyle(showPassword ? .black : .black)
+                    Text("Weiter")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .background(Color.brown)
+                        .cornerRadius(10)
+                        .padding(.horizontal)
                 }
-                .buttonStyle(PlainButtonStyle())
-                Text("Passwort anzeigen")
-                    .font(.subheadline)
-                Spacer()
-            }
-            .padding(.horizontal)
-            .padding(.top, 5)
-            
-            
-            HStack {
-                TextField("PLZ", text: $postalCode)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .frame(width: 100)
-                    .padding(.horizontal)
-                
-                TextField("Wohnort", text: $city)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
-            }
-            .padding(.top, 15)
-            .padding(.bottom, 15)
-            
-            VStack(alignment: .leading, spacing: 20) {
-                Text("In welchem Umkreis möchtest du nach Tierheimen suchen?")
-                    .font(.subheadline)
-                    .padding(.horizontal)
-                
-                Slider(value: $searchRadius, in: 1...100, step: 1)
-                    .padding(.horizontal)
-                
-                Text("\(Int(searchRadius)) km Umkreis")
-                    .font(.headline)
-                    .padding(.horizontal)
-            }
-            Spacer()
-            
-               .padding(.top, 20)
-            
-            Button(action: {
-                Task {
-                    await authViewModel.register(
-                        firstName: firstName,
-                        lastName: lastName,
-                        email: email,
-                        password: password,
-                        birthdate: birthdate,
-                        signedUpOn: Date()
-                    )
-                    navigateToUserDetails = true
+                .navigationDestination(isPresented: $navigateToUserDetails) {
+                    UserRegisterDetailsView()
                 }
-            }) {
-                Text("Weiter")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity, minHeight: 50)
-                    .background(Color.brown)
-                    .cornerRadius(10)
-                    .padding(.horizontal)
+                
+                Button(action: {
+                    navigateToLogin = true
+                }) {
+                    Text("Bereits ein Konto? Hier einloggen")
+                        .foregroundColor(.blue)
+                        .underline()
+                }
+                .padding(.top, 10)
+                .navigationDestination(isPresented: $navigateToLogin) {
+                    LoginView()
+                }
             }
-            .padding(.bottom, 20)
-            .navigationDestination(isPresented: $navigateToUserDetails) {
-                UserRegisterDetailsView()
-            }
-            
-            Button(action: {
-                navigateToLogin = true
-            }) {
-                Text("Bereits ein Konto? Hier einloggen")
-                    .foregroundColor(.blue)
-                    .underline()
-            }
-            .navigationDestination(isPresented: $navigateToLogin) {
-                LoginView()
-            }
-            
-            .navigationTitle("Registrierung")
-            
         }
-        
+        .ignoresSafeArea(.keyboard)
+        .padding(.top, 20)
+        .navigationTitle("Registrierung")
         .navigationBarBackButtonHidden(true)
     }
 }

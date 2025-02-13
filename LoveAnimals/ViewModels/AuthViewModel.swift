@@ -83,16 +83,6 @@ final class AuthViewModel: ObservableObject {
     }
     
     
-    
-        
-    
-    
-    
-    
-    
-    
-    
-
     func logout() {
         do {
             try auth.signOut()
