@@ -52,7 +52,7 @@ struct LoginView: View {
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 10)
-                    .onChange(of: remeberMe) { oldValue, newValue in
+                    .onChange(of: remeberMe) { _, newValue in
                         authViewModel.setRememberMe(newValue)
                     }
                 }
@@ -81,9 +81,9 @@ struct LoginView: View {
 
             NavigationLink("Noch kein Account? Jetzt registrieren!", destination: RegisterView())
                 .padding(.top, 20)
+                .padding(.bottom, 100)
         }
-        .padding(.bottom, 100)
-        .onAppear  {
+        .onAppear {
             let savedData = authViewModel.loadLoginData()
             DispatchQueue.main.async {
                 email = savedData.email
