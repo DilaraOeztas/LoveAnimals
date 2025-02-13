@@ -15,6 +15,7 @@ struct TierheimApp: App {
     var body: some Scene {
         WindowGroup {
             MainView()
+                //.dismissKeyboardOnTap()
         }
     }
 
