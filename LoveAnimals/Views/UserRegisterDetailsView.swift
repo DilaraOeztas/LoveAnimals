@@ -24,6 +24,8 @@ struct UserRegisterDetailsView: View {
     var lastName: String
     var birthdate: Date
     var email: String
+    var postalCode: String
+    var city: String
     var password: String
     
     let professionOptions = [
@@ -121,6 +123,8 @@ struct UserRegisterDetailsView: View {
                                 firstName: firstName,
                                 lastName: lastName,
                                 email: email,
+                                postalCode: postalCode,
+                                city: city,
                                 password: password,
                                 birthdate: birthdate,
                                 signedUpOn: Date()
@@ -158,6 +162,8 @@ struct UserRegisterDetailsView: View {
                                         firstName: firstName,
                                         lastName: lastName,
                                         email: email,
+                                        postalCode: postalCode,
+                                        city: city,
                                         password: password,
                                         birthdate: birthdate,
                                         signedUpOn: Date()
@@ -236,6 +242,6 @@ struct UserRegisterDetailsView: View {
 }
 
 #Preview {
-    UserRegisterDetailsView(firstName: "test", lastName: "test", birthdate: Date(), email: "test@test.com", password: "test12345")
+    UserRegisterDetailsView(firstName: "test", lastName: "test", birthdate: Date(), email: "test@test.com", postalCode: "33333", city: "test", password: "test12345")
         .environmentObject(AuthViewModel())
 }

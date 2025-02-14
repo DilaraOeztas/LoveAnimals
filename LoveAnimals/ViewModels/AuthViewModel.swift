@@ -48,7 +48,7 @@ final class AuthViewModel: ObservableObject {
     }
     
     
-    func register(firstName: String, lastName: String, email: String, password: String, birthdate: Date, signedUpOn: Date) async {
+    func register(firstName: String, lastName: String, email: String, postalCode: String, city: String, password: String, birthdate: Date, signedUpOn: Date) async {
         do {
             let result = try await auth.createUser(withEmail: email, password: password)
             user = result.user
@@ -60,6 +60,8 @@ final class AuthViewModel: ObservableObject {
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
+                postalCode: postalCode,
+                city: city,
                 birthdate: birthdate,
                 signedUpOn: Date()
             )
@@ -70,12 +72,14 @@ final class AuthViewModel: ObservableObject {
         }
     }
     
-    func createUser(userID: String, firstName: String, lastName: String, email: String, birthdate: Date, signedUpOn: Date) {
+    func createUser(userID: String, firstName: String, lastName: String, email: String, postalCode: String, city: String, birthdate: Date, signedUpOn: Date) {
         let user = FireUser(
             id: userID,
             firstName: firstName,
             lastName: lastName,
             email: email,
+            postalCode: postalCode,
+            city: city,
             birthdate: birthdate,
             signedUpOn: Date()
         )

@@ -32,7 +32,9 @@ struct UserRegisterView: View {
         return ageComponents.year ?? 0 >= 18
     }
     
-    
+    private var isFormValid: Bool {
+        !firstName.isEmpty && !lastName.isEmpty && isOldEnough && !email.isEmpty && !postalCode.isEmpty && !city.isEmpty && !password.isEmpty && !confirmPassword.isEmpty && password == confirmPassword
+    }
     
     var body: some View {
         
@@ -160,20 +162,22 @@ struct UserRegisterView: View {
                     Text("Weiter")
                         .font(.headline)
                         .foregroundColor(.white)
-                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .frame(width: 200, height: 50)
                         .background(Color.brown)
                         .cornerRadius(10)
                         .padding(.horizontal)
+                        .disabled(!isFormValid)
+                        .opacity(isFormValid ? 1.0 : 0.5)
                 }
                 .navigationDestination(isPresented: $navigateToUserDetails) {
-                    UserRegisterDetailsView(firstName: firstName, lastName: lastName, birthdate: birthdate, email: email, password: password)
+                    UserRegisterDetailsView(firstName: firstName, lastName: lastName, birthdate: birthdate, email: email, postalCode: postalCode, city: city, password: password)
                 }
                 
                 Button(action: {
                     navigateToLogin = true
                 }) {
                     Text("Bereits ein Konto? Hier einloggen")
-                        .foregroundColor(.blue)
+                        .foregroundStyle(.blue)
                         .underline()
                 }
                 .padding(.top, 10)
