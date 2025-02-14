@@ -65,7 +65,8 @@ struct UserRegisterView: View {
                         .datePickerStyle(.compact)
                         .labelsHidden()
                         .environment(\.locale, Locale(identifier: "de_DE"))
-                        .onChange(of: birthdate) { _, _ in
+                        .onChange(of: birthdate) { _, newDate in
+                            birthdate = newDate
                             isTooYoung = !isOldEnough
                         }
                     }
@@ -165,7 +166,7 @@ struct UserRegisterView: View {
                         .padding(.horizontal)
                 }
                 .navigationDestination(isPresented: $navigateToUserDetails) {
-                    UserRegisterDetailsView(firstName: firstName, lastName: lastName, birthdate: Date(), email: email, password: password)
+                    UserRegisterDetailsView(firstName: firstName, lastName: lastName, birthdate: birthdate, email: email, password: password)
                 }
                 
                 Button(action: {

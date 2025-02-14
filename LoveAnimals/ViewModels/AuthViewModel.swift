@@ -51,53 +51,21 @@ final class AuthViewModel: ObservableObject {
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
-                birthdate: Date(),
+                birthdate: birthdate,
                 signedUpOn: Date()
             )
         } catch {
             errorMessage = error.localizedDescription
         }
     }
-
-    func login(email: String, password: String) async {
-        if email.isEmpty && password.isEmpty {
-            errorMessage = "Bitte geben Sie Ihre E-Mail-Adresse und Ihr Passwort ein."
-            return
-        } else if email.isEmpty {
-            errorMessage = "Bitte geben Sie Ihre E-Mail-Adresse ein."
-            return
-        } else if password.isEmpty {
-            errorMessage = "Bitte geben Sie Ihr Passwort ein."
-            return
-        }
-
-        do {
-            let result = try await auth.signIn(withEmail: email, password: password)
-            user = result.user
-            errorMessage = nil
-            saveLoginData(email: email, password: password)
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
     
-    func logout() {
-        do {
-            try auth.signOut()
-            user = nil
-            errorMessage = nil
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
     func createUser(userID: String, firstName: String, lastName: String, email: String, birthdate: Date, signedUpOn: Date) {
         let user = FireUser(
             id: userID,
             firstName: firstName,
             lastName: lastName,
             email: email,
-            birthdate: Date(),
+            birthdate: birthdate,
             signedUpOn: Date()
         )
         do {
@@ -121,6 +89,40 @@ final class AuthViewModel: ObservableObject {
             }
         }
     }
+
+    func login(email: String, password: String) async {
+        if email.isEmpty && password.isEmpty {
+            errorMessage = "Please enter your email adress and password."
+            return
+        } else if email.isEmpty {
+            errorMessage = "Please enter your email adress."
+            return
+        } else if password.isEmpty {
+            errorMessage = "Please enter your password."
+            return
+        }
+
+        do {
+            let result = try await auth.signIn(withEmail: email, password: password)
+            user = result.user
+            errorMessage = nil
+            saveLoginData(email: email, password: password)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+    
+    func logout() {
+        do {
+            try auth.signOut()
+            user = nil
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    
     
     func saveLoginData(email: String, password: String) {
         let rememberMe = UserDefaults.standard.bool(forKey: "rememberMe")
