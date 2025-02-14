@@ -98,7 +98,7 @@ struct LoginView: View {
                         .underline()
                 }
                 .padding(.top, 20)
-                .padding(.bottom, 30)
+                .padding(.bottom, 20)
             }
             
             .onAppear {

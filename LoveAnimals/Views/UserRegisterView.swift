@@ -177,13 +177,17 @@ struct UserRegisterView: View {
                         .underline()
                 }
                 .padding(.top, 10)
+                .padding(.bottom, 20)
                 .navigationDestination(isPresented: $navigateToLogin) {
                     LoginView()
                 }
             }
-            .padding(.bottom, keyboardObersver.isKeyboardVisible ? 300 : 20)
         }
-        .ignoresSafeArea(.keyboard)
+        .simultaneousGesture(
+            TapGesture().onEnded {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            }
+        )
         .padding(.top, 20)
         .navigationTitle("Registrierung")
         .navigationBarBackButtonHidden(true)
