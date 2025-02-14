@@ -11,21 +11,21 @@ import SwiftUI
 struct SplashScreenView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var navigateToNextScreen = false
-    @State private var scaleEffect = 1.0
+    @State private var scaleEffect = 0.5
 
     var body: some View {
         ZStack {
             if !navigateToNextScreen {
                 Color.white.ignoresSafeArea()
 
-                Image("AppLogo")
+                Image("AppIcon3")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 200, height: 200)
                     .scaleEffect(scaleEffect)
                     .onAppear {
                         withAnimation(.easeInOut(duration: 1.5)) {
-                            self.scaleEffect = 3.0
+                            self.scaleEffect = 2.0
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                             withAnimation(.easeInOut(duration: 0.8)) {
