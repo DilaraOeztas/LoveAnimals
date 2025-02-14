@@ -17,10 +17,10 @@ final class AuthViewModel: ObservableObject {
     @Published var fireUser: FireUser?
     @Published var errorMessage: String?
     
-    @Published var selectedProfession = "Beruf auswählen"
-    @Published var selectedHousing = "Wohnsituation auswählen"
+    @Published var selectedProfession = ""
+    @Published var selectedHousing = ""
+    @Published var selectedFamily = ""
     @Published var hasGarden = false
-    @Published var selectedFamily = "Familienstand auswählen"
     @Published var hasChildren = false
     @Published var numberOfChildren = ""
     @Published var childrenAges = ""
@@ -86,6 +86,10 @@ final class AuthViewModel: ObservableObject {
             print(error.localizedDescription)
         }
     }
+    
+    
+    
+    
     
     func fetchUser(userID: String) {
         Task {
@@ -157,32 +161,46 @@ final class AuthViewModel: ObservableObject {
         UserDefaults.standard.set(remember, forKey: "rememberMe")
     }
     
-    func saveUserDetails() async {
+    
+    
+    
+    func saveUserDetails(isSkipped: Bool = false) async {
         guard let userID = Auth.auth().currentUser?.uid else {
             print("Fehler: Kein eingeloggter User gefunden.")
             return
         }
-        
-        var userDetails: [String: Any] = [
-            "userID": userID,
-            "profession": selectedProfession,
-            "housingSituation": selectedHousing,
-            "hasGarden": hasGarden,
-            "familyStatus": selectedFamily,
-            "hasChildren": hasChildren,
-            "updatedAt": Timestamp()
-        ]
-        
-        if hasChildren {
-            userDetails["numberOfChildren"] = numberOfChildren
-            userDetails["childrenAges"] = childrenAges
+
+        if isSkipped {
+            do {
+                try await AuthManager.shared.database.collection("users")
+                    .document(userID)
+                    .setData(["profileCompleted": false], merge: true)
+                print("✅ Profil wurde als nicht abgeschlossen markiert!")
+            } catch {
+                print("Fehler beim Speichern: \(error.localizedDescription)")
+            }
+            return
         }
-        
-        let db = Firestore.firestore()
+
+        var userDetails: [String: Any] = [
+            "profession": (selectedProfession == "Beruf auswählen" || selectedProfession.isEmpty) ? "Keine Angabe" : selectedProfession,
+            "housingSituation": (selectedHousing == "Wohnsituation auswählen" || selectedHousing.isEmpty) ? "Keine Angabe" : selectedHousing,
+            "familyStatus": (selectedFamily == "Familienstand auswählen" || selectedFamily.isEmpty) ? "Keine Angabe" : selectedFamily,
+            "hasGarden": hasGarden,
+            "hasChildren": hasChildren,
+            "updatedAt": Timestamp(),
+        ]
+
+        if hasChildren {
+            userDetails["numberOfChildren"] = numberOfChildren.isEmpty ? "Keine Angabe" : numberOfChildren
+            userDetails["childrenAges"] = childrenAges.isEmpty ? ["Keine Angabe"] : childrenAges
+        } 
+
         do {
-            try await db.collection("users").document(userID).setData(userDetails, merge: true)
-            print("Daten erfolgreich gespeichert!")
-            self.navigateToHome = true
+            try await AuthManager.shared.database.collection("users").document(userID).setData(userDetails, merge: true)
+            DispatchQueue.main.async {
+                self.navigateToHome = true
+            }
         } catch {
             print("Fehler beim Speichern der Daten: \(error.localizedDescription)")
         }

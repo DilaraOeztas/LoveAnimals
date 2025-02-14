@@ -139,7 +139,7 @@ struct UserRegisterDetailsView: View {
                                         birthdate: birthdate,
                                         signedUpOn: Date()
                                     )
-                                    await authViewModel.saveUserDetails()
+                                    await authViewModel.saveUserDetails(isSkipped: false)
                                 }
                             }) {
                                 Text("Speichern & Weiter")
@@ -176,6 +176,8 @@ struct UserRegisterDetailsView: View {
                                                 birthdate: birthdate,
                                                 signedUpOn: Date()
                                             )
+                                            await authViewModel.saveUserDetails(isSkipped: true)
+                                            
                                         }
                                        
                                     },
