@@ -12,19 +12,13 @@ import FirebaseFirestore
 struct UserRegisterDetailsView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @Environment(\.presentationMode) var presentationMode
-    @State private var selectedProfession = "Beruf auswählen"
-    @State private var selectedHousing = "Wohnsituation auswählen"
-    @State private var hasGarden = false
-    @State private var selectedFamily = "Familienstand auswählen"
-    @State private var hasChildren = false
-    @State private var numberOfChildren = ""
-    @State private var childrenAges = ""
+    
+    
     @State private var showProfessionOptions = false
     @State private var showHousingOptions = false
     @State private var showFamilyOptions = false
     @State private var showSkipAlert = false
     @State private var scrollToID: UUID? = nil
-    @State private var navigateToHome: Bool = false
     
     var firstName: String
     var lastName: String
@@ -70,28 +64,28 @@ struct UserRegisterDetailsView: View {
                             
                             dropdownSection(
                                 title: "Beruf",
-                                selectedOption: $selectedProfession,
+                                selectedOption: $authViewModel.selectedProfession,
                                 showOptions: $showProfessionOptions,
                                 options: professionOptions)
                             
                             dropdownSection(
                                 title: "Wohnsituation",
-                                selectedOption: $selectedHousing,
+                                selectedOption: $authViewModel.selectedHousing,
                                 showOptions: $showHousingOptions,
                                 options: housingOptions)
                             
-                            Toggle("Haben Sie einen Garten?", isOn: $hasGarden)
+                            Toggle("Haben Sie einen Garten?", isOn: $authViewModel.hasGarden)
                                 .padding(.horizontal)
                             
                             dropdownSection(
                                 title: "Familienstand",
-                                selectedOption: $selectedFamily,
+                                selectedOption: $authViewModel.selectedFamily,
                                 showOptions: $showFamilyOptions,
                                 options: familyOptions)
                             
-                            Toggle("Haben Sie Kinder?", isOn: $hasChildren)
+                            Toggle("Haben Sie Kinder?", isOn: $authViewModel.hasChildren)
                                 .padding(.horizontal)
-                                .onChange(of: hasChildren) { _, newValue in
+                                .onChange(of: authViewModel.hasChildren) { _, newValue in
                                     withAnimation {
                                         if newValue {
                                             scrollToID = UUID()
@@ -105,13 +99,13 @@ struct UserRegisterDetailsView: View {
                                     }
                                 }
                             
-                            if hasChildren {
+                            if authViewModel.hasChildren {
                                 VStack(alignment: .leading) {
                                     Text("Wie viele Kinder haben Sie?")
                                         .font(.headline)
                                         .foregroundColor(.gray)
                                     
-                                    TextField("Anzahl der Kinder", text: $numberOfChildren)
+                                    TextField("Anzahl der Kinder", text: $authViewModel.numberOfChildren)
                                         .textFieldStyle(RoundedBorderTextFieldStyle())
                                         .autocorrectionDisabled(true)
                                         .keyboardType(.numberPad)
@@ -124,7 +118,7 @@ struct UserRegisterDetailsView: View {
                                         .font(.headline)
                                         .foregroundColor(.gray)
                                     
-                                    TextField("Alter der Kinder (z.B.: 3, 5, 8)", text: $childrenAges)
+                                    TextField("Alter der Kinder (z.B.: 3, 5, 8)", text: $authViewModel.childrenAges)
                                         .textFieldStyle(RoundedBorderTextFieldStyle())
                                         .autocorrectionDisabled(true)
                                         .keyboardType(.numbersAndPunctuation)
@@ -145,7 +139,7 @@ struct UserRegisterDetailsView: View {
                                         birthdate: birthdate,
                                         signedUpOn: Date()
                                     )
-                                    navigateToHome = true
+                                    await authViewModel.saveUserDetails()
                                 }
                             }) {
                                 Text("Speichern & Weiter")
@@ -182,7 +176,6 @@ struct UserRegisterDetailsView: View {
                                                 birthdate: birthdate,
                                                 signedUpOn: Date()
                                             )
-                                            navigateToHome = true
                                         }
                                        
                                     },
@@ -191,7 +184,7 @@ struct UserRegisterDetailsView: View {
                             }
                             .padding(.bottom, 20)
                             
-                            .navigationDestination(isPresented: $navigateToHome) {
+                            .navigationDestination(isPresented: $authViewModel.navigateToHome) {
                                 HomeView()
                             }
                         }
@@ -251,37 +244,7 @@ struct UserRegisterDetailsView: View {
         .padding(.horizontal)
     }
     
-    func saveUserDetails() {
-        guard let userID = Auth.auth().currentUser?.uid else {
-            print("Fehler: Kein eingeloggter User gefunden.")
-            return
-        }
-        
-        var userDetails: [String: Any] = [
-            "userID": userID,
-            "profession": selectedProfession,
-            "housingSituation": selectedHousing,
-            "hasGarden": hasGarden,
-            "familyStatus": selectedFamily,
-            "hasChildren": hasChildren,
-            "updatedAt": Timestamp()
-        ]
-        
-        if hasChildren {
-            userDetails["numberOfChildren"] = numberOfChildren
-            userDetails["childrenAges"] = childrenAges
-        }
-        
-        let db = Firestore.firestore()
-        db.collection("users").document(userID).setData(userDetails, merge: true) { error in
-            if let error = error {
-                print("Fehler beim Speichern der Daten: \(error.localizedDescription)")
-            } else {
-                print("Daten erfolgreich gespeichert!")
-                navigateToHome = true
-            }
-        }
-    }
+    
 }
 
 #Preview {
