@@ -200,13 +200,10 @@ struct UserRegisterDetailsView: View {
     @ViewBuilder
     func dropdownSection(title: String, selectedOption: Binding<String>, showOptions: Binding<Bool>, options: [String]) -> some View {
         VStack(alignment: .leading) {
-            Text(title)
-                .font(.headline)
-                .foregroundStyle(.gray)
             
             HStack {
-                Text(selectedOption.wrappedValue)
-                    .foregroundStyle(.black)
+                Text(selectedOption.wrappedValue.isEmpty ? title : selectedOption.wrappedValue)
+                    .foregroundStyle(selectedOption.wrappedValue.isEmpty ? .gray : .black)
                 Spacer()
                 Button(action: { showOptions.wrappedValue.toggle() }) {
                     Image(systemName: "chevron.down")
