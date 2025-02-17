@@ -24,6 +24,10 @@ struct UserRegisterView: View {
     @State private var searchRadius: Double = 10
     @State private var navigateToLogin: Bool = false
     @State private var navigateToUserDetails: Bool = false
+    @State private var agbAccepted = false
+    @State private var navigateToAgb: Bool = false
+    @State private var navigateToDatenschutz: Bool = false
+    
     
     var isOldEnough: Bool {
         let calendar = Calendar.current
@@ -33,13 +37,13 @@ struct UserRegisterView: View {
     }
     
     private var isFormValid: Bool {
-        !firstName.isEmpty && !lastName.isEmpty && isOldEnough && !email.isEmpty && !postalCode.isEmpty && !city.isEmpty && !password.isEmpty && !confirmPassword.isEmpty && password == confirmPassword
+        !firstName.isEmpty && !lastName.isEmpty && isOldEnough && !email.isEmpty && !postalCode.isEmpty && !city.isEmpty && !password.isEmpty && !confirmPassword.isEmpty && password == confirmPassword && agbAccepted == true
     }
     
     var body: some View {
         
         ScrollView {
-            VStack(spacing: 20) {
+            VStack(alignment: .leading, spacing: 20) {
                 HStack {
                     TextField("Vorname", text: $firstName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -55,31 +59,7 @@ struct UserRegisterView: View {
                         .textInputAutocapitalization(.never)
                         .keyboardType(.asciiCapable)
                 }
-                VStack(alignment: .leading, spacing: 20) {
-                    HStack {
-                        Text("Geburtsdatum")
-                        
-                        Spacer()
-                        DatePicker("Wähle dein Geburtsdatum",
-                                   selection: $birthdate,
-                                   in: ...Date(),
-                                   displayedComponents: .date)
-                        .datePickerStyle(.compact)
-                        .labelsHidden()
-                        .environment(\.locale, Locale(identifier: "de_DE"))
-                        .onChange(of: birthdate) { _, newDate in
-                            birthdate = newDate
-                            isTooYoung = !isOldEnough
-                        }
-                    }
-                    if isTooYoung {
-                        Text("Du musst mindestens 18 Jahre alt sein")
-                            .foregroundColor(.red)
-                            .font(.subheadline)
-                    }
-                    
-                }
-                .padding(.horizontal)
+                
                 
                 TextField("E-Mail", text: $email)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -140,6 +120,32 @@ struct UserRegisterView: View {
                         .padding(.horizontal)
                 }
                 
+                VStack(alignment: .leading, spacing: 20) {
+                    HStack {
+                        Text("Geburtsdatum")
+                        
+                        Spacer()
+                        DatePicker("Wähle dein Geburtsdatum",
+                                   selection: $birthdate,
+                                   in: ...Date(),
+                                   displayedComponents: .date)
+                        .datePickerStyle(.compact)
+                        .labelsHidden()
+                        .environment(\.locale, Locale(identifier: "de_DE"))
+                        .onChange(of: birthdate) { _, newDate in
+                            birthdate = newDate
+                            isTooYoung = !isOldEnough
+                        }
+                    }
+                    if isTooYoung {
+                        Text("Du musst mindestens 18 Jahre alt sein")
+                            .foregroundColor(.red)
+                            .font(.subheadline)
+                    }
+                    
+                }
+                .padding(.horizontal)
+                
                 VStack(alignment: .leading, spacing: 10) {
                     Text("In welchem Umkreis möchtest du nach Tierheimen suchen?")
                         .font(.subheadline)
@@ -152,40 +158,59 @@ struct UserRegisterView: View {
                         .font(.headline)
                         .padding(.horizontal)
                 }
-                    .padding(.bottom, 20)
                 
-                
-                Button(action: {
-                    navigateToUserDetails = true
-                    
-                }) {
-                    Text("Weiter")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(width: 200, height: 50)
-                        .background(Color.brown)
-                        .cornerRadius(10)
-                        .padding(.horizontal)
-                        .disabled(!isFormValid)
-                        .opacity(isFormValid ? 1.0 : 0.5)
+                HStack {
+                    Button(action: {
+                        agbAccepted.toggle()
+                    }) {
+                        Image(systemName: agbAccepted ? "checkmark.square.fill" : "square")
+                            .foregroundStyle(agbAccepted ? .blue : .gray)
+                    }
+                    Text(attributedTermsText)
+                        .foregroundStyle(.primary)
+                        .onTapGesture {
+                            handleTapGesture()
+                        }
                 }
-                .navigationDestination(isPresented: $navigateToUserDetails) {
-                    UserRegisterDetailsView(firstName: firstName, lastName: lastName, birthdate: birthdate, email: email, postalCode: postalCode, city: city, password: password)
-                }
-                
-                Button(action: {
-                    navigateToLogin = true
-                }) {
-                    Text("Bereits ein Konto? Hier einloggen")
-                        .foregroundStyle(.blue)
-                        .underline()
-                }
-                .padding(.top, 10)
-                .padding(.bottom, 20)
-                .navigationDestination(isPresented: $navigateToLogin) {
-                    LoginView()
-                }
+                .padding()
             }
+            .padding(.bottom, 20)
+                VStack {
+                    Button(action: {
+                        if isFormValid == true {
+                            navigateToUserDetails = true
+                        } else {
+                            // Warnung anzeigen
+                        }
+                    }) {
+                        Text("Weiter")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(width: 200, height: 50)
+                            .background(Color.brown)
+                            .cornerRadius(10)
+                            .padding(.horizontal)
+                            .disabled(!isFormValid)
+                            .opacity(isFormValid ? 1.0 : 0.5)
+                    }
+                    .navigationDestination(isPresented: $navigateToUserDetails) {
+                        UserRegisterDetailsView(firstName: firstName, lastName: lastName, birthdate: birthdate, email: email, postalCode: postalCode, city: city, password: password)
+                    }
+                    
+                    Button(action: {
+                        navigateToLogin = true
+                    }) {
+                        Text("Bereits ein Konto? Hier einloggen")
+                            .foregroundStyle(.blue)
+                            .underline()
+                    }
+                    .padding(.top, 10)
+                    .padding(.bottom, 20)
+                    .navigationDestination(isPresented: $navigateToLogin) {
+                        LoginView()
+                    }
+                }
+                .padding(.horizontal)
         }
         .simultaneousGesture(
             TapGesture().onEnded {
@@ -197,7 +222,42 @@ struct UserRegisterView: View {
         .navigationBarBackButtonHidden(true)
         
     }
+        
+    
+    
+    
+    private var attributedTermsText: AttributedString {
+        var text = AttributedString("Ich akzeptiere die AGB und die Datenschutzerklärung.")
+        
+        if let agbRange = text.range(of: "AGB") {
+            text[agbRange].foregroundColor = .blue
+            text[agbRange].underlineStyle = .single
+            text[agbRange].link = URL(string: "app://navigateToAGB")
+        }
+        
+        if let datenschutzRange = text.range(of: "Datenschutzerklärung") {
+            text[datenschutzRange].foregroundColor = .blue
+            text[datenschutzRange].underlineStyle = .single
+            text[datenschutzRange].link = URL(string: "app://navigateToDatenschutz")
+        }
+        
+        return text
+    }
+    
+    private func handleTapGesture() {
+        let text = attributedTermsText
+        if let agbRange = text.range(of: "AGB"),
+           text[agbRange].link == URL(string: "app://navigateToAGB") {
+            navigateToAgb = true
+        }
+        
+        if let datenschutzRange = text.range(of: "Datenschutzerklärung"),
+           text[datenschutzRange].link == URL(string: "app://navigateToDatenschutz") {
+            navigateToDatenschutz = true
+        }
+    }
 }
+
 
 
 #Preview {
