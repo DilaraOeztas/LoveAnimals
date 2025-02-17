@@ -18,6 +18,7 @@ struct UserRegisterView: View {
     @State private var email = ""
     @State private var isEmailValid: Bool? = nil
     @State private var showFormError: Bool = false
+    @State private var showEmailExistsError: Bool = false
     @State private var password = ""
     @State private var confirmPassword = ""
     @State private var isPasswordValid: Bool = false
@@ -76,13 +77,21 @@ struct UserRegisterView: View {
                     .keyboardType(.emailAddress)
                     .onChange(of: email) { _, _ in
                         showFormError = false
+                        showEmailExistsError = false
                         isEmailValid = nil
                     }
-                    
-                    
+                
+                
                 
                 if showFormError {
                     Text("Bitte gib eine gültige E-Mail-Adresse ein.")
+                        .foregroundColor(.red)
+                        .font(.footnote)
+                        .padding(.horizontal)
+                }
+                
+                if showEmailExistsError {
+                    Text("Diese E-Mail-Adresse wird bereits verwendet.")
                         .foregroundColor(.red)
                         .font(.footnote)
                         .padding(.horizontal)
@@ -235,17 +244,32 @@ struct UserRegisterView: View {
                 Button(action: {
                     Task {
                         isLoading = true
-                        guard let isValid = try? await EmailValidationRepository.shared.validateEmailWithAPI(email: email), isValid else {
+                        authViewModel.checkIfEmailExistsInFirestore(email: email) { exists in
                             DispatchQueue.main.async {
-                                isEmailValid = false
-                                showFormError = true
-                                isLoading = false
+                                if exists {
+                                    showEmailExistsError = true
+                                    isLoading = false
+                                } else {
+                                    Task {
+                                        guard let isValid = try? await EmailValidationRepository.shared.validateEmailWithAPI(email: email), isValid else {
+                                            DispatchQueue.main.async {
+                                                isLoading = false
+                                                isEmailValid = false
+                                                showFormError = true
+                                                
+                                            }
+                                            return
+                                        }
+                                        DispatchQueue.main.async {
+                                            isLoading = false
+                                            isEmailValid = true
+                                            showFormError = false
+                                            showEmailExistsError = false
+                                            navigateToUserDetails = true
+                                        }
+                                    }
+                                }
                             }
-                            return
-                        }
-                        DispatchQueue.main.async {
-                            isEmailValid = true
-                            showFormError = false
                         }
                     }
                 }) {

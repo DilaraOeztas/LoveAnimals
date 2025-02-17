@@ -170,7 +170,7 @@ final class AuthViewModel: ObservableObject {
             print("Fehler: Kein eingeloggter User gefunden.")
             return
         }
-
+        
         if isSkipped {
             do {
                 try await AuthManager.shared.database.collection("users")
@@ -182,7 +182,7 @@ final class AuthViewModel: ObservableObject {
             }
             return
         }
-
+        
         var userDetails: [String: Any] = [
             "profession": (selectedProfession == "Beruf auswählen" || selectedProfession.isEmpty) ? "Keine Angabe" : selectedProfession,
             "housingSituation": (selectedHousing == "Wohnsituation auswählen" || selectedHousing.isEmpty) ? "Keine Angabe" : selectedHousing,
@@ -191,12 +191,12 @@ final class AuthViewModel: ObservableObject {
             "hasChildren": hasChildren,
             "updatedAt": Timestamp(),
         ]
-
+        
         if hasChildren {
             userDetails["numberOfChildren"] = numberOfChildren.isEmpty ? "Keine Angabe" : numberOfChildren
             userDetails["childrenAges"] = childrenAges.isEmpty ? ["Keine Angabe"] : childrenAges
-        } 
-
+        }
+        
         do {
             try await AuthManager.shared.database.collection("users").document(userID).setData(userDetails, merge: true)
             DispatchQueue.main.async {
@@ -206,4 +206,19 @@ final class AuthViewModel: ObservableObject {
             print("Fehler beim Speichern der Daten: \(error.localizedDescription)")
         }
     }
+    
+
+    func checkIfEmailExistsInFirestore(email: String, completion: @escaping (Bool) -> Void) {
+        let db = Firestore.firestore()
+        
+        db.collection("users").whereField("email", isEqualTo: email).getDocuments { (snapshot, error) in
+            if let error = error {
+                print("Fehler beim Abrufen: \(error.localizedDescription)")
+                completion(false)
+                return
+            }
+            completion(!(snapshot?.documents.isEmpty ?? true))
+        }
+    }
 }
+
