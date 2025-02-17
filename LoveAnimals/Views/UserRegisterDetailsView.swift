@@ -123,9 +123,10 @@ struct UserRegisterDetailsView: View {
                                 firstName: firstName,
                                 lastName: lastName,
                                 email: email,
+                                password: password,
                                 postalCode: postalCode,
                                 city: city,
-                                password: password,
+                                
                                 birthdate: birthdate,
                                 signedUpOn: Date()
                             )
@@ -162,9 +163,9 @@ struct UserRegisterDetailsView: View {
                                         firstName: firstName,
                                         lastName: lastName,
                                         email: email,
+                                        password: password,
                                         postalCode: postalCode,
                                         city: city,
-                                        password: password,
                                         birthdate: birthdate,
                                         signedUpOn: Date()
                                     )

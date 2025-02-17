@@ -48,18 +48,19 @@ final class AuthViewModel: ObservableObject {
     }
     
     
-    func register(firstName: String, lastName: String, email: String, postalCode: String, city: String, password: String, birthdate: Date, signedUpOn: Date) async {
+    func register(firstName: String, lastName: String, email: String, password: String, postalCode: String, city: String, birthdate: Date, signedUpOn: Date) async {
         do {
             let result = try await auth.createUser(withEmail: email, password: password)
             user = result.user
             errorMessage = nil
             guard let email = result.user.email else {
                 fatalError("Found a user without an email.") }
-            createUser(
+            await createUser(
                 userID: userID!,
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
+                password: password,
                 postalCode: postalCode,
                 city: city,
                 birthdate: birthdate,
@@ -72,7 +73,7 @@ final class AuthViewModel: ObservableObject {
         }
     }
     
-    func createUser(userID: String, firstName: String, lastName: String, email: String, postalCode: String, city: String, birthdate: Date, signedUpOn: Date) {
+    func createUser(userID: String, firstName: String, lastName: String, email: String, password: String, postalCode: String, city: String, birthdate: Date, signedUpOn: Date) async {
         let user = FireUser(
             id: userID,
             firstName: firstName,
@@ -90,10 +91,6 @@ final class AuthViewModel: ObservableObject {
             print(error.localizedDescription)
         }
     }
-    
-    
-    
-    
     
     func fetchUser(userID: String) {
         Task {
