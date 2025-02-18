@@ -16,7 +16,8 @@ struct SplashScreenView: View {
     var body: some View {
         ZStack {
             if !navigateToNextScreen {
-                Color.white.ignoresSafeArea()
+                Color(UIColor.systemBackground)
+                    .ignoresSafeArea()
 
                 Image("AppIcon3")
                     .resizable()
@@ -48,4 +49,5 @@ struct SplashScreenView: View {
 
 #Preview {
     SplashScreenView()
+        .environmentObject(AuthViewModel())
 }
