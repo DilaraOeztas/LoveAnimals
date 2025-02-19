@@ -9,12 +9,12 @@ import SwiftUI
 
 struct AGBView: View {
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Allgemeine Geschäftsbedingungen (AGB)")
-                    .font(.title)
-                    .bold()
-                
+        VStack(alignment: .leading) {
+            Text("Allgemeine Geschäftsbedingungen (AGB)")
+                .font(.title)
+                .bold()
+            
+            VStack {
                 Text("""
                 1. Geltungsbereich
                 Diese Allgemeinen Geschäftsbedingungen (AGB) regeln die Nutzung der LoveAnimals-App...
@@ -27,16 +27,15 @@ struct AGBView: View {
                 3. Vertragsabschluss & Kündigung
                 - Das Abo kann jederzeit über den App Store gekündigt werden.
                 - Bereits gezahlte Beträge werden nicht erstattet.
-
+                
                 4. Datenschutz
                 Siehe Datenschutzerklärung.
                 """)
-
-                Spacer()
             }
-            .padding()
+            .padding(.top, 20)
+            Spacer()
         }
-        .navigationTitle("AGB")
+        .padding(.horizontal, 20)
     }
 }
 

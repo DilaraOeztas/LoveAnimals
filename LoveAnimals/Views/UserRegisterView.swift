@@ -33,6 +33,7 @@ struct UserRegisterView: View {
     @State private var navigateToLogin: Bool = false
     @State private var navigateToUserDetails: Bool = false
     @State private var agbAccepted = false
+    @State private var navigateTo: String? = nil
     @State private var navigateToAgb: Bool = false
     @State private var navigateToDatenschutz: Bool = false
     @State private var isLoading: Bool = false
@@ -139,13 +140,14 @@ struct UserRegisterView: View {
                         PasswortKriterien(text: "Mindestens ein Kleinbuchstabe", isValid: password.rangeOfCharacter(from: .lowercaseLetters) != nil)
                         PasswortKriterien(text: "Mindestens eine Zahl", isValid: password.rangeOfCharacter(from: .decimalDigits) != nil)
                     }
-                    .font(.subheadline)
+                    .font(.footnote)
                     .padding(.horizontal)
                 }
                 
                 if !passwordsMatch && !confirmPassword.isEmpty {
                     Text("Die Passwörter stimmen nicht überein. Bitte überprüfen Sie es erneut.")
                         .foregroundStyle(.red)
+                        .font(.footnote)
                         .padding(.horizontal)
                 }
                 
@@ -183,15 +185,12 @@ struct UserRegisterView: View {
                 
                 VStack(alignment: .leading, spacing: 20) {
                     HStack {
-                        Text("Geburtsdatum")
                         
-                        Spacer()
-                        DatePicker("Wähle dein Geburtsdatum",
+                        DatePicker("Geburtsdatum",
                                    selection: $birthdate,
-                                   in: ...Date(),
+                                   in: ...(Calendar.current.date(byAdding: .year, value: -18, to: Date()) ?? Date()),
                                    displayedComponents: .date)
                         .datePickerStyle(.compact)
-                        .labelsHidden()
                         .environment(\.locale, Locale(identifier: "de_DE"))
                         .onChange(of: birthdate) { _, newDate in
                             birthdate = newDate
@@ -220,19 +219,27 @@ struct UserRegisterView: View {
                         .padding(.horizontal)
                 }
                 
-                HStack {
+                HStack(spacing: 0) {
                     Button(action: {
                         agbAccepted.toggle()
                     }) {
                         Image(systemName: agbAccepted ? "checkmark.square.fill" : "square")
                             .foregroundStyle(agbAccepted ? .blue : .gray)
                     }
-                    Text(attributedTermsText)
-                        .foregroundStyle(.primary)
-                        .onTapGesture {
-                            handleTapGesture()
-                        }
+                    Spacer()
+                    Text("Hiermit akzeptiere ich die ")
+
+                    NavigationLink("AGB", destination: AGBView())
+                        .foregroundColor(.blue)
+                        .underline()
+
+                    Text(" und ")
+
+                    NavigationLink("Datenschutzerklärung", destination: DatenschutzView())
+                        .foregroundColor(.blue)
+                        .underline()
                 }
+                .font(.caption)
                 .padding()
             }
             .autocorrectionDisabled(true)
@@ -329,36 +336,6 @@ struct UserRegisterView: View {
     }
     
     
-    private var attributedTermsText: AttributedString {
-        var text = AttributedString("Ich akzeptiere die AGB und die Datenschutzerklärung.")
-        
-        if let agbRange = text.range(of: "AGB") {
-            text[agbRange].foregroundColor = .blue
-            text[agbRange].underlineStyle = .single
-            text[agbRange].link = URL(string: "app://navigateToAGB")
-        }
-        
-        if let datenschutzRange = text.range(of: "Datenschutzerklärung") {
-            text[datenschutzRange].foregroundColor = .blue
-            text[datenschutzRange].underlineStyle = .single
-            text[datenschutzRange].link = URL(string: "app://navigateToDatenschutz")
-        }
-        
-        return text
-    }
-    
-    private func handleTapGesture() {
-        let text = attributedTermsText
-        if let agbRange = text.range(of: "AGB"),
-           text[agbRange].link == URL(string: "app://navigateToAGB") {
-            navigateToAgb = true
-        }
-        
-        if let datenschutzRange = text.range(of: "Datenschutzerklärung"),
-           text[datenschutzRange].link == URL(string: "app://navigateToDatenschutz") {
-            navigateToDatenschutz = true
-        }
-    }
 }
 
 
