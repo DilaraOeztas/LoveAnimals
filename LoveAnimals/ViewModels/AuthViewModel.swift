@@ -48,7 +48,7 @@ final class AuthViewModel: ObservableObject {
     }
     
     
-    func register(firstName: String, lastName: String, email: String, password: String, postalCode: String, city: String, birthdate: Date, signedUpOn: Date) async {
+    func register(firstName: String, lastName: String, email: String, password: String, postalCode: String, city: String, birthdate: Date, searchRadius: Int, signedUpOn: Date) async {
         do {
             let result = try await auth.createUser(withEmail: email, password: password)
             user = result.user
@@ -64,6 +64,7 @@ final class AuthViewModel: ObservableObject {
                 postalCode: postalCode,
                 city: city,
                 birthdate: birthdate,
+                searchRadius: searchRadius,
                 signedUpOn: Date()
             )
             self.navigateToHome = true
@@ -73,7 +74,7 @@ final class AuthViewModel: ObservableObject {
         }
     }
     
-    func createUser(userID: String, firstName: String, lastName: String, email: String, password: String, postalCode: String, city: String, birthdate: Date, signedUpOn: Date) async {
+    func createUser(userID: String, firstName: String, lastName: String, email: String, password: String, postalCode: String, city: String, birthdate: Date, searchRadius: Int, signedUpOn: Date) async {
         let user = FireUser(
             id: userID,
             firstName: firstName,
@@ -82,6 +83,7 @@ final class AuthViewModel: ObservableObject {
             postalCode: postalCode,
             city: city,
             birthdate: birthdate,
+            searchRadius: searchRadius,
             signedUpOn: Date()
         )
         do {

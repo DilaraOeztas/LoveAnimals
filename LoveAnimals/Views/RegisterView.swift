@@ -24,7 +24,7 @@ struct RegisterView: View {
                         .font(.headline)
                         .frame(maxWidth: .infinity, minHeight: 50)
                         .background(Color.customBrown)
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .cornerRadius(10)
                         .padding(.horizontal)
                 }
@@ -39,7 +39,7 @@ struct RegisterView: View {
                         .font(.headline)
                         .frame(maxWidth: .infinity, minHeight: 50)
                         .background(Color.customLightBrown)
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .cornerRadius(10)
                         .padding(.horizontal)
                 }

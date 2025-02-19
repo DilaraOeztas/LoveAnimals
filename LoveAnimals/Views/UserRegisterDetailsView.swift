@@ -26,6 +26,7 @@ struct UserRegisterDetailsView: View {
     var email: String
     var postalCode: String
     var city: String
+    var searchRadius: Int
     var password: String
     
     let professionOptions = [
@@ -59,7 +60,7 @@ struct UserRegisterDetailsView: View {
                 VStack(spacing: 20) {
                     Text("Erzähle uns mehr über dich")
                         .font(.title)
-                        .fontWeight(.bold)
+                        .bold()
                         .padding(.top, 10)
                     
                     dropdownSection(
@@ -91,7 +92,7 @@ struct UserRegisterDetailsView: View {
                         VStack(alignment: .leading) {
                             Text("Wie viele Kinder haben Sie?")
                                 .font(.headline)
-                                .foregroundColor(.gray)
+                                .foregroundStyle(.gray)
                             
                             TextField("Anzahl der Kinder", text: $authViewModel.numberOfChildren)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -104,7 +105,7 @@ struct UserRegisterDetailsView: View {
                         VStack(alignment: .leading) {
                             Text("Wie alt sind Ihre Kinder?")
                                 .font(.headline)
-                                .foregroundColor(.gray)
+                                .foregroundStyle(.gray)
                             
                             TextField("Alter der Kinder (z.B.: 3, 5, 8)", text: $authViewModel.childrenAges)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -126,8 +127,8 @@ struct UserRegisterDetailsView: View {
                                 password: password,
                                 postalCode: postalCode,
                                 city: city,
-                                
                                 birthdate: birthdate,
+                                searchRadius: searchRadius,
                                 signedUpOn: Date()
                             )
                             await authViewModel.saveUserDetails(isSkipped: false)
@@ -135,7 +136,7 @@ struct UserRegisterDetailsView: View {
                     }) {
                         Text("Speichern & Weiter")
                             .font(.headline)
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .frame(maxWidth: .infinity, minHeight: 50)
                             .background(Color.brown)
                             .cornerRadius(10)
@@ -149,7 +150,7 @@ struct UserRegisterDetailsView: View {
                     }) {
                         Text("Überspringen")
                             .font(.headline)
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                             .underline()
                     }
                     .alert(isPresented: $showSkipAlert) {
@@ -167,6 +168,7 @@ struct UserRegisterDetailsView: View {
                                         postalCode: postalCode,
                                         city: city,
                                         birthdate: birthdate,
+                                        searchRadius: searchRadius,
                                         signedUpOn: Date()
                                     )
                                     await authViewModel.saveUserDetails(isSkipped: true)
@@ -243,6 +245,6 @@ struct UserRegisterDetailsView: View {
 }
 
 #Preview {
-    UserRegisterDetailsView(firstName: "test", lastName: "test", birthdate: Date(), email: "test@test.com", postalCode: "33333", city: "test", password: "test12345")
+    UserRegisterDetailsView(firstName: "test", lastName: "test", birthdate: Date(), email: "test@test.com", postalCode: "33333", city: "test", searchRadius: 10, password: "test12345")
         .environmentObject(AuthViewModel())
 }

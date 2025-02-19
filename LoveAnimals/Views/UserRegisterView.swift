@@ -79,18 +79,16 @@ struct UserRegisterView: View {
                         isEmailValid = nil
                     }
                 
-                
-                
                 if showFormError {
                     Text("Bitte gib eine gültige E-Mail-Adresse ein.")
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                         .font(.footnote)
                         .padding(.horizontal)
                 }
                 
                 if showEmailExistsError {
                     Text("Diese E-Mail-Adresse wird bereits verwendet.")
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                         .font(.footnote)
                         .padding(.horizontal)
                 }
@@ -148,8 +146,6 @@ struct UserRegisterView: View {
                         .padding(.horizontal)
                 }
                 
-                
-                
                 HStack {
                     Button(action: {
                         showPassword.toggle()
@@ -196,10 +192,9 @@ struct UserRegisterView: View {
                     }
                     if isTooYoung {
                         Text("Du musst mindestens 18 Jahre alt sein")
-                            .foregroundColor(.red)
+                            .foregroundStyle(.red)
                             .font(.subheadline)
                     }
-                    
                 }
                 .padding(.horizontal)
                 
@@ -208,7 +203,7 @@ struct UserRegisterView: View {
                         .font(.subheadline)
                         .padding(.horizontal)
                     
-                    Slider(value: $searchRadius, in: 1...100, step: 1)
+                    Slider(value: $searchRadius, in: 5...500, step: 5)
                         .padding(.horizontal)
                     
                     Text("\(Int(searchRadius)) km Umkreis")
@@ -223,17 +218,17 @@ struct UserRegisterView: View {
                         Image(systemName: agbAccepted ? "checkmark.square.fill" : "square")
                             .foregroundStyle(agbAccepted ? .blue : .gray)
                     }
-                    Spacer()
+                    .padding(.trailing, 10)
                     Text("Hiermit akzeptiere ich die ")
 
                     NavigationLink("AGB", destination: AGBView())
-                        .foregroundColor(.blue)
+                        .foregroundStyle(.blue)
                         .underline()
 
                     Text(" und ")
 
                     NavigationLink("Datenschutzerklärung", destination: DatenschutzView())
-                        .foregroundColor(.blue)
+                        .foregroundStyle(.blue)
                         .underline()
                 }
                 .font(.caption)
@@ -282,7 +277,7 @@ struct UserRegisterView: View {
                     } else {
                         Text("Weiter")
                             .font(.headline)
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .frame(width: 200, height: 50)
                             .background(Color.brown)
                             .cornerRadius(10)
@@ -292,7 +287,7 @@ struct UserRegisterView: View {
                     }
                 }
                 .navigationDestination(isPresented: $navigateToUserDetails) {
-                    UserRegisterDetailsView(firstName: firstName, lastName: lastName, birthdate: birthdate, email: email, postalCode: postalCode, city: city, password: password)
+                    UserRegisterDetailsView(firstName: firstName, lastName: lastName, birthdate: birthdate, email: email, postalCode: postalCode, city: city, searchRadius: Int(searchRadius), password: password)
                 }
                 
                 Button(action: {

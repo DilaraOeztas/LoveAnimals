@@ -69,7 +69,7 @@ struct LoginView: View {
                     
                     if let errorMessage = authViewModel.errorMessage {
                         Text(errorMessage)
-                            .foregroundColor(.red)
+                            .foregroundStyle(.red)
                             .padding(.top, 5)
                     }
                 }
@@ -82,7 +82,7 @@ struct LoginView: View {
                     }) {
                         Text("Anmelden")
                             .font(.headline)
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .frame(width: 200, height: 50)
                             .background(Color.customLightBrown)
                             .cornerRadius(10)
