@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject private var keyboardObersver = KeyboardObserver()
+    //@StateObject private var keyboardObersver = KeyboardObserver()
 
     @State private var email: String = ""
     @State private var password: String = ""

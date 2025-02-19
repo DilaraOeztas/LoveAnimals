@@ -9,7 +9,6 @@ import SwiftUI
 
 struct UserRegisterView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    @StateObject private var keyboardObersver = KeyboardObserver()
     @State private var firstName = ""
     @State private var lastName = ""
     @State private var birthdate: Date = Calendar.current.date(
@@ -55,14 +54,14 @@ struct UserRegisterView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
                         .autocorrectionDisabled(true)
-                        .textInputAutocapitalization(.never)
+                        .textInputAutocapitalization(.words)
                         .keyboardType(.asciiCapable)
                     
                     TextField("Nachname", text: $lastName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
                         .autocorrectionDisabled(true)
-                        .textInputAutocapitalization(.never)
+                        .textInputAutocapitalization(.words)
                         .keyboardType(.asciiCapable)
                 }
                 
@@ -105,6 +104,7 @@ struct UserRegisterView: View {
                         SecureField("Passwort", text: $password)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .focused($isConfirmPasswordFieldFocused)
+                            .textContentType(.oneTimeCode)
                             .onChange(of: password) { _, newValue in
                                 validatePassword()
                             }
@@ -121,6 +121,7 @@ struct UserRegisterView: View {
                         SecureField("Passwort bestätigen", text: $confirmPassword)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .focused($isConfirmPasswordFieldFocused)
+                            .textContentType(.oneTimeCode)
                             .onChange(of: confirmPassword) { _, newValue in
                                 validatePassword()
                             }
@@ -171,7 +172,7 @@ struct UserRegisterView: View {
                     TextField("Wohnort", text: $city)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .autocorrectionDisabled(true)
-                        .textInputAutocapitalization(.never)
+                        .textInputAutocapitalization(.words)
                         .keyboardType(.asciiCapable)
                         .padding(.horizontal)
                 }
@@ -234,9 +235,6 @@ struct UserRegisterView: View {
                 .font(.caption)
                 .padding()
             }
-            .autocorrectionDisabled(true)
-            .textInputAutocapitalization(.never)
-            .keyboardType(.asciiCapable)
             .padding(.bottom, 20)
             
             VStack {
@@ -304,6 +302,7 @@ struct UserRegisterView: View {
                 }
             }
             .padding(.horizontal)
+            
         }
         .simultaneousGesture(
             TapGesture().onEnded {

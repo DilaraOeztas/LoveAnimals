@@ -24,6 +24,10 @@ final class AuthViewModel: ObservableObject {
     @Published var hasChildren = false
     @Published var numberOfChildren = ""
     @Published var childrenAges = ""
+    @Published var hasPets: Bool = false
+    @Published var petTypes: String = ""
+    @Published var numberOfPets: String = ""
+    @Published var petAges: String = ""
     @Published var navigateToHome: Bool = false
     
     var isUserSignedIn: Bool {
@@ -191,12 +195,19 @@ final class AuthViewModel: ObservableObject {
             "familyStatus": (selectedFamily == "Familienstand auswählen" || selectedFamily.isEmpty) ? "Keine Angabe" : selectedFamily,
             "hasGarden": hasGarden,
             "hasChildren": hasChildren,
+            "hasPets": hasPets,
             "updatedAt": Timestamp(),
         ]
         
         if hasChildren {
             userDetails["numberOfChildren"] = numberOfChildren.isEmpty ? "Keine Angabe" : numberOfChildren
             userDetails["childrenAges"] = childrenAges.isEmpty ? ["Keine Angabe"] : childrenAges
+        }
+        
+        if hasPets {
+            userDetails["numberOfPets"] = numberOfPets.isEmpty ? "Keine Angabe" : numberOfPets
+            userDetails["petTypes"] = petTypes.isEmpty ? "Keine Angabe" : petTypes
+            userDetails["petAges"] = petAges.isEmpty ? "Keine Angabe" : petAges
         }
         
         do {

@@ -11,14 +11,11 @@ import FirebaseFirestore
 
 struct UserRegisterDetailsView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    @Environment(\.presentationMode) var presentationMode
-    @StateObject private var keyboardObserver = KeyboardObserver()
     
     @State private var showProfessionOptions = false
     @State private var showHousingOptions = false
     @State private var showFamilyOptions = false
     @State private var showSkipAlert = false
-    @State private var scrollToID: UUID? = nil
     
     var firstName: String
     var lastName: String
@@ -50,6 +47,7 @@ struct UserRegisterDetailsView: View {
     let familyOptions = [
         "Single",
         "Verheiratet",
+        "Geschieden",
         "Sonstiges"
     ]
     
@@ -114,9 +112,45 @@ struct UserRegisterDetailsView: View {
                                 .padding(.top, 5)
                         }
                         .padding(.horizontal)
-                        .id(scrollToID)
                     }
                     
+                    Toggle("Haben Sie Haustiere?", isOn: $authViewModel.hasPets)
+                        .padding(.horizontal)
+
+                        if authViewModel.hasPets {
+                            VStack(alignment: .leading) {
+                                Text("Welche Haustiere haben Sie?")
+                                    .font(.headline)
+                                    .foregroundStyle(.gray)
+
+                                TextField("z.B. Hund, Katze, Hamster", text: $authViewModel.petTypes)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .autocorrectionDisabled(true)
+                                    .padding(.top, 5)
+
+                                Text("Wie viele Haustiere haben Sie?")
+                                    .font(.headline)
+                                    .foregroundStyle(.gray)
+
+                                TextField("Anzahl", text: $authViewModel.numberOfPets)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .keyboardType(.numberPad)
+                                    .padding(.top, 5)
+
+                                Text("Wie alt sind Ihre Haustiere?")
+                                    .font(.headline)
+                                    .foregroundStyle(.gray)
+
+                                TextField("Alter der Haustiere (z.B. 2, 5, 8)", text: $authViewModel.petAges)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .autocorrectionDisabled(true)
+                                    .keyboardType(.numbersAndPunctuation)
+                                    .padding(.top, 5)
+                            }
+                            .padding(.horizontal)
+                        }
+                    
+                
                     
                     Button(action: {
                         Task {
