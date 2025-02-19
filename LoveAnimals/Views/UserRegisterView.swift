@@ -33,9 +33,6 @@ struct UserRegisterView: View {
     @State private var navigateToLogin: Bool = false
     @State private var navigateToUserDetails: Bool = false
     @State private var agbAccepted = false
-    @State private var navigateTo: String? = nil
-    @State private var navigateToAgb: Bool = false
-    @State private var navigateToDatenschutz: Bool = false
     @State private var isLoading: Bool = false
     
     var isOldEnough: Bool {
