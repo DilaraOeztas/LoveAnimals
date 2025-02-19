@@ -10,7 +10,7 @@ import Firebase
 
 @main
 struct TierheimApp: App {
-    @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var authViewModel = UserAuthViewModel()
 
     var body: some Scene {
         WindowGroup {

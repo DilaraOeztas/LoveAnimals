@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UserRegisterView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var authViewModel: UserAuthViewModel
     @State private var firstName = ""
     @State private var lastName = ""
     @State private var birthdate: Date = Calendar.current.date(
@@ -333,5 +333,5 @@ struct UserRegisterView: View {
 
 #Preview {
     UserRegisterView()
-        .environmentObject(AuthViewModel())
+        .environmentObject(UserAuthViewModel())
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainView: View {
 
-    @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var authViewModel = UserAuthViewModel()
 
     var body: some View {
         Group {

@@ -16,7 +16,7 @@ struct LoginView: View {
     @State private var ispasswordVisible = false
     @State private var navigateToRegister: Bool = false
 
-    @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var authViewModel: UserAuthViewModel
 
     var body: some View {
         NavigationStack {
@@ -124,5 +124,5 @@ struct LoginView: View {
 
 #Preview {
     LoginView()
-        .environmentObject(AuthViewModel())
+        .environmentObject(UserAuthViewModel())
 }

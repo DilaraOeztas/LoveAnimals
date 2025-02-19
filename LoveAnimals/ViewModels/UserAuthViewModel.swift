@@ -10,7 +10,7 @@ import FirebaseAuth
 import Combine
 
 @MainActor
-final class AuthViewModel: ObservableObject {
+final class UserAuthViewModel: ObservableObject {
     
     private var auth = Auth.auth()
     @Published var user: FirebaseAuth.User?

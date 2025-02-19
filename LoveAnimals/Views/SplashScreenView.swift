@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct SplashScreenView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var authViewModel: UserAuthViewModel
     @State private var navigateToNextScreen = false
     @State private var scaleEffect = 0.5
 
@@ -49,5 +49,5 @@ struct SplashScreenView: View {
 
 #Preview {
     SplashScreenView()
-        .environmentObject(AuthViewModel())
+        .environmentObject(UserAuthViewModel())
 }
