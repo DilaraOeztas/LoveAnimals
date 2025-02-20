@@ -1,20 +1,20 @@
 //
-//  HomeView.swift
+//  TierheimHomeView.swift
 //  LoveAnimals
 //
-//  Created by Dilara Öztas on 12.02.25.
+//  Created by Dilara Öztas on 20.02.25.
 //
 
 import SwiftUI
 
-struct HomeView: View {
-    @EnvironmentObject var authViewModel: UserAuthViewModel
+struct TierheimHomeView: View {
+    @EnvironmentObject var authViewModel: TierheimAuthViewModel
     @State private var navigateToLogin = false
 
     var body: some View {
         NavigationStack {
             VStack {
-                Text("Willkommen in der HomeView!")
+                Text("Willkommen in der TierheimHomeView!")
                     .font(.largeTitle)
                     .padding()
 
@@ -26,7 +26,7 @@ struct HomeView: View {
                 }) {
                     Text("Logout")
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .frame(maxWidth: .infinity, minHeight: 50)
                         .background(Color.red)
                         .cornerRadius(10)
@@ -41,6 +41,7 @@ struct HomeView: View {
         }
     }
 }
+
 #Preview {
-    HomeView()
+    TierheimHomeView()
 }

@@ -51,7 +51,7 @@ struct TierheimRegisterView: View {
                     SecureField("Passwort bestätigen", text: $viewModel.confirmPasswort)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                     
-                    Text("Welche Zahlunsarten akzeptierst du?")
+                    Text("Welche Zahlungsarten werden akzeptiert?")
                         .font(.headline)
                         .padding(.top, 10)
                     
@@ -75,8 +75,10 @@ struct TierheimRegisterView: View {
                         }
                         .padding(.top, 10)
                     }
+                        
 
-                    Toggle("An Spenden teilnehmen", isOn: $viewModel.nimmtSpendenAn)
+                    Toggle("Ja, ich möchte an Spenden teilnehmen", isOn: $viewModel.nimmtSpendenAn)
+                        .toggleStyle(CheckboxToggleStyle())
 
                     if viewModel.nimmtSpendenAn && !viewModel.akzeptiertÜberweisung {
                         VStack(alignment: .leading, spacing: 10) {
@@ -104,7 +106,7 @@ struct TierheimRegisterView: View {
                                 
                                 if let zeiten = viewModel.öffnungszeiten[tag] {
                                     Text("\(formatTime(zeiten.von)) - \(formatTime(zeiten.bis))")
-                                        .foregroundColor(.gray)
+                                        .foregroundStyle(.gray)
                                 } else {
                                     Text("Geschlossen")
                                         .foregroundColor(.red)
@@ -130,7 +132,7 @@ struct TierheimRegisterView: View {
                         viewModel.registerTierheim()
                     }) {
                         Text(viewModel.isLoading ? "Registrieren..." : "Registrieren")
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(Color.blue)
@@ -141,7 +143,7 @@ struct TierheimRegisterView: View {
                 .padding()
             }
             .navigationDestination(isPresented: $viewModel.navigateToHome) {
-                HomeView()
+                TierheimHomeView()
             }
         }
     }

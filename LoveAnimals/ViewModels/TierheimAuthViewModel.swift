@@ -10,6 +10,12 @@ import FirebaseAuth
 import FirebaseFirestore
 
 class TierheimAuthViewModel: ObservableObject {
+    
+    private var auth = Auth.auth()
+    @Published var user: FirebaseAuth.User?
+    @Published var tierheimUser: FireUser?
+    @Published var errorMessage: String?
+    
     @Published var tierheimName = ""
     @Published var straße = ""
     @Published var plz: String = ""
@@ -36,6 +42,29 @@ class TierheimAuthViewModel: ObservableObject {
     @Published var confirmPasswort = ""
     @Published var isLoading = false
     @Published var navigateToHome = false
+    
+    
+    var isUserSignedIn: Bool {
+        user != nil
+    }
+    
+    var userID: String? {
+        user?.uid
+    }
+    
+    var emailAdress: String? {
+        user?.email
+    }
+    
+    init() {
+        checkAuth()
+    }
+    
+    
+    private func checkAuth() {
+        user = auth.currentUser
+    }
+    
 
     func registerTierheim() {
         guard passwort == confirmPasswort else {
@@ -87,6 +116,16 @@ class TierheimAuthViewModel: ObservableObject {
                     }
                 }
             }
+        }
+    }
+    
+    func logout() {
+        do {
+            try auth.signOut()
+            user = nil
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 }

@@ -14,7 +14,7 @@ struct MainView: View {
     var body: some View {
         Group {
             if authViewModel.isUserSignedIn {
-                HomeView()
+                UserHomeView()
             } else {
                 LoginView()
             }

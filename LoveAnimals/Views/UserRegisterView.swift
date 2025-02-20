@@ -217,22 +217,25 @@ struct UserRegisterView: View {
                         agbAccepted.toggle()
                     }) {
                         Image(systemName: agbAccepted ? "checkmark.square.fill" : "square")
-                            .foregroundStyle(agbAccepted ? .blue : .gray)
+                            .foregroundStyle(agbAccepted ? .blue : .black)
                     }
                     .padding(.trailing, 10)
                     Text("Hiermit akzeptiere ich die ")
+                        .font(.caption)
 
                     NavigationLink("AGB", destination: AGBView())
                         .foregroundStyle(.blue)
                         .underline()
+                        .font(.caption)
 
                     Text(" und ")
+                        .font(.caption)
 
                     NavigationLink("Datenschutzerklärung", destination: DatenschutzView())
                         .foregroundStyle(.blue)
                         .underline()
+                        .font(.caption)
                 }
-                .font(.caption)
                 .padding()
             }
             .padding(.bottom, 20)
@@ -277,7 +280,7 @@ struct UserRegisterView: View {
                             .font(.headline)
                             .foregroundStyle(.white)
                             .frame(width: 200, height: 50)
-                            .background(Color.brown)
+                            .background(Color.customLightBrown)
                             .cornerRadius(10)
                             .padding(.horizontal)
                             .disabled(!isFormValid)

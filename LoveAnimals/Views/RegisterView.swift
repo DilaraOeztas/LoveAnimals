@@ -31,11 +31,13 @@ struct RegisterView: View {
                 .navigationDestination(isPresented: $isUser) {
                     UserRegisterView()
                 }
+                
+                Text("ODER")
 
                 Button(action: {
                     isTierheim = true
                 }) {
-                    Text("Ich bin ein Tierheim")
+                    Text("Als Tierheim fortfahren")
                         .font(.headline)
                         .frame(maxWidth: .infinity, minHeight: 50)
                         .background(Color.customLightBrown)

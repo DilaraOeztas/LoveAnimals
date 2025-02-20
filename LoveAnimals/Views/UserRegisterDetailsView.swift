@@ -216,7 +216,7 @@ struct UserRegisterDetailsView: View {
                     .padding(.bottom, 20)
                     
                     .navigationDestination(isPresented: $authViewModel.navigateToHome) {
-                        HomeView()
+                        UserHomeView()
                     }
                 }
             

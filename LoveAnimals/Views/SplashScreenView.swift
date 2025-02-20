@@ -36,7 +36,7 @@ struct SplashScreenView: View {
                     }
             } else {
                 if authViewModel.isUserSignedIn {
-                    HomeView()
+                    UserHomeView()
                         .transition(.move(edge: .trailing))
                 } else {
                     LoginView()
