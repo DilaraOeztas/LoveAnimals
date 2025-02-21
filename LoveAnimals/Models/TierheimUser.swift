@@ -16,21 +16,7 @@ struct TierheimUser: Codable, Identifiable {
     var ort: String
     var email: String
     var homepage: String?
-    var akzeptiertBarzahlung: Bool
-    var akzeptiertÜberweisung: Bool
-    var empfaengername: String?
-    var iban: String?
-    var bic: String?
     var nimmtSpendenAn: Bool
-    var spendenIban: String?
-    var spendenBic: String?
-    var verfügbareTage: [String: Bool]
-    var öffnungszeiten: [String: [Oeffnungszeit]]
-    var passwort: String
     var signedUpOn: Date
 }
 
-struct Oeffnungszeit: Codable {
-    var von: Date
-    var bis: Date
-}

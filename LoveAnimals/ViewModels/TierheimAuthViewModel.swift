@@ -22,7 +22,7 @@ final class TierheimAuthViewModel: ObservableObject {
         userT != nil
     }
 
-    var userID: String? {
+    var userId: String? {
         userT?.uid
     }
 
@@ -38,7 +38,7 @@ final class TierheimAuthViewModel: ObservableObject {
         userT = auth.currentUser
     }
 
-    func registerTierheim(tierheimName: String, straße: String, plz: String, ort: String, email: String, homepage: String? = nil, akzeptiertBarzahlung: Bool, akzeptiertUeberweisung: Bool, empfaengerName: String? = nil, iban: String? = nil, bic: String? = nil, nimmtSpendenAn: Bool, sependenIban: String? = nil, spendenBic: String? = nil, verfuegbareTage: [String: Bool], öffnungszeiten: [String: [Oeffnungszeit]], passwort: String, signedUpOn: Date) async {
+    func registerTierheim(tierheimName: String, straße: String, plz: String, ort: String, email: String, homepage: String? = nil, nimmtSpendenAn: Bool, passwort: String, signedUpOn: Date) async {
         
         do {
             let result = try await auth.createUser(withEmail: email, password: passwort)
@@ -49,23 +49,14 @@ final class TierheimAuthViewModel: ObservableObject {
                 fatalError("Found a User without an email.") }
             
             await createUserT(
-                userID: userID!,
+                userId: userId!,
                 tierheimName: tierheimName,
                 straße: straße,
                 plz: plz,
                 ort: ort,
                 email: email,
                 homepage: homepage,
-                akzeptiertBarzahlung: false,
-                akzeptiertUeberweisung: false,
-                empfaengerName: empfaengerName,
-                iban: iban,
-                bic: bic,
                 nimmtSpendenAn: false,
-                sependenIban: sependenIban,
-                spendenBic: spendenBic,
-                verfuegbareTage: verfuegbareTage,
-                öffnungszeiten: öffnungszeiten.isEmpty ? [:] : öffnungszeiten,
                 passwort: passwort,
                 signedUpOn: Date()
                 )
@@ -75,43 +66,33 @@ final class TierheimAuthViewModel: ObservableObject {
         }
     }
     
-    func createUserT(userID: String, tierheimName: String, straße: String, plz: String, ort: String, email: String, homepage: String? = nil, akzeptiertBarzahlung: Bool, akzeptiertUeberweisung: Bool, empfaengerName: String? = nil, iban: String? = nil, bic: String? = nil, nimmtSpendenAn: Bool, sependenIban: String? = nil, spendenBic: String? = nil, verfuegbareTage: [String: Bool], öffnungszeiten: [String: [Oeffnungszeit]], passwort: String, signedUpOn: Date) async {
+    func createUserT(userId: String, tierheimName: String, straße: String, plz: String, ort: String, email: String, homepage: String? = nil, nimmtSpendenAn: Bool, passwort: String, signedUpOn: Date) async {
         
         let userT = TierheimUser(
-            id: userID,
+            id: userId,
             tierheimName: tierheimName,
             straße: straße,
             plz: plz,
             ort: ort,
             email: email,
             homepage: homepage,
-            akzeptiertBarzahlung: false,
-            akzeptiertÜberweisung: false,
-            empfaengername: empfaengerName,
-            iban: iban,
-            bic: bic,
             nimmtSpendenAn: false,
-            spendenIban: sependenIban,
-            spendenBic: spendenBic,
-            verfügbareTage: verfuegbareTage,
-            öffnungszeiten: öffnungszeiten.isEmpty ? [:] : öffnungszeiten,
-            passwort: passwort,
             signedUpOn: Date()
         )
         do {
-            try AuthManager.shared.database.collection("tierheime").document(userID).setData(from: userT)
-            fetchTierheim(userID: userID)
+            try AuthManager.shared.database.collection("tierheime").document(userId).setData(from: userT)
+            fetchTierheim(userId: userId)
         } catch {
             print(error.localizedDescription)
         }
     }
 
-    func fetchTierheim(userID: String) {
+    func fetchTierheim(userId: String) {
         Task {
             do {
                 let snapshot = try await AuthManager.shared.database
                     .collection("tierheime")
-                    .document(userID)
+                    .document(userId)
                     .getDocument()
                 self.tierheimUser = try snapshot.data(as: TierheimUser.self)
             } catch {

@@ -23,8 +23,6 @@ struct TierheimRegisterView: View {
     @State private var nimmtSpendenAn: Bool = false
     @State private var spendenIban: String = ""
     @State private var spendenBic: String = ""
-    @State private var verfuegbareTage: [String : Bool] = [:]
-    @State private var oeffnungszeiten: [String : [Oeffnungszeit]] = [:]
     @State private var passwort: String = ""
     
     @State private var isEmailValid: Bool? = nil
@@ -49,7 +47,6 @@ struct TierheimRegisterView: View {
         && !plz.isEmpty
         && !ort.isEmpty
         && !email.isEmpty
-        && isEmailValid == true
         && !passwort.isEmpty
         && !confirmPassword.isEmpty
         && isPasswordValid
@@ -297,6 +294,20 @@ struct TierheimRegisterView: View {
                                                 isEmailValid = true
                                                 showFormError = false
                                                 showEmailExistsError = false
+                                                
+                                                Task {
+                                                    await viewModel.registerTierheim(
+                                                        tierheimName: tierheimName,
+                                                        straße: straße,
+                                                        plz: plz,
+                                                        ort: ort,
+                                                        email: email,
+                                                        homepage: homepage,
+                                                        nimmtSpendenAn: nimmtSpendenAn,
+                                                        passwort: passwort,
+                                                        signedUpOn: Date()
+                                                    )
+                                                }
                                                 navigateToHome = true
                                             }
                                         }

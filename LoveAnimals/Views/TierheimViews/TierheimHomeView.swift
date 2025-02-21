@@ -44,4 +44,5 @@ struct TierheimHomeView: View {
 
 #Preview {
     TierheimHomeView()
+        .environmentObject(TierheimAuthViewModel())
 }

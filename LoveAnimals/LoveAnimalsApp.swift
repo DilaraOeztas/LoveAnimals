@@ -11,13 +11,13 @@ import Firebase
 @main
 struct TierheimApp: App {
     @StateObject private var authViewModel = UserAuthViewModel()
+    @StateObject private var tierheimAuthViewModel = TierheimAuthViewModel()
 
     var body: some Scene {
         WindowGroup {
             SplashScreenView()
                 .environmentObject(authViewModel)
-            //MainView()
-                //.dismissKeyboardOnTap()
+                .environmentObject(tierheimAuthViewModel)
         }
     }
 
