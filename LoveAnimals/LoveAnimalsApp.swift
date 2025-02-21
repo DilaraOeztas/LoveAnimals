@@ -10,7 +10,7 @@ import Firebase
 import UserNotifications
 
 @main
-struct TierheimApp: App {
+struct LoveAnimalsApp: App {
     @AppStorage("hasRequestedNotificationPermission") private var hasRequestedNotificationPermission: Bool = false
     
     @StateObject private var authViewModel = UserAuthViewModel()

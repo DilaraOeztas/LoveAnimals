@@ -93,6 +93,10 @@ final class UserAuthViewModel: ObservableObject {
         do {
             try AuthManager.shared.database.collection("users").document(userID).setData(from: user)
             fetchUser(userID: userID)
+            
+            DispatchQueue.main.async {
+                NotificationManager.shared.requestPermission()
+            }
         } catch {
             print(error.localizedDescription)
         }
