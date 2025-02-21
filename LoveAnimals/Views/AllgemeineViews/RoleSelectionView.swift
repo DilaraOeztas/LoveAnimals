@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct RegisterView: View {
+struct RoleSelectionView: View {
     @State private var isUser = false
     @State private var isTierheim = false
 
@@ -55,5 +55,5 @@ struct RegisterView: View {
 
 
 #Preview {
-    RegisterView()
+    RoleSelectionView()
 }

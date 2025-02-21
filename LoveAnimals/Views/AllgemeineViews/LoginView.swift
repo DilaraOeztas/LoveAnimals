@@ -8,15 +8,12 @@
 import SwiftUI
 
 struct LoginView: View {
-    
-
+    @EnvironmentObject var authViewModel: UserAuthViewModel
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var remeberMe: Bool = false
     @State private var ispasswordVisible = false
-    @State private var navigateToRegister: Bool = false
-
-    @EnvironmentObject var authViewModel: UserAuthViewModel
+    @State private var navigateToRoleSelection: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -91,7 +88,7 @@ struct LoginView: View {
                 .padding(.top, 20)
                 
                 Button(action: {
-                    navigateToRegister = true
+                    navigateToRoleSelection = true
                 }) {
                     Text("Noch kein Account? Jetzt registrieren!")
                         .foregroundStyle(.blue)
@@ -115,8 +112,8 @@ struct LoginView: View {
                 }
             )
             .padding(.top, 10)
-            .navigationDestination(isPresented: $navigateToRegister) {
-                RegisterView()
+            .navigationDestination(isPresented: $navigateToRoleSelection) {
+                RoleSelectionView()
             }
         }
     }
