@@ -38,6 +38,9 @@ struct UserHomeView: View {
                 }
 
             }
+            .onAppear {
+                UNUserNotificationCenter.current().delegate = NotificationManager.shared
+            }
         }
     }
 }

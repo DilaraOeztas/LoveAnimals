@@ -7,9 +7,12 @@
 
 import SwiftUI
 import Firebase
+import UserNotifications
 
 @main
 struct TierheimApp: App {
+    @AppStorage("hasRequestedNotificationPermission") private var hasRequestedNotificationPermission: Bool = false
+    
     @StateObject private var authViewModel = UserAuthViewModel()
     @StateObject private var tierheimAuthViewModel = TierheimAuthViewModel()
 
@@ -24,6 +27,7 @@ struct TierheimApp: App {
     init() {
         FirebaseConfiguration.shared.setLoggerLevel(.min)
         FirebaseApp.configure()
+
     }
 
 }

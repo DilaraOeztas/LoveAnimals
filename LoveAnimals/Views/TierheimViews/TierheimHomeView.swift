@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TierheimHomeView: View {
-    @EnvironmentObject var authViewModel: TierheimAuthViewModel
+    @EnvironmentObject var tierheimAuthViewModel: TierheimAuthViewModel
     @State private var navigateToLogin = false
 
     var body: some View {
@@ -21,7 +21,7 @@ struct TierheimHomeView: View {
                 Spacer()
 
                 Button(action: {
-                    authViewModel.logout()
+                    tierheimAuthViewModel.logout()
                     navigateToLogin = true
                 }) {
                     Text("Logout")
@@ -37,6 +37,9 @@ struct TierheimHomeView: View {
                     LoginView()
                 }
 
+            }
+            .onAppear {
+                UNUserNotificationCenter.current().delegate = NotificationManager.shared
             }
         }
     }
