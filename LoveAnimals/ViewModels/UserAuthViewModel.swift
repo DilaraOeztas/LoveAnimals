@@ -168,6 +168,19 @@ final class UserAuthViewModel: ObservableObject {
         UserDefaults.standard.set(remember, forKey: "rememberMe")
     }
     
+    func checkIfEmailExistsInFirestore(email: String, completion: @escaping (Bool) -> Void) {
+        let db = Firestore.firestore()
+        
+        db.collection("users").whereField("email", isEqualTo: email).getDocuments { (snapshot, error) in
+            if let error = error {
+                print("Fehler beim Abrufen: \(error.localizedDescription)")
+                completion(false)
+                return
+            }
+            completion(!(snapshot?.documents.isEmpty ?? true))
+        }
+    }
+    
     
     
     
@@ -221,17 +234,6 @@ final class UserAuthViewModel: ObservableObject {
     }
     
 
-    func checkIfEmailExistsInFirestore(email: String, completion: @escaping (Bool) -> Void) {
-        let db = Firestore.firestore()
-        
-        db.collection("users").whereField("email", isEqualTo: email).getDocuments { (snapshot, error) in
-            if let error = error {
-                print("Fehler beim Abrufen: \(error.localizedDescription)")
-                completion(false)
-                return
-            }
-            completion(!(snapshot?.documents.isEmpty ?? true))
-        }
-    }
+    
 }
 

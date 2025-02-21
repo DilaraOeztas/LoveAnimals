@@ -5,127 +5,187 @@
 //  Created by Dilara Öztas on 19.02.25.
 //
 
-import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
+import Combine
 
-class TierheimAuthViewModel: ObservableObject {
+@MainActor
+final class TierheimAuthViewModel: ObservableObject {
     
     private var auth = Auth.auth()
-    @Published var user: FirebaseAuth.User?
-    @Published var tierheimUser: FireUser?
+    @Published var userT: FirebaseAuth.User?
+    @Published var tierheimUser: TierheimUser?
     @Published var errorMessage: String?
-    
-    @Published var tierheimName = ""
-    @Published var straße = ""
-    @Published var plz: String = ""
-    @Published var ort = ""
-    @Published var telefonnummer = ""
-    @Published var email = ""
-    @Published var homepage = ""
-    @Published var akzeptiertBarzahlung = false
-    @Published var akzeptiertÜberweisung = false
-    @Published var empfaengername: String = ""
-    @Published var iban = ""
-    @Published var bic = ""
-    @Published var nimmtSpendenAn = false
-    @Published var spendenIban = ""
-    @Published var spendenBic = ""
-    @Published var verfügbareTage: [String: Bool] = [
-        "Montag": false, "Dienstag": false, "Mittwoch": false,
-        "Donnerstag": false, "Freitag": false, "Samstag": false
-    ]
-    @Published var öffnungszeiten: [String: Öffnungszeit] = [:]
-    @Published var selectedDay: String?
-    @Published var showTimePicker: Bool = false
-    @Published var passwort = ""
-    @Published var confirmPasswort = ""
-    @Published var isLoading = false
     @Published var navigateToHome = false
     
-    
     var isUserSignedIn: Bool {
-        user != nil
+        userT != nil
     }
-    
+
     var userID: String? {
-        user?.uid
+        userT?.uid
     }
-    
-    var emailAdress: String? {
-        user?.email
+
+    var email: String? {
+        userT?.email
     }
-    
+
     init() {
         checkAuth()
     }
     
-    
     private func checkAuth() {
-        user = auth.currentUser
+        userT = auth.currentUser
+    }
+
+    func registerTierheim(tierheimName: String, straße: String, plz: String, ort: String, email: String, homepage: String? = nil, akzeptiertBarzahlung: Bool, akzeptiertUeberweisung: Bool, empfaengerName: String? = nil, iban: String? = nil, bic: String? = nil, nimmtSpendenAn: Bool, sependenIban: String? = nil, spendenBic: String? = nil, verfuegbareTage: [String: Bool], öffnungszeiten: [String: [Oeffnungszeit]], passwort: String, signedUpOn: Date) async {
+        
+        do {
+            let result = try await auth.createUser(withEmail: email, password: passwort)
+            userT = result.user
+            errorMessage = nil
+            
+            guard let email = result.user.email else {
+                fatalError("Found a User without an email.") }
+            
+            await createUserT(
+                userID: userID!,
+                tierheimName: tierheimName,
+                straße: straße,
+                plz: plz,
+                ort: ort,
+                email: email,
+                homepage: homepage,
+                akzeptiertBarzahlung: false,
+                akzeptiertUeberweisung: false,
+                empfaengerName: empfaengerName,
+                iban: iban,
+                bic: bic,
+                nimmtSpendenAn: false,
+                sependenIban: sependenIban,
+                spendenBic: spendenBic,
+                verfuegbareTage: verfuegbareTage,
+                öffnungszeiten: öffnungszeiten.isEmpty ? [:] : öffnungszeiten,
+                passwort: passwort,
+                signedUpOn: Date()
+                )
+            self.navigateToHome = true
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
     
+    func createUserT(userID: String, tierheimName: String, straße: String, plz: String, ort: String, email: String, homepage: String? = nil, akzeptiertBarzahlung: Bool, akzeptiertUeberweisung: Bool, empfaengerName: String? = nil, iban: String? = nil, bic: String? = nil, nimmtSpendenAn: Bool, sependenIban: String? = nil, spendenBic: String? = nil, verfuegbareTage: [String: Bool], öffnungszeiten: [String: [Oeffnungszeit]], passwort: String, signedUpOn: Date) async {
+        
+        let userT = TierheimUser(
+            id: userID,
+            tierheimName: tierheimName,
+            straße: straße,
+            plz: plz,
+            ort: ort,
+            email: email,
+            homepage: homepage,
+            akzeptiertBarzahlung: false,
+            akzeptiertÜberweisung: false,
+            empfaengername: empfaengerName,
+            iban: iban,
+            bic: bic,
+            nimmtSpendenAn: false,
+            spendenIban: sependenIban,
+            spendenBic: spendenBic,
+            verfügbareTage: verfuegbareTage,
+            öffnungszeiten: öffnungszeiten.isEmpty ? [:] : öffnungszeiten,
+            passwort: passwort,
+            signedUpOn: Date()
+        )
+        do {
+            try AuthManager.shared.database.collection("tierheime").document(userID).setData(from: userT)
+            fetchTierheim(userID: userID)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 
-    func registerTierheim() {
-        guard passwort == confirmPasswort else {
-            print("Passwörter stimmen nicht überein")
+    func fetchTierheim(userID: String) {
+        Task {
+            do {
+                let snapshot = try await AuthManager.shared.database
+                    .collection("tierheime")
+                    .document(userID)
+                    .getDocument()
+                self.tierheimUser = try snapshot.data(as: TierheimUser.self)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    
+    func login(email: String, passwort: String) async {
+        if email.isEmpty && passwort.isEmpty {
+            errorMessage = "Please enter your email adress and password."
+            return
+        } else if email.isEmpty {
+            errorMessage = "Please enter your email adress."
+            return
+        } else if passwort.isEmpty {
+            errorMessage = "Please enter your password."
             return
         }
-
-        isLoading = true
-
-        Auth.auth().createUser(withEmail: email, password: passwort) { authResult, error in
-            if let error = error {
-                print("Fehler beim Registrieren: \(error.localizedDescription)")
-                self.isLoading = false
-                return
-            }
-
-            guard let userID = authResult?.user.uid else {
-                self.isLoading = false
-                return
-            }
-
-            let tierheimDaten: [String: Any] = [
-                "tierheimName": self.tierheimName,
-                "straße": self.straße,
-                "telefonnummer": self.telefonnummer,
-                "email": self.email,
-                "homepage": self.homepage,
-                "akzeptiertBarzahlung": self.akzeptiertBarzahlung,
-                "akzeptiertÜberweisung": self.akzeptiertÜberweisung,
-                "iban": self.akzeptiertÜberweisung ? self.iban : "",
-                "bic": self.akzeptiertÜberweisung ? self.bic : "",
-                "nimmtSpendenAn": self.nimmtSpendenAn,
-                "spendenIban": self.nimmtSpendenAn ? (self.akzeptiertÜberweisung ? self.iban : self.spendenIban) : "",
-                "spendenBic": self.nimmtSpendenAn ? (self.akzeptiertÜberweisung ? self.bic : self.spendenBic) : "",
-                "öffnungszeiten": self.öffnungszeiten.reduce(into: [String: [String: Any]]()) { result, entry in
-                    result[entry.key] = ["von": Timestamp(date: entry.value.von), "bis": Timestamp(date: entry.value.bis)]
-                },
-                "createdAt": Timestamp(date: Date())
-            ]
-
-            Firestore.firestore().collection("tierheime").document(userID).setData(tierheimDaten) { error in
-                if let error = error {
-                    print("Fehler beim Speichern in Firestore: \(error.localizedDescription)")
-                    self.isLoading = false
-                } else {
-                    print("Tierheim erfolgreich registriert!")
-                    DispatchQueue.main.async {
-                        self.navigateToHome = true
-                    }
-                }
-            }
+        
+        do {
+            let result = try await auth.signIn(withEmail: email, password: passwort)
+            userT = result.user
+            errorMessage = nil
+            saveLoginData(email: email, passwort: passwort)
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
-    
+
     func logout() {
         do {
             try auth.signOut()
-            user = nil
+            userT = nil
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
+        }
+    }
+    
+    
+    func saveLoginData(email: String, passwort: String) {
+        let rememberMe = UserDefaults.standard.bool(forKey: "rememberMe")
+        if rememberMe {
+            UserDefaults.standard.set(email, forKey: "savedEmail")
+            UserDefaults.standard.set(passwort, forKey: "savedPassword")
+        } else {
+            UserDefaults.standard.removeObject(forKey: "savedEmail")
+            UserDefaults.standard.removeObject(forKey: "savedPassword")
+        }
+    }
+    
+    func loadLoginData() -> (email: String, password: String, rememberMe: Bool) {
+        let email = UserDefaults.standard.string(forKey: "savedEmail") ?? ""
+        let password = UserDefaults.standard.string(forKey: "savedPassword") ?? ""
+        let rememberMe = UserDefaults.standard.bool(forKey: "rememberMe")
+        return (email, password, rememberMe)
+    }
+    
+    func setRememberMe(_ remember: Bool) {
+        UserDefaults.standard.set(remember, forKey: "rememberMe")
+    }
+    
+    func checkIfEmailExistsInFirestore(email: String, completion: @escaping (Bool) -> Void) {
+        let db = Firestore.firestore()
+        
+        db.collection("tierheime").whereField("email", isEqualTo: email).getDocuments { (snapshot, error) in
+            if let error = error {
+                print("Fehler beim Abrufen: \(error.localizedDescription)")
+                completion(false)
+                return
+            }
+            completion(!(snapshot?.documents.isEmpty ?? true))
         }
     }
 }

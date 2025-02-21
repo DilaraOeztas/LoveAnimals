@@ -152,7 +152,7 @@ struct UserRegisterView: View {
                         showPassword.toggle()
                     }) {
                         Image(systemName: showPassword ? "checkmark.square" : "square")
-                            .foregroundStyle(showPassword ? .black : .black)
+                            .foregroundStyle(showPassword ? .black : .gray)
                     }
                     .buttonStyle(PlainButtonStyle())
                     Text("Passwort anzeigen")
@@ -217,7 +217,7 @@ struct UserRegisterView: View {
                         agbAccepted.toggle()
                     }) {
                         Image(systemName: agbAccepted ? "checkmark.square.fill" : "square")
-                            .foregroundStyle(agbAccepted ? .blue : .black)
+                            .foregroundStyle(agbAccepted ? .blue : .gray)
                     }
                     .padding(.trailing, 10)
                     Text("Hiermit akzeptiere ich die ")

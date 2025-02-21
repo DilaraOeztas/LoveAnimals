@@ -9,17 +9,18 @@ import SwiftUI
 
 struct MainView: View {
 
-    @StateObject private var authViewModel = UserAuthViewModel()
+    @StateObject private var userAuthViewModel = UserAuthViewModel()
+    @StateObject private var tierheimAuthViewModel = TierheimAuthViewModel()
 
     var body: some View {
         Group {
-            if authViewModel.isUserSignedIn {
+            if userAuthViewModel.isUserSignedIn {
                 UserHomeView()
             } else {
                 LoginView()
             }
         }
-        .environmentObject(authViewModel)
+        .environmentObject(userAuthViewModel)
     }
 
 }

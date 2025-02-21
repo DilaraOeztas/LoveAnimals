@@ -8,31 +8,29 @@
 import Foundation
 import FirebaseFirestore
 
-struct Tierheim: Codable, Identifiable {
+struct TierheimUser: Codable, Identifiable {
     var id: String
     var tierheimName: String
-    var adresse: String
-    var telefonnummer: String
+    var straße: String
+    var plz: String
+    var ort: String
     var email: String
-    var homepage: String
-
+    var homepage: String?
     var akzeptiertBarzahlung: Bool
     var akzeptiertÜberweisung: Bool
+    var empfaengername: String?
     var iban: String?
     var bic: String?
-
     var nimmtSpendenAn: Bool
     var spendenIban: String?
     var spendenBic: String?
-
     var verfügbareTage: [String: Bool]
-    
-    var öffnungszeiten: [String: Öffnungszeit]
-
+    var öffnungszeiten: [String: [Oeffnungszeit]]
     var passwort: String
+    var signedUpOn: Date
 }
 
-struct Öffnungszeit: Codable {
+struct Oeffnungszeit: Codable {
     var von: Date
     var bis: Date
 }
