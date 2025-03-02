@@ -35,6 +35,7 @@ struct TierheimHomeView2: View {
                     Label("Einstellungen", systemImage: "gearshape")
                 }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

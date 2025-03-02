@@ -41,7 +41,9 @@ struct TierheimHomeView: View {
             .onAppear {
                 UNUserNotificationCenter.current().delegate = NotificationManager.shared
             }
+            
         }
+        
     }
 }
 

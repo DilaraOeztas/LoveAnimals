@@ -35,6 +35,7 @@ struct UserHomeView2: View {
                     Label("Einstellungen", systemImage: "gearshape")
                 }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 #Preview {

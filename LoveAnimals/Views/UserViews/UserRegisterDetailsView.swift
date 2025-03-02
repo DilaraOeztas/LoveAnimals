@@ -16,6 +16,7 @@ struct UserRegisterDetailsView: View {
     @State private var showHousingOptions = false
     @State private var showFamilyOptions = false
     @State private var showSkipAlert = false
+    @State private var navigateToHome: Bool = false
     
     var firstName: String
     var lastName: String
@@ -215,11 +216,11 @@ struct UserRegisterDetailsView: View {
                     }
                     .padding(.bottom, 20)
                     
-                    .navigationDestination(isPresented: $authViewModel.navigateToHome) {
-                        UserHomeView()
-                    }
+                    
                 }
-            
+                .navigationDestination(isPresented: $navigateToHome) {
+                    UserHomeView2()
+                }
             }
             .simultaneousGesture(
                 TapGesture().onEnded {

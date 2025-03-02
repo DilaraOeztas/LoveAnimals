@@ -250,7 +250,7 @@ struct TierheimRegisterView: View {
                                 .font(.headline)
                         } else {
                             Text("Bitte tragen Sie Ihre Kontodaten ein.")
-                                .font(.headline)
+                                .font(.caption)
                                 .foregroundStyle(.red)
                         }
                     }
@@ -347,7 +347,7 @@ struct TierheimRegisterView: View {
                         }
                     }
                     .navigationDestination(isPresented: $navigateToHome) {
-                        TierheimHomeView()
+                        TierheimHomeView2()
                     }
                     
                     Button(action: {
