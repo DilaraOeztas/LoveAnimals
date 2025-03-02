@@ -196,13 +196,25 @@ struct TierheimRegisterView: View {
                         Spacer()
                         Toggle("Überweisung", isOn: $akzeptiertUeberweisung)
                             .toggleStyle(CheckboxToggleStyle())
-                        
+                    }
                         if akzeptiertUeberweisung {
                             TextField("Empfängername", text: $empfaengerName)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .autocorrectionDisabled(true)
+                                .textInputAutocapitalization(.words)
+                                .keyboardType(.asciiCapable)
                             TextField("IBAN", text: $iban)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .autocorrectionDisabled(true)
+                                .textInputAutocapitalization(.words)
+                                .keyboardType(.asciiCapable)
                             TextField("BIC", text: $bic)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .autocorrectionDisabled(true)
+                                .textInputAutocapitalization(.words)
+                                .keyboardType(.asciiCapable)
                         }
-                    }
+            
                 }
                 .padding(.horizontal)
                 .padding(.top, 20)
@@ -233,8 +245,13 @@ struct TierheimRegisterView: View {
                                 .autocorrectionDisabled(true)
                                 .textInputAutocapitalization(.words)
                                 .keyboardType(.asciiCapable)
-                        } else {
+                        } else if akzeptiertUeberweisung && !empfaengerName.isEmpty && !iban.isEmpty && !bic.isEmpty {
                             Text("Die Kontodaten für Spenden wurden übernommen.")
+                                .font(.headline)
+                        } else {
+                            Text("Bitte tragen Sie Ihre Kontodaten ein.")
+                                .font(.headline)
+                                .foregroundStyle(.red)
                         }
                     }
                 }

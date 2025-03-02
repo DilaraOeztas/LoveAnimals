@@ -24,10 +24,9 @@ struct LoginView: View {
                         .scaledToFit()
                         .frame(width: 350, height: 350)
                     
-                    VStack {
+                    VStack(alignment: .leading, spacing: 20) {
                         TextField("E-Mail", text: $email)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding(.horizontal)
                             .autocorrectionDisabled(true)
                             .textInputAutocapitalization(.never)
                             .keyboardType(.emailAddress)
@@ -51,18 +50,21 @@ struct LoginView: View {
                         .autocorrectionDisabled(true)
                         .textInputAutocapitalization(.never)
                         .keyboardType(.asciiCapable)
-                        .padding()
                         
+                        
+                        Text("Passwort vergessen?")
+                            .underline()
+                            .font(.caption)
                         Toggle(isOn: $remeberMe) {
-                            Text("Daten merken")
-                                .font(.subheadline)
+                            Text("Angemeldet bleiben")
                         }
-                        .padding(.horizontal, 20)
+                        .toggleStyle(CheckboxToggleStyle())
                         .padding(.top, 10)
                         .onChange(of: remeberMe) { _, newValue in
                             authViewModel.setRememberMe(newValue)
                         }
                     }
+                    .padding(.horizontal)
                     
                     if let errorMessage = authViewModel.errorMessage {
                         Text(errorMessage)
@@ -85,7 +87,7 @@ struct LoginView: View {
                             .cornerRadius(10)
                     }
                 }
-                .padding(.top, 20)
+                .padding(.top, 40)
                 
                 Button(action: {
                     navigateToRoleSelection = true
