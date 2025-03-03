@@ -17,10 +17,6 @@ final class TierheimAuthViewModel: ObservableObject {
     @Published var tierheimUser: TierheimUser?
     @Published var errorMessage: String?
     @Published var navigateToHome = false
-    
-    var isUserSignedIn: Bool {
-        userT != nil
-    }
 
     var userId: String? {
         userT?.uid
@@ -130,12 +126,9 @@ final class TierheimAuthViewModel: ObservableObject {
             let result = try await auth.signIn(withEmail: email, password: passwort)
             userT = result.user
             errorMessage = nil
-            saveLoginData(email: email, passwort: passwort)
+            AuthManager.shared.saveLoginData(email: email, password: passwort)
             UserDefaults.standard.set(true, forKey: "isLoggedIn")
             UserDefaults.standard.set("tierheim", forKey: "loggedInUsertype")
-            navigateToHome = true
-            
-            
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -146,46 +139,11 @@ final class TierheimAuthViewModel: ObservableObject {
             try auth.signOut()
             userT = nil
             errorMessage = nil
+            UserDefaults.standard.set(false, forKey: "isLoggedIn")
+            UserDefaults.standard.removeObject(forKey: "loggedInUsertype")
         } catch {
             errorMessage = error.localizedDescription
         }
     }
-    
-    
-    func saveLoginData(email: String, passwort: String) {
-        let rememberMe = UserDefaults.standard.bool(forKey: "rememberMe")
-        if rememberMe {
-            UserDefaults.standard.set(email, forKey: "savedEmail")
-            UserDefaults.standard.set(passwort, forKey: "savedPassword")
-        } else {
-            UserDefaults.standard.removeObject(forKey: "savedEmail")
-            UserDefaults.standard.removeObject(forKey: "savedPassword")
-        }
-    }
-    
-    func loadLoginData() -> (email: String, password: String, rememberMe: Bool) {
-        let email = UserDefaults.standard.string(forKey: "savedEmail") ?? ""
-        let password = UserDefaults.standard.string(forKey: "savedPassword") ?? ""
-        let rememberMe = UserDefaults.standard.bool(forKey: "rememberMe")
-        return (email, password, rememberMe)
-    }
-    
-    func setRememberMe(_ remember: Bool) {
-        UserDefaults.standard.set(remember, forKey: "rememberMe")
-    }
-    
-    func checkIfEmailExistsInFirestore(email: String, completion: @escaping (Bool) -> Void) {
-        let db = Firestore.firestore()
-        
-        db.collection("tierheime").whereField("email", isEqualTo: email).getDocuments { (snapshot, error) in
-            if let error = error {
-                print("Fehler beim Abrufen: \(error.localizedDescription)")
-                completion(false)
-                return
-            }
-            completion(!(snapshot?.documents.isEmpty ?? true))
-        }
-    }
-    
   
 }

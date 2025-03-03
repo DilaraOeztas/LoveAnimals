@@ -244,7 +244,7 @@ struct UserRegisterView: View {
                 Button(action: {
                     Task {
                         isLoading = true
-                        authViewModel.checkIfEmailExistsInFirestore(email: email) { exists in
+                        AuthManager.shared.checkIfEmailExistsInFirestore(email: email) { exists in
                             DispatchQueue.main.async {
                                 if exists {
                                     showEmailExistsError = true

@@ -46,4 +46,37 @@ class AuthManager: ObservableObject {
     }
     
     
+    func saveLoginData(email: String, password: String) {
+        let rememberMe = UserDefaults.standard.bool(forKey: "rememberMe")
+        if rememberMe {
+            UserDefaults.standard.set(email, forKey: "savedEmail")
+            UserDefaults.standard.set(password, forKey: "savedPassword")
+        } else {
+            UserDefaults.standard.removeObject(forKey: "savedEmail")
+            UserDefaults.standard.removeObject(forKey: "savedPassword")
+        }
+    }
+    
+    func loadLoginData() -> (email: String, password: String, rememberMe: Bool) {
+        let email = UserDefaults.standard.string(forKey: "savedEmail") ?? ""
+        let password = UserDefaults.standard.string(forKey: "savedPassword") ?? ""
+        let rememberMe = UserDefaults.standard.bool(forKey: "rememberMe")
+        return (email, password, rememberMe)
+    }
+    
+    func setRememberMe(_ remember: Bool) {
+        UserDefaults.standard.set(remember, forKey: "rememberMe")
+    }
+    
+    func checkIfEmailExistsInFirestore(email: String, completion: @escaping (Bool) -> Void) {
+        database.collection("users").whereField("email", isEqualTo: email).getDocuments { (snapshot, error) in
+            if let error = error {
+                print("Fehler beim Abrufen: \(error.localizedDescription)")
+                completion(false)
+                return
+            }
+            completion(!(snapshot?.documents.isEmpty ?? true))
+        }
+    }
+    
 }

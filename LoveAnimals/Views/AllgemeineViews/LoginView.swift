@@ -10,6 +10,7 @@ import SwiftUI
 struct LoginView: View {
     @EnvironmentObject var authViewModel: UserAuthViewModel
     @EnvironmentObject var tierheimAuthViewModel: TierheimAuthViewModel
+    @Environment(\.dismiss) var dismiss
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var remeberMe: Bool = false
@@ -62,7 +63,7 @@ struct LoginView: View {
                         .toggleStyle(CheckboxToggleStyle())
                         .padding(.top, 10)
                         .onChange(of: remeberMe) { _, newValue in
-                            authViewModel.setRememberMe(newValue)
+                            AuthManager.shared.setRememberMe(newValue)
                         }
                     }
                     .padding(.horizontal)
@@ -111,7 +112,7 @@ struct LoginView: View {
             }
             
             .onAppear {
-                let savedData = authViewModel.loadLoginData()
+                let savedData = AuthManager.shared.loadLoginData()
                 DispatchQueue.main.async {
                     email = savedData.email
                     password = savedData.password
@@ -127,13 +128,11 @@ struct LoginView: View {
             .navigationDestination(isPresented: $navigateToRoleSelection) {
                 RoleSelectionView()
             }
-            .navigationDestination(isPresented: $authViewModel.navigateToHome) {
-                UserHomeView2()
-            }
-            .navigationDestination(isPresented: $tierheimAuthViewModel.navigateToHome) {
-                TierheimHomeView2()
-            }
         }
+    }
+    
+    func handleLogin() {
+        
     }
     
 }
