@@ -27,7 +27,6 @@ class AuthManager: ObservableObject {
         return nil
     }
 
- 
     private func fetchUserTypeByEmail(collection: String, email: String) async -> UserType? {
         let query = database.collection(collection)
             .whereField("email", isEqualTo: email)
@@ -44,7 +43,6 @@ class AuthManager: ObservableObject {
         }
         return nil
     }
-    
     
     func saveLoginData(email: String, password: String) {
         let rememberMe = UserDefaults.standard.bool(forKey: "rememberMe")
@@ -78,5 +76,4 @@ class AuthManager: ObservableObject {
             completion(!(snapshot?.documents.isEmpty ?? true))
         }
     }
-    
 }

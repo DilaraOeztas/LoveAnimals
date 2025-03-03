@@ -30,6 +30,4 @@ class EmailValidationRepository {
 
         return isValid && hasMX
     }
-
-    
 }

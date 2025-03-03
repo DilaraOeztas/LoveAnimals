@@ -170,7 +170,6 @@ final class UserAuthViewModel: ObservableObject {
                 try await AuthManager.shared.database.collection("users")
                     .document(userID)
                     .setData(["profileCompleted": false], merge: true)
-                print("✅ Profil wurde als nicht abgeschlossen markiert!")
             } catch {
                 print("Fehler beim Speichern: \(error.localizedDescription)")
             }
