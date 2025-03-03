@@ -58,7 +58,8 @@ final class TierheimAuthViewModel: ObservableObject {
                 homepage: homepage,
                 nimmtSpendenAn: false,
                 passwort: passwort,
-                signedUpOn: Date()
+                signedUpOn: Date(),
+                userType: .tierheim
                 )
             self.navigateToHome = true
         } catch {
@@ -66,7 +67,7 @@ final class TierheimAuthViewModel: ObservableObject {
         }
     }
     
-    func createUserT(userId: String, tierheimName: String, straße: String, plz: String, ort: String, email: String, homepage: String? = nil, nimmtSpendenAn: Bool, passwort: String, signedUpOn: Date) async {
+    func createUserT(userId: String, tierheimName: String, straße: String, plz: String, ort: String, email: String, homepage: String? = nil, nimmtSpendenAn: Bool, passwort: String, signedUpOn: Date, userType: UserType) async {
         
         let userT = TierheimUser(
             id: userId,
@@ -77,11 +78,14 @@ final class TierheimAuthViewModel: ObservableObject {
             email: email,
             homepage: homepage,
             nimmtSpendenAn: false,
-            signedUpOn: Date()
+            signedUpOn: Date(),
+            userType: userType
         )
         do {
             try AuthManager.shared.database.collection("tierheime").document(userId).setData(from: userT)
-            fetchTierheim(userId: userId)
+            
+            UserDefaults.standard.set(userType.rawValue, forKey: "userType")
+            await fetchTierheim(userId: userId)
             
             DispatchQueue.main.async {
                 NotificationManager.shared.requestPermission()
@@ -91,7 +95,7 @@ final class TierheimAuthViewModel: ObservableObject {
         }
     }
 
-    func fetchTierheim(userId: String) {
+    func fetchTierheim(userId: String) async {
         Task {
             do {
                 let snapshot = try await AuthManager.shared.database
@@ -99,6 +103,10 @@ final class TierheimAuthViewModel: ObservableObject {
                     .document(userId)
                     .getDocument()
                 self.tierheimUser = try snapshot.data(as: TierheimUser.self)
+                
+                if let userType = tierheimUser?.userType {
+                    UserDefaults.standard.set(userType.rawValue, forKey: "userType")
+                }
             } catch {
                 print(error.localizedDescription)
             }
@@ -123,6 +131,11 @@ final class TierheimAuthViewModel: ObservableObject {
             userT = result.user
             errorMessage = nil
             saveLoginData(email: email, passwort: passwort)
+            UserDefaults.standard.set(true, forKey: "isLoggedIn")
+            UserDefaults.standard.set("tierheim", forKey: "loggedInUsertype")
+            navigateToHome = true
+            
+            
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -174,27 +187,5 @@ final class TierheimAuthViewModel: ObservableObject {
         }
     }
     
-    func scheduleDailyNotification() {
-        let center = UNUserNotificationCenter.current()
-        let content = UNMutableNotificationContent()
-        content.title = "LoveAnimals Erinnerung"
-        content.body = "Vergiss nicht, neue Tiere zu entdecken!"
-        content.sound = .default
-        
-        var dateComponents = DateComponents()
-        dateComponents.hour = 10
-        dateComponents.minute = 0
-        
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-        
-        let request = UNNotificationRequest(identifier: "dailyReminder", content: content, trigger: trigger)
-        
-        center.add(request) { error in
-            if let error = error {
-                print("Fehler beim Planen der täglichen Benachrichtigung: \(error.localizedDescription)")
-            } else {
-                print("Tägliche Benachrichtigung geplant ✅")
-            }
-        }
-    }
+  
 }

@@ -9,7 +9,8 @@
 import SwiftUI
 
 struct SplashScreenView: View {
-    @EnvironmentObject var authViewModel: UserAuthViewModel
+    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
+    @AppStorage("loggedInUsertype") private var loggedInUsertype: String = ""
     @State private var navigateToNextScreen = false
     @State private var scaleEffect = 0.5
 
@@ -29,15 +30,24 @@ struct SplashScreenView: View {
                             self.scaleEffect = 2.0
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            withAnimation(.easeInOut(duration: 0.8)) {
+                            withAnimation {
                                 self.navigateToNextScreen = true
                             }
+                            
                         }
                     }
             } else {
-                if authViewModel.isUserSignedIn {
-                    UserHomeView2()
-                        .transition(.move(edge: .trailing))
+                if isLoggedIn {
+                    if loggedInUsertype == "user" {
+                        UserHomeView2()
+                            .transition(.move(edge: .trailing))
+                    } else if loggedInUsertype == "tierheim" {
+                        TierheimHomeView2()
+                            .transition(.move(edge: .trailing))
+                    } else {
+                        LoginView()
+                            .transition(.move(edge: .trailing))
+                    }
                 } else {
                     LoginView()
                         .transition(.move(edge: .trailing))
@@ -49,5 +59,11 @@ struct SplashScreenView: View {
 
 #Preview {
     SplashScreenView()
-        .environmentObject(UserAuthViewModel())
 }
+
+
+
+
+
+
+    

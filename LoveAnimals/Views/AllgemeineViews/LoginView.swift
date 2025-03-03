@@ -9,6 +9,7 @@ import SwiftUI
 
 struct LoginView: View {
     @EnvironmentObject var authViewModel: UserAuthViewModel
+    @EnvironmentObject var tierheimAuthViewModel: TierheimAuthViewModel
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var remeberMe: Bool = false
@@ -76,7 +77,16 @@ struct LoginView: View {
                 VStack {
                     Button(action: {
                         Task {
-                            await authViewModel.login(email: email, password: password)
+                            if let userType = await AuthManager.shared.checkUserType(email: email) {
+                                switch userType {
+                                case .user:
+                                    await authViewModel.login(email: email, password: password)
+                                case .tierheim:
+                                    await tierheimAuthViewModel.login(email: email, passwort: password)
+                                }
+                            } else {
+                                authViewModel.errorMessage = "Kein Benutzer mit dieser E-Mail-Adresse gefunden. Bitte überprüfe deine E-Mail-Adresse und Passwort."
+                            }
                         }
                     }) {
                         Text("Anmelden")
@@ -117,11 +127,19 @@ struct LoginView: View {
             .navigationDestination(isPresented: $navigateToRoleSelection) {
                 RoleSelectionView()
             }
+            .navigationDestination(isPresented: $authViewModel.navigateToHome) {
+                UserHomeView2()
+            }
+            .navigationDestination(isPresented: $tierheimAuthViewModel.navigateToHome) {
+                TierheimHomeView2()
+            }
         }
     }
+    
 }
 
 #Preview {
     LoginView()
         .environmentObject(UserAuthViewModel())
+        .environmentObject(TierheimAuthViewModel())
 }

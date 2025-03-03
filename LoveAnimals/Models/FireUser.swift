@@ -18,4 +18,9 @@ struct FireUser: Codable, Identifiable {
     var birthdate: Date
     var searchRadius: Int
     var signedUpOn: Date
+    var userType: UserType
+    
+    
+    
 }
+

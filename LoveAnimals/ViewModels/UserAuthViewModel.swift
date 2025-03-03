@@ -29,6 +29,7 @@ final class UserAuthViewModel: ObservableObject {
     @Published var numberOfPets: String = ""
     @Published var petAges: String = ""
     @Published var navigateToHome: Bool = false
+    @Published var isTierheim: Bool = false
     
     var isUserSignedIn: Bool {
         user != nil
@@ -69,7 +70,8 @@ final class UserAuthViewModel: ObservableObject {
                 city: city,
                 birthdate: birthdate,
                 searchRadius: searchRadius,
-                signedUpOn: Date()
+                signedUpOn: Date(),
+                userType: UserType.user
             )
             self.navigateToHome = true
             
@@ -78,7 +80,7 @@ final class UserAuthViewModel: ObservableObject {
         }
     }
     
-    func createUser(userID: String, firstName: String, lastName: String, email: String, password: String, postalCode: String, city: String, birthdate: Date, searchRadius: Int, signedUpOn: Date) async {
+    func createUser(userID: String, firstName: String, lastName: String, email: String, password: String, postalCode: String, city: String, birthdate: Date, searchRadius: Int, signedUpOn: Date, userType: UserType) async {
         let user = FireUser(
             id: userID,
             firstName: firstName,
@@ -88,11 +90,14 @@ final class UserAuthViewModel: ObservableObject {
             city: city,
             birthdate: birthdate,
             searchRadius: searchRadius,
-            signedUpOn: Date()
+            signedUpOn: Date(),
+            userType: .user
         )
         do {
             try AuthManager.shared.database.collection("users").document(userID).setData(from: user)
-            fetchUser(userID: userID)
+            
+            UserDefaults.standard.set(userType.rawValue, forKey: "userType")
+            await fetchUser(userID: userID)
             
             DispatchQueue.main.async {
                 NotificationManager.shared.requestPermission()
@@ -102,7 +107,7 @@ final class UserAuthViewModel: ObservableObject {
         }
     }
     
-    func fetchUser(userID: String) {
+    func fetchUser(userID: String) async {
         Task {
             do {
                 let snapshot = try await AuthManager.shared.database
@@ -110,11 +115,16 @@ final class UserAuthViewModel: ObservableObject {
                     .document(userID)
                     .getDocument()
                 self.fireUser = try snapshot.data(as: FireUser.self)
+                
+                if let userType = fireUser?.userType {
+                    UserDefaults.standard.set(userType.rawValue, forKey: "userType")
+                }
             } catch {
                 print(error.localizedDescription)
             }
         }
     }
+    
     
     func login(email: String, password: String) async {
         if email.isEmpty && password.isEmpty {
@@ -133,6 +143,9 @@ final class UserAuthViewModel: ObservableObject {
             user = result.user
             errorMessage = nil
             saveLoginData(email: email, password: password)
+            UserDefaults.standard.set(true, forKey: "isLoggedIn")
+            UserDefaults.standard.set("user", forKey: "loggedInUsertype")
+            navigateToHome = true
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -185,9 +198,6 @@ final class UserAuthViewModel: ObservableObject {
         }
     }
     
-    
-    
-    
     func saveUserDetails(isSkipped: Bool = false) async {
         guard let userID = Auth.auth().currentUser?.uid else {
             print("Fehler: Kein eingeloggter User gefunden.")
@@ -237,6 +247,29 @@ final class UserAuthViewModel: ObservableObject {
         }
     }
     
+    func scheduleDailyNotification() {
+        let center = UNUserNotificationCenter.current()
+        let content = UNMutableNotificationContent()
+        content.title = "LoveAnimals Erinnerung"
+        content.body = "Vergiss nicht, neue Tiere zu entdecken!"
+        content.sound = .default
+        
+        var dateComponents = DateComponents()
+        dateComponents.hour = 10
+        dateComponents.minute = 0
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        
+        let request = UNNotificationRequest(identifier: "dailyReminder", content: content, trigger: trigger)
+        
+        center.add(request) { error in
+            if let error = error {
+                print("Fehler beim Planen der täglichen Benachrichtigung: \(error.localizedDescription)")
+            } else {
+                print("Tägliche Benachrichtigung geplant ✅")
+            }
+        }
+    }
 
     
 }

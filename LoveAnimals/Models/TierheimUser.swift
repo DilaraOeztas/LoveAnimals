@@ -18,5 +18,7 @@ struct TierheimUser: Codable, Identifiable {
     var homepage: String?
     var nimmtSpendenAn: Bool
     var signedUpOn: Date
+    var userType: UserType
+    
 }
 

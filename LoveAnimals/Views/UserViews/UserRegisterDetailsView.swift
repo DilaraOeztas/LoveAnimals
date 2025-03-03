@@ -11,6 +11,7 @@ import FirebaseFirestore
 
 struct UserRegisterDetailsView: View {
     @EnvironmentObject var authViewModel: UserAuthViewModel
+    @EnvironmentObject var tierheimAuthViewModel: TierheimAuthViewModel
     
     @State private var showProfessionOptions = false
     @State private var showHousingOptions = false
@@ -282,4 +283,5 @@ struct UserRegisterDetailsView: View {
 #Preview {
     UserRegisterDetailsView(firstName: "test", lastName: "test", birthdate: Date(), email: "test@test.com", postalCode: "33333", city: "test", searchRadius: 10, password: "test12345")
         .environmentObject(UserAuthViewModel())
+        .environmentObject(TierheimAuthViewModel())
 }
