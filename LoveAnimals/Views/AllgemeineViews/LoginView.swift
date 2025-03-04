@@ -130,11 +130,6 @@ struct LoginView: View {
             }
         }
     }
-    
-    func handleLogin() {
-        
-    }
-    
 }
 
 #Preview {

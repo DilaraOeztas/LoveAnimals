@@ -8,42 +8,66 @@
 import SwiftUI
 
 struct UserHomeView: View {
-    @EnvironmentObject var authViewModel: UserAuthViewModel
-    @State private var navigateToLogin = false
+    @EnvironmentObject var tierheimVM: TierheimAuthViewModel
+    @EnvironmentObject var userAuthVM: UserAuthViewModel
+    @State private var searchText = ""
+    @State private var profileImage = UIImage(named: "Dilara.jpeg") // Platzhalter
+    
 
     var body: some View {
-        NavigationStack {
-            VStack {
-                Text("Willkommen in der UserHomeView!")
-                    .font(.largeTitle)
-                    .padding()
+        VStack {
+            headerView()
 
-                Spacer()
-
-                Button(action: {
-                    authViewModel.logout()
-                    navigateToLogin = true
-                }) {
-                    Text("Logout")
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity, minHeight: 50)
-                        .background(Color.red)
-                        .cornerRadius(10)
-                        .padding(.horizontal)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 16) {
+                    ForEach(tierheimVM.animals) { animal in
+                        AnimalsView(animal: animal, userCoordinates: userAuthVM.userCoordinates)
+                    }
                 }
-                .padding(.bottom, 20)
-                .navigationDestination(isPresented: $navigateToLogin) {
-                    LoginView()
-                }
-
+                .padding(.horizontal)
             }
             .onAppear {
-                UNUserNotificationCenter.current().delegate = NotificationManager.shared
+                ladeProfilbild()
+                userAuthVM.ladeUserKoordinaten()
+                tierheimVM.ladeTiereAusTierheimen()
             }
         }
     }
+
+    @ViewBuilder
+    private func headerView() -> some View {
+        HStack {
+            Image(uiImage: profileImage ?? UIImage(named: "kein-bild-symbol.jpg")!)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 40, height: 40)
+                .clipShape(Circle())
+
+            TextField("Suche...", text: $searchText)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .frame(maxWidth: .infinity)
+
+            Button(action: {
+                // Aktion für Benachrichtigungen
+            }) {
+                Image(systemName: "bell")
+                    .font(.title2)
+            }
+        }
+        .padding()
+    }
+
+
+    private func ladeProfilbild() {
+        // Hier später Profilbild aus Firestore laden
+    }
+
+    
 }
+
+
 #Preview {
     UserHomeView()
+        .environmentObject(UserAuthViewModel())
+        .environmentObject(TierheimAuthViewModel())
 }

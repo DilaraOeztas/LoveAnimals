@@ -17,6 +17,8 @@ final class TierheimAuthViewModel: ObservableObject {
     @Published var tierheimUser: TierheimUser?
     @Published var errorMessage: String?
     @Published var navigateToHome = false
+    @Published var animals: [Animal] = []
+    
 
     var userId: String? {
         userT?.uid
@@ -145,5 +147,37 @@ final class TierheimAuthViewModel: ObservableObject {
             errorMessage = error.localizedDescription
         }
     }
+    
+    
+        
+        func ladeTiereAusTierheimen() {
+            let db = Firestore.firestore()
+            db.collection("tiere").getDocuments { snapshot, error in
+                if let error = error {
+                    print("Fehler beim Abrufen der Tiere: \(error.localizedDescription)")
+                    return
+                }
+                
+                guard let documents = snapshot?.documents else {
+                    print("Keine Tiere gefunden")
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    self.animals = documents.compactMap { doc -> Animal? in
+                        let data = doc.data()
+                        guard let name = data["name"] as? String,
+                              let imageURL = data["imageURL"] as? String,
+                              let tierheimName = data["tierheimName"] as? String,
+                              let tierheimPLZ = data["tierheimPLZ"] as? String else {
+                            return nil
+                        }
+                        return Animal(name: name, imageURL: imageURL, tierheimName: tierheimName, tierheimPLZ: tierheimPLZ)
+                    }
+                }
+            }
+        }
+    
+    
   
 }

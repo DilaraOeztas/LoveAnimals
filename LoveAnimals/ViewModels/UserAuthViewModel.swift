@@ -31,6 +31,10 @@ final class UserAuthViewModel: ObservableObject {
     @Published var navigateToHome: Bool = false
     @Published var isTierheim: Bool = false
     
+    @Published var userCoordinates: (latitude: Double, longitude: Double)? = nil
+
+    let userPLZ = "50825" // Später kommt das aus Firestore
+    
     
     var userID: String? {
         user?.uid
@@ -231,6 +235,14 @@ final class UserAuthViewModel: ObservableObject {
         }
     }
 
-    
+    func ladeUserKoordinaten() {
+        GeoapifyService.shared.fetchCoordinates(for: userPLZ) { latitude, longitude in
+            DispatchQueue.main.async {
+                if let lat = latitude, let lon = longitude {
+                    self.userCoordinates = (lat, lon)
+                }
+            }
+        }
+    }
 }
 
