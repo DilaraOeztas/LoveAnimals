@@ -22,9 +22,9 @@ struct TierOptionView: View {
             Image(systemName: "chevron.right")
                 .foregroundStyle(.white)
         }
-        .padding()
+        .padding(10)
         .background(Color.customLightBrown)
-        .cornerRadius(12)
+        .cornerRadius(8)
         .onTapGesture {
             action()
         }

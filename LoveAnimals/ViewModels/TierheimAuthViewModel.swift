@@ -11,23 +11,21 @@ import Combine
 
 @MainActor
 final class TierheimAuthViewModel: ObservableObject {
-    
     private var auth = Auth.auth()
     @Published var userT: FirebaseAuth.User?
     @Published var tierheimUser: TierheimUser?
     @Published var errorMessage: String?
-    @Published var navigateToHome = false
     @Published var animals: [Animal] = []
+    @Published var aktuelleTierID: String = UUID().uuidString
     
-
     var userId: String? {
         userT?.uid
     }
-
+    
     var email: String? {
         userT?.email
     }
-
+    
     init() {
         checkAuth()
     }
@@ -35,7 +33,7 @@ final class TierheimAuthViewModel: ObservableObject {
     private func checkAuth() {
         userT = auth.currentUser
     }
-
+    
     func registerTierheim(tierheimName: String, straße: String, plz: String, ort: String, email: String, homepage: String? = nil, nimmtSpendenAn: Bool, passwort: String, signedUpOn: Date) async {
         
         do {
@@ -58,8 +56,7 @@ final class TierheimAuthViewModel: ObservableObject {
                 passwort: passwort,
                 signedUpOn: Date(),
                 userType: .tierheim
-                )
-            self.navigateToHome = true
+            )
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -77,7 +74,7 @@ final class TierheimAuthViewModel: ObservableObject {
             homepage: homepage,
             nimmtSpendenAn: false,
             signedUpOn: Date(),
-            userType: userType
+            userType: .tierheim
         )
         do {
             try AuthManager.shared.database.collection("tierheime").document(userId).setData(from: userT)
@@ -92,7 +89,7 @@ final class TierheimAuthViewModel: ObservableObject {
             print(error.localizedDescription)
         }
     }
-
+    
     func fetchTierheim(userId: String) async {
         Task {
             do {
@@ -135,7 +132,7 @@ final class TierheimAuthViewModel: ObservableObject {
             errorMessage = error.localizedDescription
         }
     }
-
+    
     func logout() {
         do {
             try auth.signOut()
@@ -149,35 +146,61 @@ final class TierheimAuthViewModel: ObservableObject {
     }
     
     
-        
-        func ladeTiereAusTierheimen() {
-            let db = Firestore.firestore()
-            db.collection("tiere").getDocuments { snapshot, error in
-                if let error = error {
-                    print("Fehler beim Abrufen der Tiere: \(error.localizedDescription)")
-                    return
-                }
-                
-                guard let documents = snapshot?.documents else {
-                    print("Keine Tiere gefunden")
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    self.animals = documents.compactMap { doc -> Animal? in
-                        let data = doc.data()
-                        guard let name = data["name"] as? String,
-                              let imageURL = data["imageURL"] as? String,
-                              let tierheimName = data["tierheimName"] as? String,
-                              let tierheimPLZ = data["tierheimPLZ"] as? String else {
-                            return nil
-                        }
-                        return Animal(name: name, imageURL: imageURL, tierheimName: tierheimName, tierheimPLZ: tierheimPLZ)
-                    }
-                }
-            }
-        }
     
     
-  
+//    func ladeTiereAusTierheim() async {
+//        let db = Firestore.firestore()
+//        
+//        do {
+//            let snapshot = try await db.collection("tiere").getDocuments()
+//            
+//            let geladeneTiere = snapshot.documents.compactMap { doc -> Animal? in
+//                let data = doc.data()
+//                
+//                guard let tierName = data["tierName"] as? String,
+//                      let tierart = data["tierart"] as? String,
+//                      let rasse = data["rasse"] as? String,
+//                      let alter = data["alter"] as? String,
+//                      let groesse = data["groesse"] as? String,
+//                      let geschlecht = data["geschlecht"] as? String,
+//                      let farbe = data["farbe"] as? String,
+//                      let gesundheitszustand = data["gesundheitszustand"] as? String,
+//                      let beschreibung = data["beschreibung"] as? String,
+//                      let schutzgebuehr = data["schutzgebuehr"] as? String,
+//                      let imageURLs = data["imageURLs"] as? [String],
+//                      let erstelltAm = (data["erstelltAm"] as? Timestamp)?.dateValue(),
+//                      let tierheimID = data["tierheimID"] as? String else {
+//                    print("⚠️ Ein Tier-Dokument hat fehlerhafte Daten und wird übersprungen.")
+//                    return nil
+//                }
+//                
+//                // Rückgabe des vollständig erstellten `Animal`-Objekts
+//                return Animal(
+//                    tierName: tierName,
+//                    tierart: tierart,
+//                    rasse: rasse,
+//                    alter: alter,
+//                    groesse: groesse,
+//                    geschlecht: geschlecht,
+//                    farbe: farbe,
+//                    gesundheitszustand: gesundheitszustand,
+//                    beschreibung: beschreibung,
+//                    schutzgebuehr: schutzgebuehr,
+//                    imageURLs: imageURLs,
+//                    erstelltAm: erstelltAm,
+//                    tierheimID: tierheimID
+//                )
+//            }
+//            
+//            DispatchQueue.main.async {
+//                self.animals = geladeneTiere
+//            }
+//            
+//        } catch {
+//            print("❌ Fehler beim Abrufen der Tiere: \(error.localizedDescription)")
+//        }
+//    }
 }
+
+
+

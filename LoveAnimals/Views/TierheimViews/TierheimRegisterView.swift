@@ -90,7 +90,7 @@ struct TierheimRegisterView: View {
                 .keyboardType(.asciiCapableNumberPad)
                 .padding(.horizontal)
                 
-                VStack {
+//                VStack {
                     TextField("E-Mail", text: $email)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
@@ -116,7 +116,7 @@ struct TierheimRegisterView: View {
                             .font(.footnote)
                             .padding(.horizontal)
                     }
-                }
+//                }
                 
                 Group {
                     if showPassword {
@@ -290,47 +290,32 @@ struct TierheimRegisterView: View {
                     Button(action: {
                         Task {
                             isLoading = true
-                            AuthManager.shared.checkIfEmailExistsInFirestore(email: email) { exists in
+
+                            let exists = await AuthManager.shared.checkIfEmailExistsInFirestore(email: email)
                                 DispatchQueue.main.async {
                                     if exists {
                                         showEmailExistsError = true
                                         isLoading = false
                                     } else {
+                                        showEmailExistsError = false
+
                                         Task {
-                                            guard let isValid = try? await EmailValidationRepository.shared.validateEmailWithAPI(email: email), isValid else {
-                                                DispatchQueue.main.async {
-                                                    isLoading = false
-                                                    isEmailValid = false
-                                                    showFormError = true
-                                                    
-                                                }
-                                                return
-                                            }
-                                            DispatchQueue.main.async {
-                                                isLoading = false
-                                                isEmailValid = true
-                                                showFormError = false
-                                                showEmailExistsError = false
-                                                
-                                                Task {
-                                                    await viewModel.registerTierheim(
-                                                        tierheimName: tierheimName,
-                                                        straße: straße,
-                                                        plz: plz,
-                                                        ort: ort,
-                                                        email: email,
-                                                        homepage: homepage,
-                                                        nimmtSpendenAn: nimmtSpendenAn,
-                                                        passwort: passwort,
-                                                        signedUpOn: Date()
-                                                    )
-                                                }
-                                                navigateToHome = true
-                                            }
+                                            await viewModel.registerTierheim(
+                                                tierheimName: tierheimName,
+                                                straße: straße,
+                                                plz: plz,
+                                                ort: ort,
+                                                email: email,
+                                                homepage: homepage,
+                                                nimmtSpendenAn: nimmtSpendenAn,
+                                                passwort: passwort,
+                                                signedUpOn: Date()
+                                            )
+                                            navigateToHome = true
                                         }
                                     }
                                 }
-                            }
+                            
                         }
                     }) {
                         if isLoading {
@@ -342,8 +327,6 @@ struct TierheimRegisterView: View {
                                 .frame(width: 200, height: 50)
                                 .background(Color.customLightBrown)
                                 .cornerRadius(10)
-                                .disabled(!isFormValid)
-                                .opacity(isFormValid ? 1.0 : 0.5)
                         }
                     }
                     .navigationDestination(isPresented: $navigateToHome) {
@@ -391,5 +374,5 @@ struct TierheimRegisterView: View {
 
 #Preview {
     TierheimRegisterView()
-        .environmentObject(UserAuthViewModel())
+        .environmentObject(TierheimAuthViewModel())
 }

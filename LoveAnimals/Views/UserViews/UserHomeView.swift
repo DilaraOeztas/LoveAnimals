@@ -13,11 +13,12 @@ struct UserHomeView: View {
     @State private var searchText = ""
     @State private var profileImage = UIImage(named: "Dilara.jpeg") // Platzhalter
     
-
+    let userCoordinates: (latitude: Double, longitude: Double)?
+    
     var body: some View {
         VStack {
             headerView()
-
+            
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(tierheimVM.animals) { animal in
@@ -28,25 +29,25 @@ struct UserHomeView: View {
             }
             .onAppear {
                 ladeProfilbild()
-                userAuthVM.ladeUserKoordinaten()
-                tierheimVM.ladeTiereAusTierheimen()
             }
         }
     }
-
+    
+    
+    
     @ViewBuilder
     private func headerView() -> some View {
         HStack {
-            Image(uiImage: profileImage ?? UIImage(named: "kein-bild-symbol.jpg")!)
+            Image(uiImage: profileImage ?? UIImage(named: "Kein-Foto")!)
                 .resizable()
                 .scaledToFill()
                 .frame(width: 40, height: 40)
                 .clipShape(Circle())
-
+            
             TextField("Suche...", text: $searchText)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .frame(maxWidth: .infinity)
-
+            
             Button(action: {
                 // Aktion für Benachrichtigungen
             }) {
@@ -56,18 +57,18 @@ struct UserHomeView: View {
         }
         .padding()
     }
-
-
+    
+    
     private func ladeProfilbild() {
         // Hier später Profilbild aus Firestore laden
     }
-
+    
     
 }
 
 
 #Preview {
-    UserHomeView()
+    UserHomeView(userCoordinates: (latitude: 50.1109, longitude: 8.6821))
         .environmentObject(UserAuthViewModel())
         .environmentObject(TierheimAuthViewModel())
 }

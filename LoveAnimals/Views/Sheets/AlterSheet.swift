@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AlterSheet: View {
-    @Binding var ausgewählteAlter: String
+    @Binding var ausgewaehlteAlter: String
     @Binding var showAlterSheet: Bool
     
     let alter = ["Jung", "Erwachsen", "Senior"]
@@ -20,7 +20,7 @@ struct AlterSheet: View {
                     Text(alter)
                         .foregroundStyle(.black)
                     Spacer()
-                    if alter == self.ausgewählteAlter {
+                    if alter == ausgewaehlteAlter {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
                     } else {
@@ -29,7 +29,7 @@ struct AlterSheet: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    ausgewählteAlter = alter
+                    ausgewaehlteAlter = alter
                     showAlterSheet = false
                 }
             }
@@ -47,7 +47,7 @@ struct AlterSheet: View {
 }
 
 #Preview {
-    AlterSheet(ausgewählteAlter: .constant(""), showAlterSheet: .constant(true))
+    AlterSheet(ausgewaehlteAlter: .constant(""), showAlterSheet: .constant(true))
 }
 
 

@@ -6,64 +6,179 @@
 //
 
 import SwiftUI
+import FirebaseFirestore
 
 struct AnimalsView: View {
     let animal: Animal
     let userCoordinates: (latitude: Double, longitude: Double)?
 
+    @State private var tierheimPLZ = ""
+
     var body: some View {
-        VStack {
-            if !animal.imageURL.isEmpty {
-                AsyncImage(url: URL(string: animal.imageURL)) { phase in
+        VStack(alignment: .leading, spacing: 4) {
+            if let firstImageURL = animal.imageURLs.first, let url = URL(string: firstImageURL) {
+                AsyncImage(url: url) { phase in
                     switch phase {
                     case .empty:
                         ProgressView()
-                            .frame(width: 80, height: 80)
+                            .frame(width: 100, height: 90)
                     case .success(let image):
                         image.resizable()
                             .scaledToFill()
-                            .frame(width: 80, height: 80)
+                            .frame(width: 100, height: 90)
                             .clipShape(Circle())
                     case .failure:
-                        Image("Kein-Foto")
+                        Image("hund")
                             .resizable()
-                            .scaledToFill()
-                            .frame(width: 80, height: 80)
+                            .scaledToFit()
+                            .frame(width: 100, height: 90)
                             .clipShape(Circle())
+                            .foregroundColor(.gray)
                     @unknown default:
-                        ProgressView()
-                            .frame(width: 80, height: 80)
+                        EmptyView()
                     }
                 }
             } else {
-                Image("Kein-Foto")
+                Image("hund")
                     .resizable()
-                    .scaledToFill()
-                    .frame(width: 80, height: 80)
+                    .scaledToFit()
+                    .frame(width: 100, height: 90)
                     .clipShape(Circle())
+                    .foregroundColor(.gray)
             }
 
-            Text(animal.tierheimName)
-                .font(.footnote)
-                .fontWeight(.semibold)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(animal.tierName)
+                    .font(.headline)
 
-            if let userCoordinates {
-                let distance = DistanceCalculator.calculateDistance(
-                    from: userCoordinates,
-                    toPLZ: animal.tierheimPLZ
-                )
-                Text("\(distance, specifier: "%.1f") km entfernt")
-                    .font(.caption)
-                    .foregroundColor(.gray)
+                if let userCoordinates {
+                    if !tierheimPLZ.isEmpty {
+                        let distance = DistanceCalculator.calculateDistance(
+                            from: userCoordinates,
+                            toPLZ: tierheimPLZ
+                        )
+                        Text(String(format: "%.1f km entfernt", distance))
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                    }
+                }
+            }
+        }
+        .onAppear {
+            ladeTierheimPLZ()
+        }
+    }
+
+    func ladeTierheimPLZ() {
+        let db = Firestore.firestore()
+        db.collection("tierheime").document(animal.tierheimID).getDocument { snapshot, error in
+            if let data = snapshot?.data(), let plz = data["plz"] as? String {
+                tierheimPLZ = plz
             } else {
-                Text("Entfernung lädt...")
-                    .font(.caption)
-                    .foregroundColor(.gray)
+                print("Fehler beim Laden der PLZ: \(error?.localizedDescription ?? "Unbekannt")")
             }
         }
     }
 }
 
+
 #Preview {
-    AnimalsView(animal: Animal(name: "Bella", imageURL: "https://example.com/bella.jpg", tierheimName: "Tierheim Köln", tierheimPLZ: "50825"), userCoordinates: (latitude: 50.9375, longitude: 6.9603))
+    AnimalsView(animal: Animal(tierName: "Test", tierart: "Hund", rasse: "Mischling", alter: "2 Jahre", groesse: "Mittel", geschlecht: "weiblich", farbe: "schwarz", gesundheitszustand: "gesund", beschreibung: "Sehr verspielt", schutzgebuehr: "250", imageURLs: ["https//placekitten.com/400/300"], erstelltAm: Date(), tierheimID: "12345"), userCoordinates: (latitude: 50.1109, longitude: 8.6821))
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//struct AnimalsView: View {
+//    let animal: Animal
+//    let userCoordinates: (latitude: Double, longitude: Double)?
+//    
+//    @State private var tierheimName = ""
+//    @State private var tierheimPLZ = ""
+//
+//    var body: some View {
+//        VStack(alignment: .leading, spacing: 4) {
+//            if let firstImageURL = animal.imageURLs.first, let url = URL(string: firstImageURL) {
+//                AsyncImage(url: url) { phase in
+//                    switch phase {
+//                    case .empty:
+//                        ProgressView()
+//                            .frame(width: 100, height: 90)
+//                    case .success(let image):
+//                        image
+//                            .resizable()
+//                            .scaledToFill()
+//                            .frame(width: 100, height: 90)
+//                            .clipShape(Circle())
+//                    case .failure:
+//                        Image("Dilara")
+//                            .resizable()
+//                            .scaledToFit()
+//                            .frame(width: 100, height: 90)
+//                            .foregroundColor(.gray)
+//                            .clipShape(Circle())
+//                    @unknown default:
+//                        EmptyView()
+//                    }
+//                }
+//            } else {
+//                Image("hund")
+//                    .resizable()
+//                    .scaledToFit()
+//                    .frame(width: 100, height: 90)
+//                    .clipShape(Circle())
+//                    .foregroundColor(.gray)
+//            }
+//
+//            VStack(alignment: .leading, spacing: -4) {
+//                Text(animal.tierName).font(.headline)
+//                Text(tierheimName).font(.subheadline)
+//                
+//                
+//                if let userCoordinates {
+//                    let distance = DistanceCalculator.calculateDistance(
+//                        from: userCoordinates,
+//                        toPLZ: tierheimPLZ
+//                    )
+//                    Text(String(format: "%.1f km entfernt", distance))
+//                        .font(.footnote)
+//                        .foregroundColor(.gray)
+//                }
+//            }
+//        }
+//        .onAppear {
+//            ladeTierheimDaten()
+//        }
+//    }
+//
+//    func ladeTierheimDaten() {
+//        let db = Firestore.firestore()
+//        db.collection("tierheime").document(animal.tierheimID).getDocument { snapshot, error in
+//            if let data = snapshot?.data() {
+//                tierheimName = data["tierheimName"] as? String ?? "Unbekanntes Tierheim"
+//                tierheimPLZ = data["plz"] as? String ?? "00000"
+//            } else {
+//                print("Fehler beim Laden der Tierheimdaten: \(error?.localizedDescription ?? "Unbekannt")")
+//            }
+//        }
+//    }
+//}
+
+

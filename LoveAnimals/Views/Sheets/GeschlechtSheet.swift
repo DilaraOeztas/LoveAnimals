@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GeschlechtSheet: View {
-    @Binding var ausgewähltesGeschlecht: String
+    @Binding var ausgewaehltesGeschlecht: String
     @Binding var showSheet: Bool
     
     let geschlechter = ["Männlich", "Weiblich"]
@@ -20,7 +20,7 @@ struct GeschlechtSheet: View {
                     Text(geschlecht)
                         .foregroundStyle(.black)
                     Spacer()
-                    if geschlecht == self.ausgewähltesGeschlecht {
+                    if geschlecht == ausgewaehltesGeschlecht {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
                     } else {
@@ -29,7 +29,7 @@ struct GeschlechtSheet: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    ausgewähltesGeschlecht = geschlecht
+                    ausgewaehltesGeschlecht = geschlecht
                     showSheet = false
                 }
             }
@@ -47,5 +47,5 @@ struct GeschlechtSheet: View {
 }
 
 #Preview {
-    GeschlechtSheet(ausgewähltesGeschlecht: .constant(""), showSheet: .constant(true))
+    GeschlechtSheet(ausgewaehltesGeschlecht: .constant(""), showSheet: .constant(true))
 }

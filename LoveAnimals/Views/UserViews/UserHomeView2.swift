@@ -10,7 +10,7 @@ import SwiftUI
 struct UserHomeView2: View {
     var body: some View {
         TabView {
-            UserHomeView()
+            UserHomeView(userCoordinates: (latitude: 50.1109, longitude: 8.6821))
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
@@ -30,9 +30,9 @@ struct UserHomeView2: View {
                     Label("Chats", systemImage: "bubble.left.and.bubble.right")
                 }
 
-            SettingsView()
+            UserKonto()
                 .tabItem {
-                    Label("Einstellungen", systemImage: "gearshape")
+                    Label("Konto", systemImage: "person.circle")
                 }
         }
         .navigationBarBackButtonHidden(true)

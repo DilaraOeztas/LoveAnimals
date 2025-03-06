@@ -6,11 +6,21 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
-struct Animal: Identifiable {
-    let id = UUID()
-    let name: String
-    let imageURL: String
-    let tierheimName: String
-    let tierheimPLZ: String
+struct Animal: Identifiable, Codable {
+    @DocumentID var id: String? = UUID().uuidString
+    var tierName: String
+    var tierart: String
+    var rasse: String
+    var alter: String
+    var groesse: String
+    var geschlecht: String
+    var farbe: String
+    var gesundheitszustand: String
+    var beschreibung: String
+    var schutzgebuehr: String
+    var imageURLs: [String]
+    var erstelltAm: Date
+    var tierheimID: String
 }

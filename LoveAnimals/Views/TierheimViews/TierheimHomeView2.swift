@@ -35,9 +35,9 @@ struct TierheimHomeView2: View {
                 }
                 .tag(3)
 
-            THSettingsView()
+            THKonto()
                 .tabItem {
-                    Label("Einstellungen", systemImage: "gearshape")
+                    Label("Konto", systemImage: "person.crop.circle")
                 }
                 .tag(4)
 

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FarbenSheet: View {
     
-    @Binding var ausgewählteFarbe: String
+    @Binding var ausgewaehlteFarbe: String
     @Binding var showFarbenSheet: Bool
     
     let farben = ["Schwarz", "Weiß", "Braun", "Grau", "Mehrfarbig", "Sonstiges"]
@@ -21,7 +21,7 @@ struct FarbenSheet: View {
                     Text(farbe)
                         .foregroundStyle(.black)
                     Spacer()
-                    if farbe == self.ausgewählteFarbe {
+                    if farbe == ausgewaehlteFarbe {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
                     } else {
@@ -30,7 +30,7 @@ struct FarbenSheet: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    ausgewählteFarbe = farbe
+                    ausgewaehlteFarbe = farbe
                     showFarbenSheet = false
                 }
             }
@@ -49,7 +49,7 @@ struct FarbenSheet: View {
 }
 
 #Preview {
-    FarbenSheet(ausgewählteFarbe: .constant(""), showFarbenSheet: .constant(true))
+    FarbenSheet(ausgewaehlteFarbe: .constant(""), showFarbenSheet: .constant(true))
 }
 
 

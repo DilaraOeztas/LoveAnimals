@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TierartSheet: View {
-    @Binding var ausgewählteTierart: String
+    @Binding var ausgewaehlteTierart: String
     @Binding var showTierartSheet: Bool
     
     let tierarten = ["Hund", "Katze", "Vogel", "Kaninchen", "Meerschweinchen", "Reptil", "Fisch", "Sonstiges"]
@@ -20,7 +20,7 @@ struct TierartSheet: View {
                     Text(tierart)
                         .foregroundStyle(.black)
                     Spacer()
-                    if tierart == self.ausgewählteTierart {
+                    if tierart == ausgewaehlteTierart {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
                     } else {
@@ -29,7 +29,7 @@ struct TierartSheet: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    ausgewählteTierart = tierart
+                    ausgewaehlteTierart = tierart
                     showTierartSheet = false
                 }
             }
@@ -48,5 +48,5 @@ struct TierartSheet: View {
 
 
 #Preview {
-    TierartSheet(ausgewählteTierart: .constant(""), showTierartSheet: .constant(true))
+    TierartSheet(ausgewaehlteTierart: .constant(""), showTierartSheet: .constant(true))
 }

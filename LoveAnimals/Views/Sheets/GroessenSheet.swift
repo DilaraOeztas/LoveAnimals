@@ -8,19 +8,19 @@
 import SwiftUI
 
 struct GroessenSheet: View {
-    @Binding var ausgewählteGröße: String
+    @Binding var ausgewaehlteGroesse: String
     @Binding var showGroessenSheet: Bool
     
-    let größen = ["Klein", "Mittel", "Groß"]
+    let groessen = ["Klein", "Mittel", "Groß"]
     
     var body: some View {
         NavigationStack {
-            List(größen, id: \.self) { größe in
+            List(groessen, id: \.self) { groesse in
                 HStack {
-                    Text(größe)
+                    Text(groesse)
                         .foregroundStyle(.black)
                     Spacer()
-                    if größe == self.ausgewählteGröße {
+                    if groesse == ausgewaehlteGroesse {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
                     } else {
@@ -29,7 +29,7 @@ struct GroessenSheet: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    ausgewählteGröße = größe
+                    ausgewaehlteGroesse = groesse
                     showGroessenSheet = false
                 }
             }
@@ -47,5 +47,5 @@ struct GroessenSheet: View {
 }
 
 #Preview {
-    GroessenSheet(ausgewählteGröße: .constant(""), showGroessenSheet: .constant(true))
+    GroessenSheet(ausgewaehlteGroesse: .constant(""), showGroessenSheet: .constant(true))
 }

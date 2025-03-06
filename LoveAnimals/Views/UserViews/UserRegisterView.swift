@@ -244,33 +244,18 @@ struct UserRegisterView: View {
                 Button(action: {
                     Task {
                         isLoading = true
-                        AuthManager.shared.checkIfEmailExistsInFirestore(email: email) { exists in
+
+                        let exists = await AuthManager.shared.checkIfEmailExistsInFirestore(email: email) 
                             DispatchQueue.main.async {
                                 if exists {
                                     showEmailExistsError = true
                                     isLoading = false
                                 } else {
-                                    Task {
-                                        guard let isValid = try? await EmailValidationRepository.shared.validateEmailWithAPI(email: email), isValid else {
-                                            DispatchQueue.main.async {
-                                                isLoading = false
-                                                isEmailValid = false
-                                                showFormError = true
-                                                
-                                            }
-                                            return
-                                        }
-                                        DispatchQueue.main.async {
-                                            isLoading = false
-                                            isEmailValid = true
-                                            showFormError = false
-                                            showEmailExistsError = false
-                                            navigateToUserDetails = true
-                                        }
-                                    }
+                                    showEmailExistsError = false
+                                    navigateToUserDetails = true
                                 }
                             }
-                        }
+                        
                     }
                 }) {
                     if isLoading {
@@ -282,11 +267,11 @@ struct UserRegisterView: View {
                             .frame(width: 200, height: 50)
                             .background(Color.customLightBrown)
                             .cornerRadius(10)
-                            .padding(.horizontal)
-                            .disabled(!isFormValid)
-                            .opacity(isFormValid ? 1.0 : 0.5)
                     }
                 }
+                .disabled(!isFormValid)
+                .opacity(isFormValid ? 1.0 : 0.5)
+
                 .navigationDestination(isPresented: $navigateToUserDetails) {
                     UserRegisterDetailsView(firstName: firstName, lastName: lastName, birthdate: birthdate, email: email, postalCode: postalCode, city: city, searchRadius: Int(searchRadius), password: password)
                 }

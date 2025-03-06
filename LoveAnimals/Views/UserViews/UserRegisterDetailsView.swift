@@ -152,8 +152,6 @@ struct UserRegisterDetailsView: View {
                             .padding(.horizontal)
                         }
                     
-                
-                    
                     Button(action: {
                         Task {
                             await authViewModel.register(
@@ -168,6 +166,7 @@ struct UserRegisterDetailsView: View {
                                 signedUpOn: Date()
                             )
                             await authViewModel.saveUserDetails(isSkipped: false)
+                            navigateToHome = true
                         }
                     }) {
                         Text("Speichern & Weiter")
@@ -180,6 +179,7 @@ struct UserRegisterDetailsView: View {
                     }
                     .padding(.top, 30)
                     .padding(.bottom, 10)
+                    
                     
                     Button(action: {
                         showSkipAlert = true
@@ -208,20 +208,19 @@ struct UserRegisterDetailsView: View {
                                         signedUpOn: Date()
                                     )
                                     await authViewModel.saveUserDetails(isSkipped: true)
-                                    
+                                    navigateToHome = true
                                 }
-                                
                             },
                             secondaryButton: .cancel(Text("Abbrechen"))
                         )
                     }
                     .padding(.bottom, 20)
                     
-                    
                 }
                 .navigationDestination(isPresented: $navigateToHome) {
                     UserHomeView2()
                 }
+                .navigationBarBackButtonHidden(true)
             }
             .simultaneousGesture(
                 TapGesture().onEnded {

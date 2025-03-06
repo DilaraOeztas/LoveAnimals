@@ -9,16 +9,17 @@ import SwiftUI
 
 struct RassenSheet: View {
     let rassen: [String]
-    @Binding var ausgewählteRasse: String
-    @Environment(\.dismiss) var dismiss
+    @Binding var ausgewaehlteRasse: String
+    @Binding var showRasseSheet: Bool
     
     var body: some View {
         NavigationStack {
             List(rassen, id: \.self) { rasse in
                 HStack {
                     Text(rasse)
+                        .foregroundStyle(.black)
                     Spacer()
-                    if ausgewählteRasse == rasse {
+                    if rasse == ausgewaehlteRasse {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
                     } else {
@@ -28,7 +29,8 @@ struct RassenSheet: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    ausgewählteRasse = rasse
+                    ausgewaehlteRasse = rasse
+                    showRasseSheet = false
                 }
             }
             .navigationBarTitle("Rasse wählen")
@@ -36,7 +38,7 @@ struct RassenSheet: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Abbrechen") {
-                        dismiss()
+                        showRasseSheet = false
                     }
                 }
             }
@@ -45,5 +47,5 @@ struct RassenSheet: View {
 }
 
 #Preview {
-    RassenSheet(rassen: ["Mischling", "Schäferhund"], ausgewählteRasse: .constant("Mischling"))
+    RassenSheet(rassen: ["Mischling", "Schäferhund"], ausgewaehlteRasse: .constant("Mischling"), showRasseSheet: .constant(true))
 }

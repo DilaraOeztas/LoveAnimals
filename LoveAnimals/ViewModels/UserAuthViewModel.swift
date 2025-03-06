@@ -72,10 +72,8 @@ final class UserAuthViewModel: ObservableObject {
                 birthdate: birthdate,
                 searchRadius: searchRadius,
                 signedUpOn: Date(),
-                userType: UserType.user
-            )
-            self.navigateToHome = true
-            
+                userType: .user
+            )            
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -235,14 +233,14 @@ final class UserAuthViewModel: ObservableObject {
         }
     }
 
-    func ladeUserKoordinaten() {
-        GeoapifyService.shared.fetchCoordinates(for: userPLZ) { latitude, longitude in
-            DispatchQueue.main.async {
-                if let lat = latitude, let lon = longitude {
-                    self.userCoordinates = (lat, lon)
-                }
-            }
-        }
-    }
+//    func ladeUserKoordinaten() {
+//        GeoapifyService.shared.fetchCoordinates(for: userPLZ) { latitude, longitude in
+//            DispatchQueue.main.async {
+//                if let lat = latitude, let lon = longitude {
+//                    self.userCoordinates = (lat, lon)
+//                }
+//            }
+//        }
+//    }
 }
 

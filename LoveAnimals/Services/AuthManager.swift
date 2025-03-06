@@ -12,12 +12,12 @@ import FirebaseFirestore
 class AuthManager: ObservableObject {
     
     static let shared = AuthManager()
-
+    
     private init() {}
-
+    
     let database = Firestore.firestore()
-
-
+    
+    
     func checkUserType(email: String) async -> UserType? {
         if let userType = await fetchUserTypeByEmail(collection: "users", email: email) {
             return userType
@@ -26,11 +26,11 @@ class AuthManager: ObservableObject {
         }
         return nil
     }
-
+    
     private func fetchUserTypeByEmail(collection: String, email: String) async -> UserType? {
         let query = database.collection(collection)
             .whereField("email", isEqualTo: email)
-
+        
         do {
             let snapshot = try await query.getDocuments()
             if let document = snapshot.documents.first,
@@ -66,14 +66,18 @@ class AuthManager: ObservableObject {
         UserDefaults.standard.set(remember, forKey: "rememberMe")
     }
     
-    func checkIfEmailExistsInFirestore(email: String, completion: @escaping (Bool) -> Void) {
-        database.collection("users").whereField("email", isEqualTo: email).getDocuments { (snapshot, error) in
-            if let error = error {
-                print("Fehler beim Abrufen: \(error.localizedDescription)")
-                completion(false)
-                return
-            }
-            completion(!(snapshot?.documents.isEmpty ?? true))
+    
+    func checkIfEmailExistsInFirestore(email: String) async -> Bool {
+        let db = Firestore.firestore()
+        let query = db.collection("users").whereField("email", isEqualTo: email)
+        
+        do {
+            let snapshot = try await query.getDocuments()
+            return !snapshot.documents.isEmpty
+        } catch {
+            print("❌ Fehler beim E-Mail-Check: \(error.localizedDescription)")
+            return false
         }
     }
 }
+

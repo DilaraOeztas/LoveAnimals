@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Gesundheitszustand: View {
-    @Binding var ausgewählteGesundheit: String
+    @Binding var ausgewaehlteGesundheit: String
     @Binding var showGesundheitSheet: Bool
     
     let gesundheit = ["Gesund", "Erkrankt"]
@@ -20,7 +20,7 @@ struct Gesundheitszustand: View {
                     Text(gesundheit)
                         .foregroundStyle(.black)
                     Spacer()
-                    if gesundheit == self.ausgewählteGesundheit {
+                    if gesundheit == ausgewaehlteGesundheit {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
                     } else {
@@ -29,7 +29,7 @@ struct Gesundheitszustand: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    ausgewählteGesundheit = gesundheit
+                    ausgewaehlteGesundheit = gesundheit
                     showGesundheitSheet = false
                 }
             }
@@ -47,5 +47,5 @@ struct Gesundheitszustand: View {
 }
 
 #Preview {
-    Gesundheitszustand(ausgewählteGesundheit: .constant(""), showGesundheitSheet: .constant(true))
+    Gesundheitszustand(ausgewaehlteGesundheit: .constant(""), showGesundheitSheet: .constant(true))
 }
