@@ -9,6 +9,8 @@ import SwiftUI
 
 struct TierheimHomeView2: View {
     @State private var selectedTab = 0
+    @EnvironmentObject var animalsViewModel: AnimalsViewModel
+    
     var body: some View {
             TabView(selection: $selectedTab) {
                 NavigationStack {
@@ -21,6 +23,7 @@ struct TierheimHomeView2: View {
                 
                 NavigationStack {
                     TierEinstellenView(selectedTab: $selectedTab)
+                        .environmentObject(animalsViewModel)
                 }
                     .tabItem {
                         Label("Tier einstellen", systemImage: "plus.circle")

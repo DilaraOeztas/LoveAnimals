@@ -8,17 +8,18 @@
 import SwiftUI
 
 struct TierheimHomeView: View {
-    @EnvironmentObject var tierheimAuthViewModel: TierheimAuthViewModel
     @EnvironmentObject var userAuthVM: UserAuthViewModel
-    @StateObject private var viewModel = AnimalsViewModel()
+    @EnvironmentObject var viewModel: AnimalsViewModel
     
-    @State private var navigateToLogin = false
     @State private var searchText = ""
     @State private var profileImage: UIImage? = UIImage(named: "Dilara.jpeg")
     @State private var selectedAnimal: Animal?
     @State private var showDetailView = false
     
     let userCoordinates: (latitude: Double, longitude: Double)?
+    
+    @State private var showToast = false
+    @AppStorage("showPostUploadToast") var showPostUploadToast = false
     
     let columns = [
         GridItem(.flexible()),
@@ -52,32 +53,42 @@ struct TierheimHomeView: View {
                     }
                     .padding(.horizontal)
                 }
-                
-                Button(action: {
-                    tierheimAuthViewModel.logout()
-                    navigateToLogin = true
-                }) {
-                    Text("Logout")
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: 100, minHeight: 50)
-                        .background(Color.red)
-                        .cornerRadius(10)
-                        .padding(.horizontal)
-                }
-                .padding(.bottom, 20)
             }
+            .onAppear {
+                if showPostUploadToast {
+                    showPostUploadToast = false
+                    showToast = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        showToast = false
+                    }
+                }
+            }
+            .overlay(
+                toastOverlay,
+                alignment: .bottom
+            )
             .navigationDestination(isPresented: $showDetailView) {
                 if let animal = selectedAnimal {
                     AnimalDetailView(animal: animal)
                 }
             }
-            .navigationDestination(isPresented: $navigateToLogin) {
-                LoginView()
-            }
             .onAppear {
                 UNUserNotificationCenter.current().delegate = NotificationManager.shared
             }
+        }
+    }
+    
+    @ViewBuilder
+    var toastOverlay: some View {
+        if showToast {
+            Text("Dein Tier wird in Kürze online angezeigt!")
+                .padding()
+                .background(Color.black.opacity(0.7))
+                .foregroundStyle(.white)
+                .cornerRadius(8)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+                .animation(.easeInOut, value: showToast)
+                .padding(.bottom, 50)
         }
     }
 }
@@ -88,6 +99,5 @@ struct TierheimHomeView: View {
 #Preview {
     TierheimHomeView(userCoordinates: (latitude: 50.1109, longitude: 8.6821))
         .environmentObject(UserAuthViewModel())
-        .environmentObject(TierheimAuthViewModel())
         .environmentObject(AnimalsViewModel())
 }

@@ -37,7 +37,7 @@ struct BilderView: View {
                     }
             }
             
-            if viewModel.selectedImages.count > 1 {
+            if viewModel.selectedImages.count >= 1 {
                 ScrollView(.horizontal) {
                     HStack {
                         ForEach(viewModel.selectedImages.dropFirst(), id: \.self) { image in

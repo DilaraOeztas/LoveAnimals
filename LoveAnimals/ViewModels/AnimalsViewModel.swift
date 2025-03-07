@@ -14,6 +14,8 @@ import FirebaseAuth
 class AnimalsViewModel: ObservableObject {
     @Published var animals: [Animal] = []
     @Published var favoriten: [Animal] = []
+    @Published var isLoading: Bool = false
+    @Published var showPostUploadToast = false
 
     
     init() {
@@ -21,10 +23,17 @@ class AnimalsViewModel: ObservableObject {
             await ladeAlleTiere()
         }
     }
+    
+    func triggerPostUploadToast() {
+        showPostUploadToast = true
+    }
 
     func ladeAlleTiere() async {
-        let db = Firestore.firestore()
+        
+        isLoading = true
         animals.removeAll()
+        
+        let db = Firestore.firestore()
 
         do {
             let tierheimeSnapshot = try await db.collection("tierheime").getDocuments()
@@ -47,6 +56,7 @@ class AnimalsViewModel: ObservableObject {
         } catch {
             print("Fehler beim Laden der Tiere: \(error.localizedDescription)")
         }
+        isLoading = false
     }
     
     func addFavorite(animal: Animal) async {
