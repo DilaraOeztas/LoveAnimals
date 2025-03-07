@@ -44,7 +44,7 @@ struct AnimalsView: View {
                     .frame(width: 80, height: 70)
                     .clipShape(Circle())
             }
-
+            
             VStack(alignment: .leading, spacing: 4) {
                 Text(animal.name)
                     .font(.headline)
@@ -57,18 +57,18 @@ struct AnimalsView: View {
                         )
                         Text(String(format: "%.1f km entfernt", distance))
                             .font(.footnote)
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                     }
                 }
             }
-                
-            }
-        
+        }
         .onAppear {
             ladeTierheimPLZ()
         }
     }
 
+    
+    
     func ladeTierheimPLZ() {
         let db = Firestore.firestore()
         db.collection("tierheime").document(animal.tierheimID).getDocument { snapshot, error in
@@ -109,7 +109,7 @@ struct AnimalsView: View {
 //struct AnimalsView: View {
 //    let animal: Animal
 //    let userCoordinates: (latitude: Double, longitude: Double)?
-//    
+//
 //    @State private var tierheimName = ""
 //    @State private var tierheimPLZ = ""
 //
@@ -150,8 +150,8 @@ struct AnimalsView: View {
 //            VStack(alignment: .leading, spacing: -4) {
 //                Text(animal.tierName).font(.headline)
 //                Text(tierheimName).font(.subheadline)
-//                
-//                
+//
+//
 //                if let userCoordinates {
 //                    let distance = DistanceCalculator.calculateDistance(
 //                        from: userCoordinates,

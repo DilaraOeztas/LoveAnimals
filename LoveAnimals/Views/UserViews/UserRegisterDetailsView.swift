@@ -230,6 +230,8 @@ struct UserRegisterDetailsView: View {
         }
     }
     
+    
+    
     @ViewBuilder
     func dropdownSection(title: String, selectedOption: Binding<String>, showOptions: Binding<Bool>, options: [String]) -> some View {
         VStack(alignment: .leading) {
@@ -275,9 +277,9 @@ struct UserRegisterDetailsView: View {
         }
         .padding(.horizontal)
     }
-    
-    
 }
+
+
 
 #Preview {
     UserRegisterDetailsView(firstName: "test", lastName: "test", birthdate: Date(), email: "test@test.com", postalCode: "33333", city: "test", searchRadius: 10, password: "test12345")

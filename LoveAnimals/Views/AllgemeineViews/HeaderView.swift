@@ -23,7 +23,7 @@ struct HeaderView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
 
             Button(action: {
-                // Aktion für Benachrichtigungen
+                
             }) {
                 Image(systemName: "bell")
                     .font(.title2)

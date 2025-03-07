@@ -290,7 +290,6 @@ struct UserRegisterView: View {
                 }
             }
             .padding(.horizontal)
-            
         }
         .simultaneousGesture(
             TapGesture().onEnded {
@@ -303,6 +302,8 @@ struct UserRegisterView: View {
         
     }
     
+    
+    
     private func validatePassword() {
         let isLongEnough = password.count >= 6
         let hasUpperCase = password.rangeOfCharacter(from: .uppercaseLetters) != nil
@@ -313,8 +314,6 @@ struct UserRegisterView: View {
         isPasswordValid = isLongEnough && hasUpperCase && hasLowerCase && hasNumber && passwordsMatch
         showPasswordCriteria = !isPasswordValid
     }
-    
-    
 }
 
 
