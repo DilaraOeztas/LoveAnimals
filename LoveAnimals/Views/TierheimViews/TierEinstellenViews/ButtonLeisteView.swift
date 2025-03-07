@@ -21,7 +21,7 @@ struct ButtonLeisteView: View {
             }
             .padding()
             .background(Color.customBrown)
-            .foregroundColor(.white)
+            .foregroundStyle(.white)
             .cornerRadius(8)
         }
     }

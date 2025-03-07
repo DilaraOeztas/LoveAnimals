@@ -10,42 +10,39 @@ import SwiftUI
 struct TierheimHomeView2: View {
     @State private var selectedTab = 0
     var body: some View {
-        NavigationStack {
             TabView(selection: $selectedTab) {
-                TierheimHomeView(userCoordinates: (latitude: 50.1109, longitude: 8.6821))
+                NavigationStack {
+                    TierheimHomeView(userCoordinates: (latitude: 50.1109, longitude: 8.6821))
+                }
                     .tabItem {
                         Label("Home", systemImage: "house")
                     }
                     .tag(0)
                 
-                TierEinstellenView(selectedTab: $selectedTab)
+                NavigationStack {
+                    TierEinstellenView(selectedTab: $selectedTab)
+                }
                     .tabItem {
                         Label("Tier einstellen", systemImage: "plus.circle")
                     }
                     .tag(1)
                 
-                FavoritesView()
-                    .tabItem {
-                        Label("Favoriten", systemImage: "heart")
-                    }
-                    .tag(2)
-                
                 ChatsView()
                     .tabItem {
                         Label("Chats", systemImage: "bubble.left.and.bubble.right")
                     }
-                    .tag(3)
+                    .tag(2)
                 
                 THKonto()
                     .tabItem {
                         Label("Konto", systemImage: "person.crop.circle")
                     }
-                    .tag(4)
+                    .tag(3)
                 
             }
             .navigationBarBackButtonHidden(true)
         }
-    }
+    
 }
 
 #Preview {

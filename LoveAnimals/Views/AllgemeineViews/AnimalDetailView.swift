@@ -28,13 +28,13 @@ struct AnimalDetailView: View {
                                         image
                                             .resizable()
                                             .scaledToFill()
-                                            .frame(width: 250, height: 150)
+                                            .frame(width: 350, height: 250)
                                             .clipShape(RoundedRectangle(cornerRadius: 12))
                                     case .failure:
                                         Image(systemName: "photo")
                                             .resizable()
                                             .scaledToFit()
-                                            .frame(width: 250, height: 150)
+                                            .frame(width: 350, height: 250)
                                             .foregroundColor(.gray)
                                     @unknown default:
                                         EmptyView()
@@ -44,6 +44,7 @@ struct AnimalDetailView: View {
                         }
                     }
                     .padding(.bottom, 30)
+                    .padding(.top)
                 }
                 detailText(title: "Name:", value: animal.name)
                 detailText(title: "Rasse:", value: animal.rasse)

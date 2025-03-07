@@ -21,27 +21,27 @@ struct AnimalsView: View {
                     switch phase {
                     case .empty:
                         ProgressView()
-                            .frame(width: 100, height: 90)
+                            .frame(width: 90, height: 80)
                     case .success(let image):
                         image.resizable()
                             .scaledToFill()
-                            .frame(width: 80, height: 70)
+                            .frame(width: 90, height: 80)
                             .clipShape(Circle())
                     case .failure:
-                        Image("hund")
+                        Image("Kein-Foto")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 80, height: 70)
+                            .frame(width: 90, height: 80)
                             .clipShape(Circle())
                     @unknown default:
                         EmptyView()
                     }
                 }
             } else {
-                Image("hund")
+                Image("Kein-Foto")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 80, height: 70)
+                    .frame(width: 90, height: 80)
                     .clipShape(Circle())
             }
             

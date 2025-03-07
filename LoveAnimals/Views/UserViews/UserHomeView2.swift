@@ -15,11 +15,6 @@ struct UserHomeView2: View {
                     Label("Home", systemImage: "house")
                 }
 
-            SearchView()
-                .tabItem {
-                    Label("Suche", systemImage: "magnifyingglass")
-                }
-
             FavoritesView()
                 .tabItem {
                     Label("Favoriten", systemImage: "heart")

@@ -55,7 +55,7 @@ struct BilderView: View {
                     showImageSourceDialog = true
                 }
                 .padding()
-                .background(Color.blue)
+                .background(Color.customBrown)
                 .foregroundColor(.white)
                 .cornerRadius(8)
                 
