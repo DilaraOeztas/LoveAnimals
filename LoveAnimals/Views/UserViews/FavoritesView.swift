@@ -18,11 +18,11 @@ struct FavoritesView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 60, height: 60)
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
 
                     Text("Du hast noch keine Favoriten.")
                         .font(.title3)
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.gray)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .navigationTitle("Favoriten")
@@ -47,7 +47,7 @@ struct FavoritesView: View {
                                             .resizable()
                                             .scaledToFit()
                                             .frame(width: 50, height: 50)
-                                            .foregroundColor(.gray)
+                                            .foregroundStyle(.gray)
                                     @unknown default:
                                         EmptyView()
                                     }
@@ -59,8 +59,17 @@ struct FavoritesView: View {
                                     .font(.headline)
                                 Text(animal.rasse)
                                     .font(.subheadline)
-                                    .foregroundColor(.gray)
+                                    .foregroundStyle(.gray)
                             }
+                        }
+                    }
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            Task {
+                                await viewModel.removeFavorite(animalID: animal.id ?? "")
+                            }
+                        } label: {
+                            Label("Entfernen", systemImage: "trash")
                         }
                     }
                 }

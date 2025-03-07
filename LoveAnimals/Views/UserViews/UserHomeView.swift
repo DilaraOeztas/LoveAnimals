@@ -35,34 +35,35 @@ struct UserHomeView: View {
                         ForEach(viewModel.animals) { animal in
                             NavigationLink(destination: AnimalDetailView(animal: animal)) {
                                 AnimalsView(animal: animal, userCoordinates: userAuthVM.userCoordinates)
+                                    .foregroundStyle(.primary)
                             }
+                            .buttonStyle(PlainButtonStyle())
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
                     }
-                    
-                    Button(action: {
-                        tierheimVM.logout()
-                        navigateToLogin = true
-                    }) {
-                        Text("Logout")
-                            .font(.headline)
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: 100, minHeight: 50)
-                            .background(Color.red)
-                            .cornerRadius(10)
-                            .padding(.horizontal)
-                    }
-                    .padding(.bottom, 20)
-                    .navigationDestination(isPresented: $navigateToLogin) {
-                        LoginView()
-                    }
                 }
+                Spacer()
+                Button(action: {
+                    tierheimVM.logout()
+                    navigateToLogin = true
+                }) {
+                    Text("Logout")
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: 100, minHeight: 50)
+                        .background(Color.red)
+                        .cornerRadius(10)
+                        .padding(.horizontal)
+                }
+                .padding(.bottom, 20)
             }
+            .navigationDestination(isPresented: $navigateToLogin) {
+                LoginView()
+            }
+            
             .onAppear {
                 UNUserNotificationCenter.current().delegate = NotificationManager.shared
             }
-//            .navigationTitle("Alle Tiere")
         }
     }
 }
