@@ -15,8 +15,8 @@ struct AnimalsView: View {
     @State private var tierheimPLZ = ""
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            if let firstImageURL = animal.imageURLs.first, let url = URL(string: firstImageURL) {
+        VStack(alignment: .center) {
+            if let firstImageURL = animal.bilder.first, let url = URL(string: firstImageURL) {
                 AsyncImage(url: url) { phase in
                     switch phase {
                     case .empty:
@@ -25,15 +25,14 @@ struct AnimalsView: View {
                     case .success(let image):
                         image.resizable()
                             .scaledToFill()
-                            .frame(width: 100, height: 90)
+                            .frame(width: 80, height: 70)
                             .clipShape(Circle())
                     case .failure:
                         Image("hund")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 100, height: 90)
+                            .frame(width: 80, height: 70)
                             .clipShape(Circle())
-                            .foregroundColor(.gray)
                     @unknown default:
                         EmptyView()
                     }
@@ -42,15 +41,14 @@ struct AnimalsView: View {
                 Image("hund")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 100, height: 90)
+                    .frame(width: 80, height: 70)
                     .clipShape(Circle())
-                    .foregroundColor(.gray)
             }
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(animal.tierName)
+                Text(animal.name)
                     .font(.headline)
-
+                
                 if let userCoordinates {
                     if !tierheimPLZ.isEmpty {
                         let distance = DistanceCalculator.calculateDistance(
@@ -63,7 +61,9 @@ struct AnimalsView: View {
                     }
                 }
             }
-        }
+                
+            }
+        
         .onAppear {
             ladeTierheimPLZ()
         }
@@ -83,7 +83,7 @@ struct AnimalsView: View {
 
 
 #Preview {
-    AnimalsView(animal: Animal(tierName: "Test", tierart: "Hund", rasse: "Mischling", alter: "2 Jahre", groesse: "Mittel", geschlecht: "weiblich", farbe: "schwarz", gesundheitszustand: "gesund", beschreibung: "Sehr verspielt", schutzgebuehr: "250", imageURLs: ["https//placekitten.com/400/300"], erstelltAm: Date(), tierheimID: "12345"), userCoordinates: (latitude: 50.1109, longitude: 8.6821))
+    AnimalsView(animal: Animal(name: "Test", tierart: "Hund", rasse: "Mischling", alter: "2 Jahre", groesse: "Mittel", geschlecht: "weiblich", farbe: "schwarz", gesundheit: "gesund", beschreibung: "Sehr verspielt", schutzgebuehr: "250", bilder: ["https//placekitten.com/400/300"], erstelltAm: Date(), tierheimID: "12345"), userCoordinates: (latitude: 50.1109, longitude: 8.6821))
 }
 
 

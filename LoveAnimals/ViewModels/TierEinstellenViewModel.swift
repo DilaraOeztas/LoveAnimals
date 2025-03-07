@@ -104,7 +104,8 @@ class TierEinstellenViewModel: ObservableObject {
             "farbe": ausgewaehlteFarbe,
             "gesundheit": ausgewaehlteGesundheit,
             "bilder": bildUrls,
-            "erstelltAm": Timestamp(date: Date())
+            "erstelltAm": Timestamp(date: Date()),
+            "tierheimID": tierheimID
         ]
         
         let db = Firestore.firestore()

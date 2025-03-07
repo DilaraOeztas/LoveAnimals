@@ -7,30 +7,38 @@
 
 import SwiftUI
 import FirebaseFirestore
+import FirebaseAuth
+
 
 @MainActor
 class AnimalsViewModel: ObservableObject {
     @Published var animals: [Animal] = []
+    @Published var favoriten: [Animal] = []
+
+    
+    init() {
+        Task {
+            await ladeAlleTiere()
+        }
+    }
 
     func ladeAlleTiere() async {
         let db = Firestore.firestore()
-        animals.removeAll()  // Wichtig: Immer erst leeren, sonst doppelte Einträge bei erneutem Laden
+        animals.removeAll()
 
         do {
-            // 1. Alle Tierheime laden
             let tierheimeSnapshot = try await db.collection("tierheime").getDocuments()
 
-            // 2. Für jedes Tierheim die Tiere laden
             for document in tierheimeSnapshot.documents {
                 let tierheimID = document.documentID
                 let tiereSnapshot = try await db.collection("tierheime")
                     .document(tierheimID)
-                    .collection("tiere")
+                    .collection("Tiere")
                     .getDocuments()
 
                 for tierDocument in tiereSnapshot.documents {
                     var animal = try tierDocument.data(as: Animal.self)
-                    animal.tierheimID = tierheimID // Die tierheimID aus dem Pfad hinzufügen!
+                    animal.tierheimID = tierheimID 
                     animals.append(animal)
                 }
             }
@@ -40,4 +48,61 @@ class AnimalsViewModel: ObservableObject {
             print("Fehler beim Laden der Tiere: \(error.localizedDescription)")
         }
     }
+    
+    func addFavorite(animal: Animal) async {
+        guard let userID = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+
+        do {
+            try await db.collection("users")
+                .document(userID)
+                .collection("favoriten")
+                .document(animal.id ?? UUID().uuidString)
+                .setData(animal.asDictionary())
+
+            print("Favorit hinzugefügt")
+            await loadFavorites()
+        } catch {
+            print("Fehler beim Speichern des Favoriten: \(error.localizedDescription)")
+        }
+    }
+
+    func removeFavorite(animalID: String) async {
+        guard let userID = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+
+        do {
+            try await db.collection("users")
+                .document(userID)
+                .collection("favoriten")
+                .document(animalID)
+                .delete()
+
+            print("Favorit entfernt")
+            await loadFavorites()
+        } catch {
+            print("Fehler beim Löschen des Favoriten: \(error.localizedDescription)")
+        }
+    }
+
+    func loadFavorites() async {
+        guard let userID = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+
+        do {
+            let snapshot = try await db.collection("users")
+                .document(userID)
+                .collection("favoriten")
+                .getDocuments()
+
+            let favorites = snapshot.documents.compactMap { try? $0.data(as: Animal.self) }
+            DispatchQueue.main.async {
+                self.favoriten = favorites
+            }
+        } catch {
+            print("Fehler beim Laden der Favoriten: \(error.localizedDescription)")
+        }
+    }
 }
+
+

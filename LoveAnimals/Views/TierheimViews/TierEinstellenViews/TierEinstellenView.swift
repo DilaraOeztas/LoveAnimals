@@ -17,7 +17,7 @@ struct TierEinstellenView: View {
     @State private var showGalleryPicker = false
 
     var body: some View {
-        NavigationStack {
+//        NavigationStack {
             ScrollView {
                 VStack {
                     BilderView(viewModel: viewModel,
@@ -48,7 +48,7 @@ struct TierEinstellenView: View {
                 Text("Wenn du abbrichst, gehen alle Eingaben verloren. Möchtest du wirklich abbrechen?")
             }
         }
-    }
+//    }
 }
 
 

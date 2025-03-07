@@ -15,12 +15,14 @@ struct LoveAnimalsApp: App {
     
     @StateObject private var authViewModel = UserAuthViewModel()
     @StateObject private var tierheimAuthViewModel = TierheimAuthViewModel()
+    @StateObject private var animalsViewModel = AnimalsViewModel()
 
     var body: some Scene {
         WindowGroup {
             SplashScreenView()
                 .environmentObject(authViewModel)
                 .environmentObject(tierheimAuthViewModel)
+                .environmentObject(animalsViewModel)
         }
     }
 

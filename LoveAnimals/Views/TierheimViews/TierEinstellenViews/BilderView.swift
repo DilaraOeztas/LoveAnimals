@@ -78,3 +78,8 @@ struct BilderView: View {
         }
     }
 }
+
+//#Preview {
+//    BilderView(viewModel: TierEinstellenViewModel(), showImageSourceDialog: <#T##Bool#>, isCameraSelected: <#T##Bool#>, showGalleryPicker: <#T##Bool#>)
+//        .environmentObject(TierEinstellenViewModel())
+//}

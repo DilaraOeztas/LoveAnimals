@@ -40,4 +40,5 @@ struct UserHomeView2: View {
 }
 #Preview {
     UserHomeView2()
+        .environmentObject(UserAuthViewModel())
 }
