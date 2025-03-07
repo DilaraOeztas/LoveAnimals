@@ -21,6 +21,12 @@ struct UserHomeView: View {
     
     let userCoordinates: (latitude: Double, longitude: Double)?
     
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -33,7 +39,7 @@ struct UserHomeView: View {
                 HeaderView(profileImage: profileImage, searchText: $searchText)
                 
                 ScrollView {
-                    HStack(spacing: 16) {
+                    LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(viewModel.animals) { animal in
                             Button {
                                 selectedAnimal = animal
@@ -47,7 +53,6 @@ struct UserHomeView: View {
                     }
                     .padding(.horizontal)
                 }
-                Spacer()
                 Button(action: {
                     tierheimVM.logout()
                     navigateToLogin = true
