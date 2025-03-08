@@ -58,7 +58,7 @@ struct TierheimHomeView: View {
                 if showPostUploadToast {
                     showPostUploadToast = false
                     showToast = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                         showToast = false
                     }
                 }
@@ -81,7 +81,7 @@ struct TierheimHomeView: View {
     @ViewBuilder
     var toastOverlay: some View {
         if showToast {
-            Text("Dein Tier wird in Kürze online angezeigt!")
+            Text("Dein Tier wird in Kürze online gehen!")
                 .padding()
                 .background(Color.black.opacity(0.7))
                 .foregroundStyle(.white)

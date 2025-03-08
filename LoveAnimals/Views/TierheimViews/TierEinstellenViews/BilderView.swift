@@ -22,15 +22,21 @@ struct BilderView: View {
                     .scaledToFill()
                     .frame(height: 200)
                     .clipped()
+                    .cornerRadius(8)
             } else {
                 Rectangle()
                     .fill(Color.gray.opacity(0.2))
                     .frame(height: 200)
                     .cornerRadius(12)
                     .overlay(
-                        Image(systemName: "plus.circle")
-                            .font(.system(size: 60))
-                            .foregroundStyle(.gray)
+                        VStack {
+                            Image(systemName: "plus.circle")
+                                .font(.system(size: 60))
+                                .foregroundStyle(.gray)
+                            Text("Fotos hinzufügen")
+                                .font(.headline)
+                                .foregroundStyle(.gray)
+                        }
                     )
                     .onTapGesture {
                         showImageSourceDialog = true
@@ -48,17 +54,21 @@ struct BilderView: View {
                                 .clipped()
                                 .cornerRadius(8)
                         }
+                        Button(action: {
+                            showImageSourceDialog = true
+                        }) {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(Color.gray.opacity(0.2))
+                                    .frame(width: 100, height: 80)
+                                Image(systemName: "plus")
+                                    .font(.system(size: 30))
+                                    .foregroundStyle(.gray)
+                            }
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
-                
-                Button("Weitere Bilder hinzufügen") {
-                    showImageSourceDialog = true
-                }
-                .padding()
-                .background(Color.customBrown)
-                .foregroundColor(.white)
-                .cornerRadius(8)
-                
             }
         }
         .padding(.horizontal)

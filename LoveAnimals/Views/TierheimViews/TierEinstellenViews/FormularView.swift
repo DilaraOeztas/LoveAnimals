@@ -17,6 +17,7 @@ struct FormularView: View {
             }
             .sheet(isPresented: $viewModel.showTierartSheet) {
                 TierartSheet(ausgewaehlteTierart: $viewModel.ausgewaehlteTierart, showTierartSheet: $viewModel.showTierartSheet)
+                    .presentationDetents([.medium, .large])
             }
             
             TierOptionView(title: "Rasse", value: viewModel.ausgewaehlteRasse) {
@@ -27,6 +28,7 @@ struct FormularView: View {
             }
             .sheet(isPresented: $viewModel.showRassenSheet) {
                 RassenSheet(rassen: viewModel.aktuelleRassen, ausgewaehlteRasse: $viewModel.ausgewaehlteRasse, showRasseSheet: $viewModel.showRassenSheet)
+                    .presentationDetents([.medium, .large])
             }
             
             TierOptionView(title: "Alter", value: viewModel.ausgewaehltesAlter) {
@@ -34,6 +36,7 @@ struct FormularView: View {
             }
             .sheet(isPresented: $viewModel.showAlterSheet) {
                 AlterSheet(ausgewaehlteAlter: $viewModel.ausgewaehltesAlter, showAlterSheet: $viewModel.showAlterSheet)
+//                    .presentationDetents([.medium, .large])
             }
             
             TierOptionView(title: "Größe", value: viewModel.ausgewaehlteGroesse) {
@@ -41,6 +44,7 @@ struct FormularView: View {
             }
             .sheet(isPresented: $viewModel.showGroesseSheet) {
                 GroessenSheet(ausgewaehlteGroesse: $viewModel.ausgewaehlteGroesse, showGroessenSheet: $viewModel.showGroesseSheet)
+                    .presentationDetents([.medium, .large])
             }
             
             TierOptionView(title: "Geschlecht", value: viewModel.ausgewaehltesGeschlecht) {
@@ -48,6 +52,7 @@ struct FormularView: View {
             }
             .sheet(isPresented: $viewModel.showGeschlechtSheet) {
                 GeschlechtSheet(ausgewaehltesGeschlecht: $viewModel.ausgewaehltesGeschlecht, showSheet: $viewModel.showGeschlechtSheet)
+                    .presentationDetents([.medium, .large])
             }
             
             TierOptionView(title: "Farbe", value: viewModel.ausgewaehlteFarbe) {
@@ -55,6 +60,7 @@ struct FormularView: View {
             }
             .sheet(isPresented: $viewModel.showFarbenSheet) {
                 FarbenSheet(ausgewaehlteFarbe: $viewModel.ausgewaehlteFarbe, showFarbenSheet: $viewModel.showFarbenSheet)
+                    .presentationDetents([.medium, .large])
             }
             
             TierOptionView(title: "Gesundheit", value: viewModel.ausgewaehlteGesundheit) {
@@ -62,6 +68,7 @@ struct FormularView: View {
             }
             .sheet(isPresented: $viewModel.showGesundheitSheet) {
                 Gesundheitszustand(ausgewaehlteGesundheit: $viewModel.ausgewaehlteGesundheit, showGesundheitSheet: $viewModel.showGesundheitSheet)
+                    .presentationDetents([.medium, .large])
             }
             VStack(alignment: .leading, spacing: 8) {
                 Text("Name des Tieres")
