@@ -36,9 +36,9 @@ struct TierheimHomeView2: View {
                     }
                     .tag(2)
                 
-                THKonto()
+                StatistikView()
                     .tabItem {
-                        Label("Konto", systemImage: "person.crop.circle")
+                        Label("Statistiken", systemImage: "chart.bar")
                     }
                     .tag(3)
                 
@@ -50,5 +50,6 @@ struct TierheimHomeView2: View {
 
 #Preview {
     TierheimHomeView2()
+        .environmentObject(AnimalsViewModel())
         .environmentObject(UserAuthViewModel())
 }

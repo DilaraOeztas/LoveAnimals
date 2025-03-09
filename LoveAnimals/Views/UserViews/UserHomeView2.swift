@@ -25,9 +25,9 @@ struct UserHomeView2: View {
                     Label("Chats", systemImage: "bubble.left.and.bubble.right")
                 }
 
-            UserKonto()
+            SpendenView()
                 .tabItem {
-                    Label("Konto", systemImage: "person.circle")
+                    Label("Spenden", systemImage: "eurosign.circle")
                 }
         }
         .navigationBarBackButtonHidden(true)
@@ -36,4 +36,5 @@ struct UserHomeView2: View {
 #Preview {
     UserHomeView2()
         .environmentObject(UserAuthViewModel())
+        .environmentObject(AnimalsViewModel())
 }
