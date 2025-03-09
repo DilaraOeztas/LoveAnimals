@@ -14,6 +14,7 @@ struct Animal: Identifiable, Codable {
     var tierart: String
     var rasse: String
     var alter: String
+    var geburtsdatum: Date?
     var groesse: String
     var geschlecht: String
     var farbe: String
@@ -33,6 +34,7 @@ extension Animal {
             "tierart": tierart,
             "rasse": rasse,
             "alter": alter,
+            "geburtsdatum": geburtsdatum != nil ? Timestamp(date: geburtsdatum!) : NSNull(),
             "groesse": groesse,
             "geschlecht": geschlecht,
             "farbe": farbe,

@@ -9,15 +9,21 @@ import SwiftUI
 
 struct AlterSheet: View {
     @Binding var ausgewaehlteAlter: String
+    @Binding var ausgewaehltesGeburtsdatum: Date?
     @Binding var showAlterSheet: Bool
     
     @State private var geburtsdatum: Date? = nil
     @State private var tempGeburtsdatum: Date = Date()
+    
     @State private var showDatePicker = false
     @State private var sheetSize: PresentationDetent = .medium
     
     let alterKategorien = ["Jung", "Erwachsen", "Senior"]
-    
+    let altersangaben: [String: String] = [
+        "Jung": "< 1 Jahr",
+        "Erwachsen": "1 - 6 Jahre",
+        "Senior": "> 6 Jahre"
+    ]
     func berechnetesAlter(fuer datum: Date) -> String {
         let alter = Calendar.current.dateComponents([.year], from: datum, to: Date()).year ?? 0
         
@@ -102,6 +108,10 @@ struct AlterSheet: View {
                             Text(alter)
                                 .foregroundStyle(.black)
                             Spacer()
+                            if let altersangabe = altersangaben[alter] {
+                                Text(altersangabe)
+                                    .foregroundStyle(.gray)
+                            }
                             if alter == ausgewaehlteAlter {
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundStyle(.green)
@@ -131,6 +141,10 @@ struct AlterSheet: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Fertig") {
+                        geburtsdatum = tempGeburtsdatum
+                        ausgewaehltesGeburtsdatum = tempGeburtsdatum
+                        ausgewaehlteAlter = berechnetesAlter(fuer: tempGeburtsdatum)
+                        showDatePicker = false
                         showAlterSheet = false
                     }
                     .font(.headline)
@@ -141,9 +155,9 @@ struct AlterSheet: View {
     }
 }
 
-#Preview {
-    AlterSheet(ausgewaehlteAlter: .constant(""), showAlterSheet: .constant(true))
-}
+//#Preview {
+//    AlterSheet(ausgewaehlteAlter: .constant(""), ausgewaehltesGeburtsdatum: <#Binding<Date?>#>, showAlterSheet: .constant(true))
+//}
 
 
 

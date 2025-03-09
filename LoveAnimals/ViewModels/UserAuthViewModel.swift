@@ -33,7 +33,7 @@ final class UserAuthViewModel: ObservableObject {
     
     @Published var userCoordinates: (latitude: Double, longitude: Double)? = nil
 
-    let userPLZ = "50825" // Später kommt das aus Firestore
+    let userPLZ = "50825"
     
     
     var userID: String? {

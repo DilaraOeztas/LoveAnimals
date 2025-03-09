@@ -11,7 +11,13 @@ struct AnimalDetailView: View {
     @EnvironmentObject var viewModel: AnimalsViewModel
     @State private var isFavorite: Bool = false
     let animal: Animal
-
+    
+    let altersangaben: [String: String] = [
+        "Jung": "< 1 Jahr",
+        "Erwachsen": "1 - 6 Jahre",
+        "Senior": "> 6 Jahre"
+    ]
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
@@ -48,7 +54,31 @@ struct AnimalDetailView: View {
                 }
                 detailText(title: "Name:", value: animal.name)
                 detailText(title: "Rasse:", value: animal.rasse)
-                detailText(title: "Alter:", value: animal.alter)
+                
+                HStack {
+                    Text("Alter:")
+                        .bold()
+                    Spacer()
+                    if let altersangabe = altersangaben[animal.alter] {
+                        Text(altersangabe)
+//                            .foregroundStyle(.gray)
+//                            .font(.footnote)
+                    }
+                    Text("| \(animal.alter)")
+                }
+                .padding(.bottom, 10)
+                
+                HStack {
+                    Text("Geburtsdatum:")
+                        .bold()
+                    Spacer()
+                    if let geburtsdatum = animal.geburtsdatum {
+                        Text(geburtsdatum.formatted(date: .long, time: .omitted))
+                    } else {
+                        Text("Nicht bekannt")
+                            .foregroundStyle(.gray)
+                    }
+                }
                 detailText(title: "Größe:", value: animal.groesse)
                 detailText(title: "Farbe:", value: animal.farbe)
                 detailText(title: "Geschlecht:", value: animal.geschlecht)

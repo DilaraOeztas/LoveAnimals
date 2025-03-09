@@ -144,62 +144,6 @@ final class TierheimAuthViewModel: ObservableObject {
             errorMessage = error.localizedDescription
         }
     }
-    
-    
-    
-    
-//    func ladeTiereAusTierheim() async {
-//        let db = Firestore.firestore()
-//        
-//        do {
-//            let snapshot = try await db.collection("tiere").getDocuments()
-//            
-//            let geladeneTiere = snapshot.documents.compactMap { doc -> Animal? in
-//                let data = doc.data()
-//                
-//                guard let tierName = data["tierName"] as? String,
-//                      let tierart = data["tierart"] as? String,
-//                      let rasse = data["rasse"] as? String,
-//                      let alter = data["alter"] as? String,
-//                      let groesse = data["groesse"] as? String,
-//                      let geschlecht = data["geschlecht"] as? String,
-//                      let farbe = data["farbe"] as? String,
-//                      let gesundheitszustand = data["gesundheitszustand"] as? String,
-//                      let beschreibung = data["beschreibung"] as? String,
-//                      let schutzgebuehr = data["schutzgebuehr"] as? String,
-//                      let imageURLs = data["imageURLs"] as? [String],
-//                      let erstelltAm = (data["erstelltAm"] as? Timestamp)?.dateValue(),
-//                      let tierheimID = data["tierheimID"] as? String else {
-//                    print("⚠️ Ein Tier-Dokument hat fehlerhafte Daten und wird übersprungen.")
-//                    return nil
-//                }
-//                
-//                // Rückgabe des vollständig erstellten `Animal`-Objekts
-//                return Animal(
-//                    tierName: tierName,
-//                    tierart: tierart,
-//                    rasse: rasse,
-//                    alter: alter,
-//                    groesse: groesse,
-//                    geschlecht: geschlecht,
-//                    farbe: farbe,
-//                    gesundheitszustand: gesundheitszustand,
-//                    beschreibung: beschreibung,
-//                    schutzgebuehr: schutzgebuehr,
-//                    imageURLs: imageURLs,
-//                    erstelltAm: erstelltAm,
-//                    tierheimID: tierheimID
-//                )
-//            }
-//            
-//            DispatchQueue.main.async {
-//                self.animals = geladeneTiere
-//            }
-//            
-//        } catch {
-//            print("❌ Fehler beim Abrufen der Tiere: \(error.localizedDescription)")
-//        }
-//    }
 }
 
 

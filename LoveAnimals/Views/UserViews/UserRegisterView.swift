@@ -46,7 +46,13 @@ struct UserRegisterView: View {
     }
     
     var body: some View {
-        
+        VStack {
+            Image("AppIcon3")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 100)
+                .padding(.top, 16)
+        }
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 HStack {
@@ -199,18 +205,18 @@ struct UserRegisterView: View {
                 }
                 .padding(.horizontal)
                 
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("In welchem Umkreis möchtest du nach Tierheimen suchen?")
-                        .font(.subheadline)
-                        .padding(.horizontal)
-                    
-                    Slider(value: $searchRadius, in: 5...500, step: 5)
-                        .padding(.horizontal)
-                    
-                    Text("\(Int(searchRadius)) km Umkreis")
-                        .font(.headline)
-                        .padding(.horizontal)
-                }
+//                VStack(alignment: .leading, spacing: 10) {
+//                    Text("In welchem Umkreis möchtest du nach Tierheimen suchen?")
+//                        .font(.subheadline)
+//                        .padding(.horizontal)
+//                    
+//                    Slider(value: $searchRadius, in: 5...500, step: 5)
+//                        .padding(.horizontal)
+//                    
+//                    Text("\(Int(searchRadius)) km Umkreis")
+//                        .font(.headline)
+//                        .padding(.horizontal)
+//                }
                 
                 HStack(spacing: 0) {
                     Button(action: {

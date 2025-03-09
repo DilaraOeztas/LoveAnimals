@@ -11,7 +11,9 @@ struct RassenSheet: View {
     let rassen: [String]
     @Binding var ausgewaehlteRasse: String
     @Binding var showRasseSheet: Bool
-    
+    @State private var benutzerdefinierteRasse: String = ""
+    @State private var showCustomAlert: Bool = false
+
     var body: some View {
         NavigationStack {
             List(rassen, id: \.self) { rasse in
@@ -24,16 +26,19 @@ struct RassenSheet: View {
                             .foregroundStyle(.green)
                     } else {
                         Image(systemName: "circle")
-                            
                     }
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    ausgewaehlteRasse = rasse
-                    showRasseSheet = false
+                    if rasse == "Sonstige" {
+                        showCustomAlert = true
+                    } else {
+                        ausgewaehlteRasse = rasse
+                        showRasseSheet = false
+                    }
                 }
             }
-            .navigationBarTitle("Rasse wählen")
+            .navigationTitle("Rasse wählen")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -42,6 +47,18 @@ struct RassenSheet: View {
                     }
                 }
             }
+            .alert("Eigene Rasse eingeben", isPresented: $showCustomAlert) {
+                TextField("Rasse", text: $benutzerdefinierteRasse)
+                Button("Speichern", action: speichereEigeneRasse)
+                Button("Abbrechen", role: .cancel) {}
+            }
+        }
+    }
+
+    private func speichereEigeneRasse() {
+        if !benutzerdefinierteRasse.isEmpty {
+            ausgewaehlteRasse = benutzerdefinierteRasse
+            showRasseSheet = false
         }
     }
 }

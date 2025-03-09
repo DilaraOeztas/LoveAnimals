@@ -13,18 +13,17 @@ import FirebaseAuth
 @MainActor
 class TierEinstellenViewModel: ObservableObject {
     
-    // Bilder aus der Galerie
     @Published var selectedImages: [UIImage] = []
     @Published var imagePickerItems: [PhotosPickerItem] = []
     @Published var uploadedImageURLs: [String] = []
     
-    // Formular-Daten
     @Published var tierName = ""
     @Published var tierBeschreibung = ""
     @Published var schutzgebuehr = ""
     @Published var ausgewaehlteTierart = ""
     @Published var ausgewaehlteRasse = ""
     @Published var ausgewaehltesAlter = ""
+    @Published var ausgewaehltesGeburtsdatum: Date? = nil
     @Published var ausgewaehlteGroesse = ""
     @Published var ausgewaehltesGeschlecht = ""
     @Published var ausgewaehlteFarbe = ""
@@ -99,6 +98,7 @@ class TierEinstellenViewModel: ObservableObject {
             "tierart": ausgewaehlteTierart,
             "rasse": ausgewaehlteRasse,
             "alter": ausgewaehltesAlter,
+            "geburtsdatum": ausgewaehltesGeburtsdatum != nil ? Timestamp(date: ausgewaehltesGeburtsdatum!) : NSNull(),
             "groesse": ausgewaehlteGroesse,
             "geschlecht": ausgewaehltesGeschlecht,
             "farbe": ausgewaehlteFarbe,
@@ -148,6 +148,7 @@ class TierEinstellenViewModel: ObservableObject {
         self.ausgewaehlteTierart = ""
         self.ausgewaehlteRasse = ""
         self.ausgewaehltesAlter = ""
+        self.ausgewaehltesGeburtsdatum = nil
         self.ausgewaehlteGroesse = ""
         self.ausgewaehltesGeschlecht = ""
         self.ausgewaehlteFarbe = ""

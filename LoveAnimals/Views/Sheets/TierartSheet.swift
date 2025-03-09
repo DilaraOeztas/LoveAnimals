@@ -10,6 +10,8 @@ import SwiftUI
 struct TierartSheet: View {
     @Binding var ausgewaehlteTierart: String
     @Binding var showTierartSheet: Bool
+    @State private var benutzerdefinierteTierart: String = ""
+    @State private var showCustomAlert: Bool = false
     
     let tierarten = ["Hund", "Katze", "Vogel", "Kaninchen", "Meerschweinchen", "Reptil", "Fisch", "Sonstiges"]
     
@@ -29,8 +31,12 @@ struct TierartSheet: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    ausgewaehlteTierart = tierart
-                    showTierartSheet = false
+                    if tierart == "Sonstiges" {
+                        showCustomAlert = true
+                    } else {
+                        ausgewaehlteTierart = tierart
+                        showTierartSheet = false
+                    }
                 }
             }
             .navigationTitle("Tierart auswählen")
@@ -42,9 +48,22 @@ struct TierartSheet: View {
                     }
                 }
             }
+            .alert("Eigene Tierart eingeben", isPresented: $showCustomAlert) {
+                TextField("Tierart", text: $benutzerdefinierteTierart)
+                Button("Speichern", action: speichereEigeneTierart)
+                Button("Abbrechen", role: .cancel) { }
+            }
+        }
+    }
+    
+    private func speichereEigeneTierart() {
+        if !benutzerdefinierteTierart.isEmpty {
+            ausgewaehlteTierart = benutzerdefinierteTierart
+            showTierartSheet = false
         }
     }
 }
+
 
 
 #Preview {

@@ -12,11 +12,19 @@ struct RoleSelectionView: View {
     @State private var isTierheim = false
 
     var body: some View {
+        VStack {
+            Image("AppIcon3")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 100)
+                .padding(.top, 16)
+            
+            Spacer()
             VStack(spacing: 20) {
-
+                
                 Text("Bitte auswählen:")
                     .font(.headline)
-
+                
                 Button(action: {
                     isUser = true
                 }) {
@@ -33,7 +41,7 @@ struct RoleSelectionView: View {
                 }
                 
                 Text("ODER")
-
+                
                 Button(action: {
                     isTierheim = true
                 }) {
@@ -49,6 +57,8 @@ struct RoleSelectionView: View {
                     TierheimRegisterView()
                 }
             }
+            Spacer().frame(height: 300)
+        }
     }
 }
 
