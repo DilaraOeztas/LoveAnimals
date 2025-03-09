@@ -18,6 +18,9 @@ struct TierheimHomeView: View {
     
     @State private var selectedCategory: String = "Alle"
     @State private var otherCategories: [String] = []
+    @State private var showBackgroundOverlay = false
+    @State private var showMenu = false
+    @State private var menuPosition: CGPoint = .zero
     
     let userCoordinates: (latitude: Double, longitude: Double)?
     
@@ -31,65 +34,98 @@ struct TierheimHomeView: View {
     ]
     
     var body: some View {
-        NavigationStack {
-            VStack {
-                Image("AppIcon3")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 100)
-                    .padding(.top, 16)
-                
-                HeaderView(profileImage: profileImage, searchText: $searchText)
-                
-                HStack(spacing: 10) {
-                    filterButton(title: "Alle", category: "Alle")
-                    filterButton(title: "Hunde", category: "Hund")
-                    filterButton(title: "Katzen", category: "Katze")
-                    filterButton(title: "Weitere Tiere", category: "Weitere Tiere")
-                }
-                .padding(.horizontal)
-                .padding(.bottom, 20)
-                
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(filteredAnimals()) { animal in
-                            Button {
-                                selectedAnimal = animal
-                                showDetailView = true
-                            } label: {
-                                AnimalsView(animal: animal, userCoordinates: userAuthVM.userCoordinates)
-                                    .foregroundStyle(.primary)
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                        }
+        ZStack {
+            NavigationStack {
+                VStack {
+                    Image("AppIcon3")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 100)
+                        .padding(.top, 16)
+                    
+                    HeaderView(profileImage: profileImage, searchText: $searchText, showBackgroundOverlay: $showBackgroundOverlay, showMenu: $showMenu, menuPosition: $menuPosition)
+                    
+                    HStack(spacing: 10) {
+                        filterButton(title: "Alle", category: "Alle")
+                        filterButton(title: "Hunde", category: "Hund")
+                        filterButton(title: "Katzen", category: "Katze")
+                        filterButton(title: "Weitere Tiere", category: "Weitere Tiere")
                     }
                     .padding(.horizontal)
-                }
-            }
-            .onAppear {
-                if showPostUploadToast {
-                    showPostUploadToast = false
-                    showToast = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                        showToast = false
+                    .padding(.bottom, 20)
+                    
+                    ScrollView {
+                        LazyVGrid(columns: columns, spacing: 16) {
+                            ForEach(filteredAnimals()) { animal in
+                                Button {
+                                    selectedAnimal = animal
+                                    showDetailView = true
+                                } label: {
+                                    AnimalsView(animal: animal, userCoordinates: userAuthVM.userCoordinates)
+                                        .foregroundStyle(.primary)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                        .padding(.horizontal)
                     }
                 }
-            }
-            .overlay(
-                toastOverlay,
-                alignment: .bottom
-            )
-            .navigationDestination(isPresented: $showDetailView) {
-                if let animal = selectedAnimal {
-                    AnimalDetailView(animal: animal)
+                .onAppear {
+                    if showPostUploadToast {
+                        showPostUploadToast = false
+                        showToast = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                            showToast = false
+                        }
+                    }
+                }
+                .overlay(
+                    toastOverlay,
+                    alignment: .bottom
+                )
+                .navigationDestination(isPresented: $showDetailView) {
+                    if let animal = selectedAnimal {
+                        AnimalDetailView(animal: animal)
+                    }
+                }
+                .onAppear {
+                    UNUserNotificationCenter.current().delegate = NotificationManager.shared
                 }
             }
-            .onAppear {
-                UNUserNotificationCenter.current().delegate = NotificationManager.shared
+            if showMenu {
+                Color.black.opacity(0.4)
+                    .edgesIgnoringSafeArea(.all)
+                    .onTapGesture {
+                        withAnimation {
+                            showBackgroundOverlay = false
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                                showMenu = false
+                            }
+                        }
+                    }
+                
+                VStack(alignment: .leading, spacing: 10) {
+                    MenuButton(title: "Profil", systemImage: "person.circle") { }
+                    MenuButton(title: "Meine Anzeigen", systemImage: "list.bullet.rectangle") { }
+                    MenuButton(title: "Einstellungen", systemImage: "gearshape") { }
+                    MenuButton(title: "Benachrichtigungen", systemImage: "bell") { }
+                    MenuButton(title: "App bewerten", systemImage: "star") { }
+                    MenuButton(title: "Hilfebereich", systemImage: "questionmark.circle") { }
+                    MenuButton(title: "Kontaktiere uns", systemImage: "envelope") { }
+                    Divider()
+                    MenuButton(title: "Ausloggen", systemImage: "rectangle.portrait.and.arrow.right", isDestructive: true) { }
+                }
+                .frame(width: 230)
+                .background(Color.white)
+                .cornerRadius(10)
+                .shadow(radius: 10)
+                .position(x: menuPosition.x - 100, y: menuPosition.y + 150)
+                .transition(.opacity)
             }
+            
         }
     }
-    
     
     private func filterButton(title: String, category: String) -> some View {
         Button(action: { selectedCategory = category }) {
@@ -98,7 +134,7 @@ struct TierheimHomeView: View {
                 .padding(.vertical, 8)
                 .padding(.horizontal, 12)
                 .background(selectedCategory == category ? Color.customLightBrown : Color.gray.opacity(0.5))
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
                 .cornerRadius(8)
         }
     }
@@ -131,6 +167,29 @@ struct TierheimHomeView: View {
                 .transition(.move(edge: .bottom).combined(with: .opacity))
                 .animation(.easeInOut, value: showToast)
                 .padding(.bottom, 50)
+        }
+    }
+    
+    struct MenuButton: View {
+        var title: String
+        var systemImage: String
+        var isDestructive: Bool = false
+        var action: () -> Void
+
+        var body: some View {
+            Button(action: {
+                action()
+            }) {
+                HStack {
+                    Image(systemName: systemImage)
+                        .foregroundStyle(isDestructive ? .red : .primary)
+                    Text(title)
+                        .foregroundStyle(isDestructive ? .red : .primary)
+                }
+                .padding(.vertical, 8)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 16)
+            }
         }
     }
 }
