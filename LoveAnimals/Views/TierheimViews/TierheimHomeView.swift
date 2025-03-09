@@ -10,6 +10,7 @@ import SwiftUI
 struct TierheimHomeView: View {
     @EnvironmentObject var userAuthVM: UserAuthViewModel
     @EnvironmentObject var viewModel: AnimalsViewModel
+    @EnvironmentObject var thAuthVM: TierheimAuthViewModel
     
     @State private var searchText = ""
     @State private var profileImage: UIImage? = UIImage(named: "Dilara.jpeg")
@@ -21,6 +22,7 @@ struct TierheimHomeView: View {
     @State private var showBackgroundOverlay = false
     @State private var showMenu = false
     @State private var menuPosition: CGPoint = .zero
+    @State private var navigateToLogin = false
     
     let userCoordinates: (latitude: Double, longitude: Double)?
     
@@ -114,7 +116,10 @@ struct TierheimHomeView: View {
                     MenuButton(title: "Hilfebereich", systemImage: "questionmark.circle") { }
                     MenuButton(title: "Kontaktiere uns", systemImage: "envelope") { }
                     Divider()
-                    MenuButton(title: "Ausloggen", systemImage: "rectangle.portrait.and.arrow.right", isDestructive: true) { }
+                    MenuButton(title: "Ausloggen", systemImage: "rectangle.portrait.and.arrow.right", isDestructive: true) {
+                        thAuthVM.logout()
+                        navigateToLogin = true
+                    }
                 }
                 .frame(width: 230)
                 .background(Color.white)

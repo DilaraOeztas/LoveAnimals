@@ -22,6 +22,7 @@ struct UserHomeView: View {
     @State private var showBackgroundOverlay = false
     @State private var showMenu = false
     @State private var menuPosition: CGPoint = .zero
+    @State private var navigateToLogin = false
 
     let userCoordinates: (latitude: Double, longitude: Double)?
 
@@ -99,7 +100,10 @@ struct UserHomeView: View {
                     MenuButton(title: "Hilfebereich", systemImage: "questionmark.circle") { }
                     MenuButton(title: "Kontaktiere uns", systemImage: "envelope") { }
                     Divider()
-                    MenuButton(title: "Ausloggen", systemImage: "rectangle.portrait.and.arrow.right", isDestructive: true) { }
+                    MenuButton(title: "Ausloggen", systemImage: "rectangle.portrait.and.arrow.right", isDestructive: true) {
+                        userAuthVM.logout()
+                        navigateToLogin = true
+                    }
                 }
                 .frame(width: 230)
                 .background(Color.white)
