@@ -33,7 +33,7 @@ struct GroessenSheet: View {
                     showGroessenSheet = false
                 }
             }
-            .navigationTitle("Größe auswählen")
+            .navigationTitle("Größe wählen")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

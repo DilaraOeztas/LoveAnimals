@@ -33,7 +33,7 @@ struct Gesundheitszustand: View {
                     showGesundheitSheet = false
                 }
             }
-            .navigationTitle("Geschlecht auswählen")
+            .navigationTitle("Gesundheitszustand wählen")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

@@ -131,7 +131,7 @@ struct AlterSheet: View {
                     }
                 }
             }
-            .navigationTitle("Alter auswählen")
+            .navigationTitle("Alter wählen")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

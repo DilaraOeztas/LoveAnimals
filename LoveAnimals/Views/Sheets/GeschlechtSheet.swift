@@ -33,7 +33,7 @@ struct GeschlechtSheet: View {
                     showSheet = false
                 }
             }
-            .navigationTitle("Geschlecht auswählen")
+            .navigationTitle("Geschlecht wählen")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

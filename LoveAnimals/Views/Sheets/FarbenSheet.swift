@@ -34,7 +34,7 @@ struct FarbenSheet: View {
                     showFarbenSheet = false
                 }
             }
-            .navigationTitle("Geschlecht auswählen")
+            .navigationTitle("Farbe wählen")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

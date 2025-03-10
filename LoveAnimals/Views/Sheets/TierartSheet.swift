@@ -39,7 +39,7 @@ struct TierartSheet: View {
                     }
                 }
             }
-            .navigationTitle("Tierart auswählen")
+            .navigationTitle("Tierart wählen")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

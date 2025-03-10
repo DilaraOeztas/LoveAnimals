@@ -53,6 +53,7 @@ struct AnimalDetailView: View {
                     .padding(.top)
                 }
                 detailText(title: "Name:", value: animal.name)
+                detailText(title: "Tierart:", value: animal.tierart)
                 detailText(title: "Rasse:", value: animal.rasse)
                 
                 HStack {
@@ -61,12 +62,9 @@ struct AnimalDetailView: View {
                     Spacer()
                     if let altersangabe = altersangaben[animal.alter] {
                         Text(altersangabe)
-//                            .foregroundStyle(.gray)
-//                            .font(.footnote)
                     }
                     Text("| \(animal.alter)")
                 }
-                .padding(.bottom, 10)
                 
                 HStack {
                     Text("Geburtsdatum:")
