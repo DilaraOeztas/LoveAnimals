@@ -14,11 +14,19 @@ struct TierartSheet: View {
     @State private var benutzerdefinierteTierart: String = ""
     @State private var showCustomAlert: Bool = false
     
-    let tierarten = ["Hund", "Katze", "Vogel", "Kaninchen", "Meerschweinchen", "Reptil", "Fisch", "Sonstiges"]
+    var tierarten: [String] {
+        let standardTierarten = ["Hund", "Katze", "Vogel", "Kaninchen", "Reptil", "Fisch", "Sonstiges"]
+        let gespeicherteTierarten = viewModel.benutzerdefinierteTierarten.keys.sorted()
+        var liste = standardTierarten + gespeicherteTierarten
+        if !viewModel.neueTierart.isEmpty {
+            liste.append(viewModel.neueTierart)
+        }
+        return liste
+    }
     
     var body: some View {
         NavigationStack {
-            List(tierarten, id: \.self) { tierart in
+            List(Array(Set(tierarten)), id: \.self) { tierart in
                 HStack {
                     Text(tierart)
                         .foregroundStyle(.black)
@@ -48,21 +56,33 @@ struct TierartSheet: View {
                         showTierartSheet = false
                     }
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Fertig") {
+                        if !viewModel.neueTierart.isEmpty {
+                            ausgewaehlteTierart = viewModel.neueTierart
+                            viewModel.neueTierart = ""
+                        }
+                        showTierartSheet = false
+                    }
+                }
             }
             .alert("Tierart eingeben", isPresented: $showCustomAlert) {
                 TextField("Tierart", text: $benutzerdefinierteTierart)
                 Button("Speichern", action: speichereEigeneTierart)
                 Button("Abbrechen", role: .cancel) { }
             }
+            .onAppear {
+                Task {
+                    await viewModel.ladeBenutzerdefinierteTierarten()
+                }
+            }
         }
     }
     
     private func speichereEigeneTierart() {
         guard !benutzerdefinierteTierart.isEmpty else { return }
-        viewModel.benutzerdefinierteTierart = benutzerdefinierteTierart
-        ausgewaehlteTierart = benutzerdefinierteTierart
-        showTierartSheet = false
-        
+        viewModel.neueTierart = benutzerdefinierteTierart
+        benutzerdefinierteTierart = ""
     }
 }
 

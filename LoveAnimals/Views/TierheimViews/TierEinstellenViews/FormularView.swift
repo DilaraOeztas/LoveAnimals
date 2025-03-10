@@ -26,9 +26,18 @@ struct FormularView: View {
                 }
                 viewModel.showRassenSheet = true
             }
-            .sheet(isPresented: $viewModel.showRassenSheet) {
-                RassenSheet(rassen: $viewModel.aktuelleRassen, ausgewaehlteRasse: $viewModel.ausgewaehlteRasse, showRasseSheet: $viewModel.showRassenSheet, tierartIstBenutzerdefiniert: viewModel.ausgewaehlteTierart == viewModel.benutzerdefinierteTierart)
-                    .presentationDetents([.medium, .large])
+            .sheet(isPresented: $viewModel.showRassenSheet, onDismiss: {
+                Task {
+                    await viewModel.ladeRassenFuerTierart(tierart: viewModel.ausgewaehlteTierart)
+                }
+            }) {
+                RassenSheet(
+                    viewModel: viewModel,
+                    ausgewaehlteRasse: $viewModel.ausgewaehlteRasse,
+                    showRasseSheet: $viewModel.showRassenSheet,
+                    tierartIstBenutzerdefiniert: viewModel.tierartIstBenutzerdefiniert
+                )
+                .presentationDetents([.medium, .large])
             }
             
             TierOptionView(title: "Alter", value: viewModel.ausgewaehltesAlter) {
@@ -36,7 +45,7 @@ struct FormularView: View {
             }
             .sheet(isPresented: $viewModel.showAlterSheet) {
                 AlterSheet(ausgewaehlteAlter: $viewModel.ausgewaehltesAlter, ausgewaehltesGeburtsdatum: $viewModel.ausgewaehltesGeburtsdatum, showAlterSheet: $viewModel.showAlterSheet)
-//                    .presentationDetents([.medium, .large])
+                    .presentationDetents([.medium, .large])
             }
             
             TierOptionView(title: "Größe", value: viewModel.ausgewaehlteGroesse) {

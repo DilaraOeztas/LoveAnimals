@@ -30,11 +30,14 @@ class TierEinstellenViewModel: ObservableObject {
     @Published var ausgewaehltesGeschlecht = ""
     @Published var ausgewaehlteFarbe = ""
     @Published var ausgewaehlteGesundheit = ""
-    
+    @Published var tierartIstBenutzerdefiniert: Bool = false
+    @Published var neueTierart: String = ""
+    @Published var neueRasse: String = ""
+    @Published var benutzerdefinierteTierarten: [String: [String]] = [:]
+    @Published var aktuelleRassen: [String] = []
     
     @Published var showTierartSheet = false
     @Published var showRassenSheet = false
-    @Published var aktuelleRassen: [String] = []
     @Published var showGroesseSheet = false
     @Published var showGeschlechtSheet = false
     @Published var showAlterSheet = false
@@ -42,6 +45,12 @@ class TierEinstellenViewModel: ObservableObject {
     @Published var showGesundheitSheet = false
     
     @Published var isUploading = false
+    
+    init() {
+        Task {
+            await ladeBenutzerdefinierteTierarten()
+        }
+    }
     
     func loadImages(from items: [PhotosPickerItem]) {
         Task {
@@ -60,9 +69,9 @@ class TierEinstellenViewModel: ObservableObject {
     func uploadAllImagesAndSave() async {
         isUploading = true
         uploadedImageURLs.removeAll()
-
+        
         print("Starte Upload von \(selectedImages.count) Bildern...")
-
+        
         for (index, image) in selectedImages.enumerated() {
             do {
                 let url = try await ImgurService.uploadImage(image)
@@ -72,17 +81,17 @@ class TierEinstellenViewModel: ObservableObject {
                 print("Fehler beim Hochladen von Bild \(index + 1): \(error.localizedDescription)")
             }
         }
-
+        
         print("Upload abgeschlossen: \(uploadedImageURLs.count) von \(selectedImages.count) Bildern erfolgreich.")
-
+        
         if uploadedImageURLs.isEmpty {
             print("Keine Bilder erfolgreich hochgeladen - Abbruch.")
             isUploading = false
             return
         }
-
+        
         await speichereTierInFirestore(bildUrls: uploadedImageURLs)
-
+        
         resetForm()
         isUploading = false
     }
@@ -92,15 +101,15 @@ class TierEinstellenViewModel: ObservableObject {
             print("Kein eingeloggtes Tierheim gefunden")
             return
         }
-        let eigeneTierartSpeichern = !benutzerdefinierteTierart.isEmpty ? benutzerdefinierteTierart : ausgewaehlteTierart
-        let eigeneRasseSpeichern = !benutzerdefinierteRasse.isEmpty ? benutzerdefinierteRasse : ausgewaehlteRasse
-        
+        let db = Firestore.firestore()
+        let tierRef = db.collection("tierheime").document(tierheimID).collection("Tiere").document()
+
         let tierDaten: [String: Any] = [
             "name": tierName,
             "beschreibung": tierBeschreibung,
             "schutzgebuehr": schutzgebuehr,
-            "tierart": eigeneTierartSpeichern,
-            "rasse": eigeneRasseSpeichern,
+            "tierart": neueTierart.isEmpty ? ausgewaehlteTierart : neueTierart,
+            "rasse": neueRasse.isEmpty ? ausgewaehlteRasse : neueRasse,
             "alter": ausgewaehltesAlter,
             "geburtsdatum": ausgewaehltesGeburtsdatum != nil ? Timestamp(date: ausgewaehltesGeburtsdatum!) : NSNull(),
             "groesse": ausgewaehlteGroesse,
@@ -112,11 +121,13 @@ class TierEinstellenViewModel: ObservableObject {
             "tierheimID": tierheimID
         ]
         
-        let db = Firestore.firestore()
         do {
-            let tierRef = db.collection("tierheime").document(tierheimID).collection("Tiere").document()
             try await tierRef.setData(tierDaten)
             print("Tier erfolgreich gespeichert!")
+            if !neueTierart.isEmpty || !neueRasse.isEmpty {
+                await speichereBenutzerdefinierteTierart(neueTierart: neueTierart, neueRasse: neueRasse)
+            }
+            resetForm()
         } catch {
             print("Fehler beim Speichern: \(error.localizedDescription)")
         }
@@ -159,4 +170,91 @@ class TierEinstellenViewModel: ObservableObject {
         self.ausgewaehlteGesundheit = ""
         
     }
+    
+    func ladeBenutzerdefinierteTierarten() async {
+        guard let tierheimID = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+        let tierheimRef = db.collection("tierheime").document(tierheimID)
+
+        do {
+            let document = try await tierheimRef.getDocument()
+            if let gespeicherteTierarten = document.data()?["benutzerdefinierteTierarten"] as? [String: [String]] {
+                DispatchQueue.main.async {
+                    self.benutzerdefinierteTierarten = gespeicherteTierarten
+                }
+            }
+        } catch {
+            print("Fehler beim Laden der Tierarten aus Firestore: \(error.localizedDescription)")
+        }
+    }
+    
+    func speichereBenutzerdefinierteTierart(neueTierart: String, neueRasse: String) async {
+        guard let tierheimID = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+        let tierheimRef = db.collection("tierheime").document(tierheimID)
+
+        do {
+            let document = try await tierheimRef.getDocument()
+            var gespeicherteTierarten = document.data()?["benutzerdefinierteTierarten"] as? [String: [String]] ?? [:]
+
+            if !neueRasse.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                if gespeicherteTierarten[neueTierart] == nil {
+                    gespeicherteTierarten[neueTierart] = []
+                }
+                gespeicherteTierarten[neueTierart]?.append(neueRasse)
+            }
+
+            let firestoreData: [String: Any] = ["benutzerdefinierteTierarten": gespeicherteTierarten]
+            try await tierheimRef.updateData(firestoreData)
+
+            DispatchQueue.main.async {
+                self.aktuelleRassen = gespeicherteTierarten[neueTierart] ?? []
+            }
+
+        } catch {
+            print("Fehler beim Speichern der Tierart/Rasse: \(error.localizedDescription)")
+        }
+    }
+    
+    func ladeRassenFuerTierart(tierart: String) async {
+        guard let tierheimID = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+        let tierheimRef = db.collection("tierheime").document(tierheimID)
+
+        DispatchQueue.main.async {
+            if let tierartEnum = Tierart(rawValue: tierart) {
+                self.aktuelleRassen = tierartEnum.rassen()
+            } else {
+                self.aktuelleRassen = []
+            }
+        }
+
+        do {
+            let document = try await tierheimRef.getDocument()
+            if let gespeicherteRassen = document.data()?["benutzerdefinierteTierarten"] as? [String: [String]],
+               let rassenListe = gespeicherteRassen[tierart] {
+
+                print("✅ Rassen erfolgreich geladen: \(rassenListe)")
+
+                DispatchQueue.main.async {
+                    self.aktuelleRassen.append(contentsOf: rassenListe)
+                }
+            } else {
+                print("Keine zusätzlichen Rassen gefunden für Tierart \(tierart)")
+            }
+        } catch {
+            print("Fehler beim Laden der Rassen: \(error.localizedDescription)")
+        }
+    }
+    
+    
+    
 }
+
+
+
+
+
+
+    
+

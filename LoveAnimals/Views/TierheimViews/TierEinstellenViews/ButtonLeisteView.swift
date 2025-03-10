@@ -21,11 +21,11 @@ struct ButtonLeisteView: View {
                 Task {
                     selectedTab = 0
                     showPostUploadToast = true
-
-                    Task {
-                        await viewModel.uploadAllImagesAndSave()
-                        await animalsViewModel.ladeAlleTiere()
+                    if !viewModel.ausgewaehlteTierart.isEmpty || !viewModel.ausgewaehlteRasse.isEmpty {
+                        await viewModel.speichereBenutzerdefinierteTierart(neueTierart: viewModel.ausgewaehlteTierart, neueRasse: viewModel.ausgewaehlteRasse)
                     }
+                    await viewModel.uploadAllImagesAndSave()
+                    await animalsViewModel.ladeAlleTiere()
                 }
             }
             .padding()
