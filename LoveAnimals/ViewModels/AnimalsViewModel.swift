@@ -48,7 +48,6 @@ class AnimalsViewModel: ObservableObject {
                 for tierDocument in tiereSnapshot.documents {
                     var animal = try tierDocument.data(as: Animal.self)
 
-                    // Geburtsdatum manuell aus Firestore extrahieren
                     if let timestamp = tierDocument["geburtsdatum"] as? Timestamp {
                         animal.geburtsdatum = timestamp.dateValue()
                     } else {

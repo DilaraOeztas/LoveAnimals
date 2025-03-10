@@ -16,7 +16,7 @@ struct FormularView: View {
                 viewModel.showTierartSheet = true
             }
             .sheet(isPresented: $viewModel.showTierartSheet) {
-                TierartSheet(ausgewaehlteTierart: $viewModel.ausgewaehlteTierart, showTierartSheet: $viewModel.showTierartSheet)
+                TierartSheet(viewModel: viewModel, ausgewaehlteTierart: $viewModel.ausgewaehlteTierart, showTierartSheet: $viewModel.showTierartSheet)
                     .presentationDetents([.medium, .large])
             }
             
@@ -27,7 +27,7 @@ struct FormularView: View {
                 viewModel.showRassenSheet = true
             }
             .sheet(isPresented: $viewModel.showRassenSheet) {
-                RassenSheet(rassen: viewModel.aktuelleRassen, ausgewaehlteRasse: $viewModel.ausgewaehlteRasse, showRasseSheet: $viewModel.showRassenSheet)
+                RassenSheet(rassen: $viewModel.aktuelleRassen, ausgewaehlteRasse: $viewModel.ausgewaehlteRasse, showRasseSheet: $viewModel.showRassenSheet, tierartIstBenutzerdefiniert: viewModel.ausgewaehlteTierart == viewModel.benutzerdefinierteTierart)
                     .presentationDetents([.medium, .large])
             }
             

@@ -21,6 +21,8 @@ class TierEinstellenViewModel: ObservableObject {
     @Published var tierBeschreibung = ""
     @Published var schutzgebuehr = ""
     @Published var ausgewaehlteTierart = ""
+    @Published var benutzerdefinierteTierart: String = ""
+    @Published var benutzerdefinierteRasse: String = ""
     @Published var ausgewaehlteRasse = ""
     @Published var ausgewaehltesAlter = ""
     @Published var ausgewaehltesGeburtsdatum: Date? = nil
@@ -90,13 +92,15 @@ class TierEinstellenViewModel: ObservableObject {
             print("Kein eingeloggtes Tierheim gefunden")
             return
         }
+        let eigeneTierartSpeichern = !benutzerdefinierteTierart.isEmpty ? benutzerdefinierteTierart : ausgewaehlteTierart
+        let eigeneRasseSpeichern = !benutzerdefinierteRasse.isEmpty ? benutzerdefinierteRasse : ausgewaehlteRasse
         
         let tierDaten: [String: Any] = [
             "name": tierName,
             "beschreibung": tierBeschreibung,
             "schutzgebuehr": schutzgebuehr,
-            "tierart": ausgewaehlteTierart,
-            "rasse": ausgewaehlteRasse,
+            "tierart": eigeneTierartSpeichern,
+            "rasse": eigeneRasseSpeichern,
             "alter": ausgewaehltesAlter,
             "geburtsdatum": ausgewaehltesGeburtsdatum != nil ? Timestamp(date: ausgewaehltesGeburtsdatum!) : NSNull(),
             "groesse": ausgewaehlteGroesse,

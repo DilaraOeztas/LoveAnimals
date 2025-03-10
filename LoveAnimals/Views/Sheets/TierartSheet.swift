@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TierartSheet: View {
+    @ObservedObject var viewModel: TierEinstellenViewModel
     @Binding var ausgewaehlteTierart: String
     @Binding var showTierartSheet: Bool
     @State private var benutzerdefinierteTierart: String = ""
@@ -57,15 +58,15 @@ struct TierartSheet: View {
     }
     
     private func speichereEigeneTierart() {
-        if !benutzerdefinierteTierart.isEmpty {
-            ausgewaehlteTierart = benutzerdefinierteTierart
-            showTierartSheet = false
-        }
+        guard !benutzerdefinierteTierart.isEmpty else { return }
+        viewModel.benutzerdefinierteTierart = benutzerdefinierteTierart
+        ausgewaehlteTierart = benutzerdefinierteTierart
+        showTierartSheet = false
+        
     }
 }
 
-
-
 #Preview {
-    TierartSheet(ausgewaehlteTierart: .constant(""), showTierartSheet: .constant(true))
+    TierartSheet(viewModel: TierEinstellenViewModel(), ausgewaehlteTierart: .constant(""), showTierartSheet: .constant(true))
+        .environmentObject(TierEinstellenViewModel())
 }
