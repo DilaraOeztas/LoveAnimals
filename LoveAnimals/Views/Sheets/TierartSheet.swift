@@ -48,7 +48,7 @@ struct TierartSheet: View {
                     }
                 }
             }
-            .alert("Eigene Tierart eingeben", isPresented: $showCustomAlert) {
+            .alert("Tierart eingeben", isPresented: $showCustomAlert) {
                 TextField("Tierart", text: $benutzerdefinierteTierart)
                 Button("Speichern", action: speichereEigeneTierart)
                 Button("Abbrechen", role: .cancel) { }
