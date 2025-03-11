@@ -24,7 +24,6 @@ struct AlterSheet: View {
         "Senior": "> 6 Jahre"
     ]
 
-    /// Berechnet das Alter basierend auf dem Geburtsdatum
     func berechnetesAlter(fuer datum: Date) -> String {
         let alter = Calendar.current.dateComponents([.year], from: datum, to: Date()).year ?? 0
         if alter < 1 {
@@ -65,12 +64,11 @@ struct AlterSheet: View {
                                 Image(systemName: "circle")
                                     .onTapGesture {
                                         showDatePicker = true
-                                        sheetSize = .large  // Sheet wird automatisch groß
+                                        sheetSize = .large
                                     }
                             }
                         }
 
-                        // DatePicker wird inline angezeigt
                         if showDatePicker {
                             VStack {
                                 DatePicker(
