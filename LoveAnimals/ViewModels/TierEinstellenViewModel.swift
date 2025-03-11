@@ -326,11 +326,6 @@ class TierEinstellenViewModel: ObservableObject {
             print("Fehler beim Laden der Farben aus Firestore: \(error.localizedDescription)")
         }
     }
-    
-
-    
-
-    
 }
 
 

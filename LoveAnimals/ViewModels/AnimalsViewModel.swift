@@ -29,7 +29,6 @@ class AnimalsViewModel: ObservableObject {
     }
 
     func ladeAlleTiere() async {
-        
         isLoading = true
         animals.removeAll()
         
