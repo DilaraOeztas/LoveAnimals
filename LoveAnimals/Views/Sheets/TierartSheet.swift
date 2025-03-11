@@ -12,13 +12,14 @@ struct TierartSheet: View {
     @Binding var ausgewaehlteTierart: String
     @Binding var showTierartSheet: Bool
     @State private var benutzerdefinierteTierart: String = ""
+    @State private var eigeneTierartGespeichert: Bool = false
     @State private var showCustomAlert: Bool = false
     
     var tierarten: [String] {
-        let standardTierarten = ["Hund", "Katze", "Vogel", "Kaninchen", "Reptil", "Fisch", "Sonstiges"]
+        let standardTierarten = ["Hund", "Katze", "Vogel", "Kaninchen", "Reptil", "Fisch"]
         let gespeicherteTierarten = viewModel.benutzerdefinierteTierarten.keys.sorted()
         var liste = standardTierarten + gespeicherteTierarten
-        if !viewModel.neueTierart.isEmpty {
+        if eigeneTierartGespeichert, !viewModel.neueTierart.isEmpty {
             liste.append(viewModel.neueTierart)
         }
         return liste
@@ -40,28 +41,27 @@ struct TierartSheet: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    if tierart == "Sonstiges" {
-                        showCustomAlert = true
-                    } else {
-                        ausgewaehlteTierart = tierart
-                        showTierartSheet = false
-                    }
+                    ausgewaehlteTierart = tierart
+                    showTierartSheet = false
                 }
             }
             .navigationTitle("Tierart wählen")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Abbrechen") {
-                        showTierartSheet = false
+                ToolbarItem(placement: .topBarTrailing) {
+                    if eigeneTierartGespeichert {
+                        Button("Fertig") {
+                            showTierartSheet = false
+                        }
+                    } else {
+                        Button("Hinzufügen") {
+                            showCustomAlert = true
+                        }
                     }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Fertig") {
-                        if !viewModel.neueTierart.isEmpty {
-                            ausgewaehlteTierart = viewModel.neueTierart
-                            viewModel.neueTierart = ""
-                        }
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Abbrechen") {
+                        benutzerdefinierteTierart = ""
                         showTierartSheet = false
                     }
                 }
@@ -82,7 +82,9 @@ struct TierartSheet: View {
     private func speichereEigeneTierart() {
         guard !benutzerdefinierteTierart.isEmpty else { return }
         viewModel.neueTierart = benutzerdefinierteTierart
+        ausgewaehlteTierart = benutzerdefinierteTierart
         benutzerdefinierteTierart = ""
+        eigeneTierartGespeichert = true
     }
 }
 

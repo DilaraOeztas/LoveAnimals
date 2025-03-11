@@ -15,13 +15,13 @@ enum Tierart: String {
     func rassen() -> [String] {
         switch self {
         case .hund:
-            return ["Mischling", "Schäferhund", "Labrador", "Sonstige"]
+            return ["Mischling", "Schäferhund", "Labrador"]
         case .katze:
-            return ["Europäisch Kurzhaar", "Maine Coon", "Perser", "Sonstige"]
+            return ["Europäisch Kurzhaar", "Maine Coon", "Perser"]
         case .vogel:
-            return ["Wellensittich", "Papagei", "Kanarienvogel", "Sonstige"]
+            return ["Wellensittich", "Papagei", "Kanarienvogel"]
         case .kaninchen:
-            return ["Zwergkaninchen", "Löwenkopfkaninchen", "Rex", "Sonstige"]
+            return ["Zwergkaninchen", "Löwenkopfkaninchen", "Rex"]
         }
     }
 }

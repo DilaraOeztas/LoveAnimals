@@ -34,7 +34,7 @@ extension Animal {
             "tierart": tierart,
             "rasse": rasse,
             "alter": alter,
-            "geburtsdatum": geburtsdatum != nil ? Timestamp(date: geburtsdatum!) : NSNull(),
+            "geburtsdatum": geburtsdatum.map { Timestamp(date: $0) } ?? NSNull(),
             "groesse": groesse,
             "geschlecht": geschlecht,
             "farbe": farbe,

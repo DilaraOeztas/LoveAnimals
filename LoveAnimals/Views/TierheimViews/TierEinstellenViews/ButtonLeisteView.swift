@@ -18,14 +18,18 @@ struct ButtonLeisteView: View {
     var body: some View {
         VStack(alignment: .center) {
             Button("Tier einstellen") {
+                selectedTab = 0
+                showPostUploadToast = true
                 Task {
-                    selectedTab = 0
-                    showPostUploadToast = true
                     if !viewModel.ausgewaehlteTierart.isEmpty || !viewModel.ausgewaehlteRasse.isEmpty {
                         await viewModel.speichereBenutzerdefinierteTierart(neueTierart: viewModel.ausgewaehlteTierart, neueRasse: viewModel.ausgewaehlteRasse)
                     }
+                    if !viewModel.ausgewaehlteFarbe.isEmpty {
+                        await viewModel.speichereBenutzerdefinierteFarben(farbe: viewModel.ausgewaehlteFarbe)
+                    }
                     await viewModel.uploadAllImagesAndSave()
                     await animalsViewModel.ladeAlleTiere()
+                    await viewModel.ladeBenutzerdefinierteFarben()
                 }
             }
             .padding()

@@ -17,7 +17,6 @@ struct RassenSheet: View {
     @State private var eigeneRasseGespeichert : Bool = false
     @State private var showCustomAlert: Bool = false
     
-    
     var body: some View {
         NavigationStack {
             VStack {
@@ -27,8 +26,7 @@ struct RassenSheet: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding()
                 } 
-                List {
-                    ForEach(Array(Set(viewModel.aktuelleRassen)), id: \.self) { rasse in
+                List(Array(Set(viewModel.aktuelleRassen)), id: \.self) { rasse in
                         HStack {
                             Text(rasse)
                                 .foregroundStyle(.black)
@@ -42,16 +40,10 @@ struct RassenSheet: View {
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            if rasse == "Sonstige" || tierartIstBenutzerdefiniert {
-                                showCustomAlert = true
-                            } else {
                                 ausgewaehlteRasse = rasse
                                 showRasseSheet = false
-                            }
                         }
-                    }
                 }
-                
             }
             .navigationTitle("Rasse wählen")
             .navigationBarTitleDisplayMode(.inline)
@@ -96,6 +88,7 @@ struct RassenSheet: View {
                 neueTierart: viewModel.ausgewaehlteTierart,
                 neueRasse: benutzerdefinierteRasse
             )
+            ausgewaehlteRasse = benutzerdefinierteRasse
             benutzerdefinierteRasse = ""
             eigeneRasseGespeichert = true
         }

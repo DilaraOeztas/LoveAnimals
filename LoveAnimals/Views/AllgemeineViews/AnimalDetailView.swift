@@ -18,6 +18,12 @@ struct AnimalDetailView: View {
         "Senior": "> 6 Jahre"
     ]
     
+    let groessenAngaben: [String: String] = [
+        "Klein": "< 30 cm",
+        "Mittel": "30 - 60 cm",
+        "Groß": "> 60 cm"
+    ]
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
@@ -70,14 +76,23 @@ struct AnimalDetailView: View {
                     Text("Geburtsdatum:")
                         .bold()
                     Spacer()
-                    if let geburtsdatum = animal.geburtsdatum {
+                    if let geburtsdatum = animal.geburtsdatum, geburtsdatum != Date() {
                         Text(geburtsdatum.formatted(date: .long, time: .omitted))
                     } else {
                         Text("Nicht bekannt")
                             .foregroundStyle(.gray)
                     }
                 }
-                detailText(title: "Größe:", value: animal.groesse)
+                HStack {
+                    Text("Größe")
+                        .bold()
+                    Spacer()
+                    
+                    if let groessenAngabe = groessenAngaben[animal.groesse] {
+                        Text(groessenAngabe)
+                    }
+                    Text("| \(animal.groesse)")
+                }
                 detailText(title: "Farbe:", value: animal.farbe)
                 detailText(title: "Geschlecht:", value: animal.geschlecht)
                 detailText(title: "Gesundheitszustand:", value: animal.gesundheit)

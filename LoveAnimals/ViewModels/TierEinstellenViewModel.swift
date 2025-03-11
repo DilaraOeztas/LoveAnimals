@@ -35,7 +35,9 @@ class TierEinstellenViewModel: ObservableObject {
     @Published var neueRasse: String = ""
     @Published var benutzerdefinierteTierarten: [String: [String]] = [:]
     @Published var aktuelleRassen: [String] = []
-    
+    @Published var benutzerdefinierteFarben: [String] = []
+    @Published var gespeicherteFarbe: String = ""
+    @Published var neueFarbe: String = ""
     @Published var showTierartSheet = false
     @Published var showRassenSheet = false
     @Published var showGroesseSheet = false
@@ -104,14 +106,13 @@ class TierEinstellenViewModel: ObservableObject {
         let db = Firestore.firestore()
         let tierRef = db.collection("tierheime").document(tierheimID).collection("Tiere").document()
 
-        let tierDaten: [String: Any] = [
+        var tierDaten: [String: Any] = [
             "name": tierName,
             "beschreibung": tierBeschreibung,
             "schutzgebuehr": schutzgebuehr,
             "tierart": neueTierart.isEmpty ? ausgewaehlteTierart : neueTierart,
             "rasse": neueRasse.isEmpty ? ausgewaehlteRasse : neueRasse,
             "alter": ausgewaehltesAlter,
-            "geburtsdatum": ausgewaehltesGeburtsdatum != nil ? Timestamp(date: ausgewaehltesGeburtsdatum!) : NSNull(),
             "groesse": ausgewaehlteGroesse,
             "geschlecht": ausgewaehltesGeschlecht,
             "farbe": ausgewaehlteFarbe,
@@ -120,6 +121,10 @@ class TierEinstellenViewModel: ObservableObject {
             "erstelltAm": Timestamp(date: Date()),
             "tierheimID": tierheimID
         ]
+        
+        if let geburtsdatum = ausgewaehltesGeburtsdatum {
+            tierDaten["geburtsdatum"] = Timestamp(date: geburtsdatum)
+        }
         
         do {
             try await tierRef.setData(tierDaten)
@@ -234,10 +239,11 @@ class TierEinstellenViewModel: ObservableObject {
             if let gespeicherteRassen = document.data()?["benutzerdefinierteTierarten"] as? [String: [String]],
                let rassenListe = gespeicherteRassen[tierart] {
 
-                print("✅ Rassen erfolgreich geladen: \(rassenListe)")
+                print("Rassen erfolgreich geladen: \(rassenListe)")
 
                 DispatchQueue.main.async {
                     self.aktuelleRassen.append(contentsOf: rassenListe)
+                    self.aktuelleRassen = Array(Set(self.aktuelleRassen))
                 }
             } else {
                 print("Keine zusätzlichen Rassen gefunden für Tierart \(tierart)")
@@ -247,12 +253,70 @@ class TierEinstellenViewModel: ObservableObject {
         }
     }
     
-    
+    func ladeBenutzerdefinierteFarben() async {
+        guard let tierheimID = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+        let tierheimRef = db.collection("tierheime").document(tierheimID)
+
+        do {
+            let document = try await tierheimRef.getDocument()
+
+            if document.exists {
+                print("Dokument gefunden für Tierheim ID: \(tierheimID)")
+
+                if let gespeicherteFarben = document.data()?["benutzerdefinierteFarben"] as? [String] {
+                    DispatchQueue.main.async {
+                        self.benutzerdefinierteFarben = Array(Set(gespeicherteFarben))
+                    }
+                    print("Benutzerdefinierte Farben erfolgreich geladen: \(gespeicherteFarben)")
+                } else {
+                    print("Keine benutzerdefinierten Farben in Firestore gefunden")
+                    DispatchQueue.main.async {
+                        self.benutzerdefinierteFarben = []
+                    }
+                }
+            } else {
+                print("Dokument für Tierheim ID existiert nicht in Firestore")
+            }
+
+        } catch {
+            print("Fehler beim Laden der Farbe aus Firestore: \(error.localizedDescription)")
+        }
+    }
+
+    func speichereBenutzerdefinierteFarben(farbe: String) async {
+        guard let tierheimID = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+        let tierheimRef = db.collection("tierheime").document(tierheimID)
+
+        do {
+            let document = try await tierheimRef.getDocument()
+            var gespeicherteFarben = document.data()?["benutzerdefinierteFarben"] as? [String] ?? []
+
+            if !gespeicherteFarben.contains(farbe.trimmingCharacters(in: .whitespacesAndNewlines)), !farbe.isEmpty {
+                gespeicherteFarben.append(farbe)
+            }
+
+            let farbenData: [String: Any] = ["benutzerdefinierteFarben": gespeicherteFarben]
+            try await tierheimRef.updateData(farbenData)
+
+            DispatchQueue.main.async {
+                self.benutzerdefinierteFarben = gespeicherteFarben
+            }
+
+            print("Farbe erfolgreich gespeichert: \(farbe)")
+        } catch {
+            print("Fehler beim Speichern der Farbe: \(error.localizedDescription)")
+        }
+    }
+
     
 }
 
 
 
+
+   
 
 
 

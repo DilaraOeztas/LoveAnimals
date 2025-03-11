@@ -44,7 +44,7 @@ struct FormularView: View {
                 viewModel.showAlterSheet = true
             }
             .sheet(isPresented: $viewModel.showAlterSheet) {
-                AlterSheet(ausgewaehlteAlter: $viewModel.ausgewaehltesAlter, ausgewaehltesGeburtsdatum: $viewModel.ausgewaehltesGeburtsdatum, showAlterSheet: $viewModel.showAlterSheet)
+                AlterSheet(ausgewaehltesAlter: $viewModel.ausgewaehltesAlter, ausgewaehltesGeburtsdatum: $viewModel.ausgewaehltesGeburtsdatum, showAlterSheet: $viewModel.showAlterSheet)
                     .presentationDetents([.medium, .large])
             }
             
@@ -68,7 +68,7 @@ struct FormularView: View {
                 viewModel.showFarbenSheet = true
             }
             .sheet(isPresented: $viewModel.showFarbenSheet) {
-                FarbenSheet(ausgewaehlteFarbe: $viewModel.ausgewaehlteFarbe, showFarbenSheet: $viewModel.showFarbenSheet)
+                FarbenSheet(viewModel: viewModel, ausgewaehlteFarbe: $viewModel.ausgewaehlteFarbe, showFarbenSheet: $viewModel.showFarbenSheet)
                     .presentationDetents([.medium, .large])
             }
             
