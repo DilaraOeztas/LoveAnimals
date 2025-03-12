@@ -66,8 +66,11 @@ struct AnimalDetailView: View {
                     .padding(.top)
                 }
                 detailText(title: "Name:", value: animal.name)
+                Divider()
                 detailText(title: "Tierart:", value: animal.tierart)
+                Divider()
                 detailText(title: "Rasse:", value: animal.rasse)
+                Divider()
                 
                 HStack {
                     Text("Alter:")
@@ -78,7 +81,7 @@ struct AnimalDetailView: View {
                     }
                     Text("| \(animal.alter)")
                 }
-                
+                Divider()
                 HStack {
                     Text("Geburtsdatum:")
                         .bold()
@@ -90,6 +93,7 @@ struct AnimalDetailView: View {
                             .foregroundStyle(.gray)
                     }
                 }
+                Divider()
                 HStack {
                     Text("Größe")
                         .bold()
@@ -100,11 +104,30 @@ struct AnimalDetailView: View {
                     }
                     Text("| \(animal.groesse)")
                 }
+                Divider()
                 detailText(title: "Farbe:", value: animal.farbe)
+                Divider()
                 detailText(title: "Geschlecht:", value: animal.geschlecht)
+                Divider()
                 detailText(title: "Gesundheitszustand:", value: animal.gesundheit)
+                Divider()
                 detailText(title: "Schutzgebühr:", value: animal.schutzgebuehr + " €")
+                Divider()
                 detailText(title: "Beschreibung:", value: animal.beschreibung)
+                
+                Button(action: {
+                   
+                }) {
+                    Text("Tierheim kontaktieren")
+                        .bold()
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.customLightBrown)
+                        .foregroundStyle(.white)
+                        .cornerRadius(10)
+                }
+                .padding(.top, 30)
+                .padding(.bottom, 20)
             }
             .padding(.horizontal)
         }
