@@ -15,7 +15,6 @@ struct TierEinstellenView: View {
     @State private var showImageSourceDialog = false
     @State private var isCameraSelected = false
     @State private var showGalleryPicker = false
-//    @State private var showMaxImageAlert = false
     
     var body: some View {
         ScrollView {
@@ -40,8 +39,8 @@ struct TierEinstellenView: View {
         }
         .alert("Hinweis", isPresented: $showAbbrechenAlert) {
             Button("Abbrechen", role: .destructive) {
-                viewModel.resetForm()
                 selectedTab = 0
+                viewModel.resetForm()
             }
             Button("Fortfahren", role: .cancel) { }
         } message: {

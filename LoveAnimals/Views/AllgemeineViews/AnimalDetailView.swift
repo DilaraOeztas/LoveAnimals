@@ -12,6 +12,8 @@ struct AnimalDetailView: View {
     @State private var isFavorite: Bool = false
     let animal: Animal
     
+    @State private var selectedImageIndex: Int?
+    
     let altersangaben: [String: String] = [
         "Jung": "< 1 Jahr",
         "Erwachsen": "1 - 6 Jahre",
@@ -42,6 +44,11 @@ struct AnimalDetailView: View {
                                             .scaledToFill()
                                             .frame(width: 350, height: 250)
                                             .clipShape(RoundedRectangle(cornerRadius: 12))
+                                            .onTapGesture {
+                                                if let index = animal.bilder.firstIndex(of: bild) {
+                                                    selectedImageIndex = index
+                                                }
+                                            }
                                     case .failure:
                                         Image(systemName: "photo")
                                             .resizable()
@@ -116,19 +123,26 @@ struct AnimalDetailView: View {
                     }
                 }) {
                     Image(systemName: isFavorite ? "heart.fill" : "heart")
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                 }
             }
         }
         .onAppear {
             isFavorite = viewModel.favoriten.contains(where: { $0.id == animal.id })
         }
+        .fullScreenCover(isPresented: Binding<Bool>(
+            get: { selectedImageIndex != nil },
+            set: { if !$0 { selectedImageIndex = nil } }
+        )) {
+            if let index = selectedImageIndex {
+                ImageFullScreenView(images: animal.bilder, selectedIndex: index) {
+                    selectedImageIndex = nil
+                }
+            }
+        }
     }
     
-    
-    
-    
-    
+
     @ViewBuilder
     private func detailText(title: String, value: String) -> some View {
         if title == "Beschreibung:" {
@@ -148,6 +162,10 @@ struct AnimalDetailView: View {
         }
     }
 }
+
+
+
+
 
 #Preview {
     AnimalDetailView(animal: Animal(name: "Test", tierart: "Hund", rasse: "Mischling", alter: "2 Jahre", groesse: "Mittel", geschlecht: "weiblich", farbe: "schwarz", gesundheit: "gesund", beschreibung: "Sehr verspielt", schutzgebuehr: "250", bilder: ["https//placekitten.com/400/300"], erstelltAm: Date(), tierheimID: "12345"))
