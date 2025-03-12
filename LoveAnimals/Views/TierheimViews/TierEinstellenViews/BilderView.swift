@@ -13,16 +13,26 @@ struct BilderView: View {
     @Binding var showImageSourceDialog: Bool
     @Binding var isCameraSelected: Bool
     @Binding var showGalleryPicker: Bool
-    
+
     var body: some View {
         VStack {
             if let firstImage = viewModel.selectedImages.first {
-                Image(uiImage: firstImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(height: 200)
-                    .clipped()
-                    .cornerRadius(8)
+                ZStack(alignment: .topTrailing) {
+                    Image(uiImage: firstImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 200)
+                        .clipped()
+                        .cornerRadius(8)
+
+                    Button(action: {
+                        removeImage(firstImage)
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundStyle(.white, .red)
+                    }
+                    .offset(x: -10, y: 10)
+                }
             } else {
                 Rectangle()
                     .fill(Color.gray.opacity(0.2))
@@ -42,18 +52,29 @@ struct BilderView: View {
                         showImageSourceDialog = true
                     }
             }
-            
+
             if viewModel.selectedImages.count >= 1 {
                 ScrollView(.horizontal) {
                     HStack {
                         ForEach(viewModel.selectedImages.dropFirst(), id: \.self) { image in
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 100, height: 80)
-                                .clipped()
-                                .cornerRadius(8)
+                            ZStack(alignment: .topTrailing) {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 100, height: 80)
+                                    .clipped()
+                                    .cornerRadius(8)
+
+                                Button(action: {
+                                    removeImage(image)
+                                }) {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundStyle(.white, .red)
+                                }
+                                .offset(x: 1, y: -1)
+                            }
                         }
+
                         Button(action: {
                             showImageSourceDialog = true
                         }) {
@@ -69,6 +90,7 @@ struct BilderView: View {
                         .buttonStyle(PlainButtonStyle())
                     }
                 }
+                .padding(.top, 10)
             }
         }
         .padding(.horizontal)
@@ -85,6 +107,12 @@ struct BilderView: View {
         .photosPicker(isPresented: $showGalleryPicker, selection: $viewModel.imagePickerItems, maxSelectionCount: 6 - viewModel.selectedImages.count, matching: .images)
         .onChange(of: viewModel.imagePickerItems) { _, _ in
             viewModel.loadImagesFromPicker()
+        }
+    }
+
+    private func removeImage(_ image: UIImage) {
+        if let index = viewModel.selectedImages.firstIndex(of: image) {
+            viewModel.selectedImages.remove(at: index)
         }
     }
 }
