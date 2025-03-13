@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestore
 
 struct Animal: Identifiable, Codable {
-    @DocumentID var id: String? = UUID().uuidString
+    @DocumentID var id: String?
     var name: String
     var tierart: String
     var rasse: String

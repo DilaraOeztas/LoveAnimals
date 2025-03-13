@@ -60,7 +60,7 @@ struct UserHomeView: View {
                                     selectedAnimal = animal
                                     showDetailView = true
                                 } label: {
-                                    AnimalsView(animal: animal, userCoordinates: userAuthVM.userCoordinates)
+                                    AnimalsView(animal: animal)
                                         .foregroundStyle(.primary)
                                 }
                                 .buttonStyle(PlainButtonStyle())

@@ -23,6 +23,7 @@ struct TierheimHomeView: View {
     @State private var showMenu = false
     @State private var menuPosition: CGPoint = .zero
     @State private var navigateToLogin = false
+    @State private var navigateToMeineAnzeigen = false
     
     let userCoordinates: (latitude: Double, longitude: Double)?
     
@@ -63,7 +64,7 @@ struct TierheimHomeView: View {
                                     selectedAnimal = animal
                                     showDetailView = true
                                 } label: {
-                                    AnimalsView(animal: animal, userCoordinates: userAuthVM.userCoordinates)
+                                    AnimalsView(animal: animal)
                                         .foregroundStyle(.primary)
                                 }
                                 .buttonStyle(PlainButtonStyle())
@@ -109,7 +110,13 @@ struct TierheimHomeView: View {
                 
                 VStack(alignment: .leading, spacing: 10) {
                     MenuButton(title: "Profil", systemImage: "person.circle") { }
-                    MenuButton(title: "Meine Anzeigen", systemImage: "list.bullet.rectangle") { }
+                    MenuButton(title: "Meine Anzeigen", systemImage: "list.bullet.rectangle") {
+                        Task {
+                            
+                            await viewModel.ladeAlleTiere()
+                            navigateToMeineAnzeigen = true
+                        }
+                    }
                     MenuButton(title: "Einstellungen", systemImage: "gearshape") { }
                     MenuButton(title: "Benachrichtigungen", systemImage: "bell") { }
                     MenuButton(title: "App bewerten", systemImage: "star") { }
@@ -127,6 +134,9 @@ struct TierheimHomeView: View {
                 .shadow(radius: 10)
                 .position(x: menuPosition.x - 100, y: menuPosition.y + 150)
                 .transition(.opacity)
+                .navigationDestination(isPresented: $navigateToMeineAnzeigen) {
+                    MeineAnzeigenView()
+                }
             }
             
         }

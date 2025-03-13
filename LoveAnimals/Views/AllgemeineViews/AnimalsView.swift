@@ -10,7 +10,7 @@ import FirebaseFirestore
 
 struct AnimalsView: View {
     let animal: Animal
-    let userCoordinates: (latitude: Double, longitude: Double)?
+//    let userCoordinates: (latitude: Double, longitude: Double)?
 
     @State private var tierheimPLZ = ""
 
@@ -49,17 +49,17 @@ struct AnimalsView: View {
                 Text(animal.name)
                     .font(.headline)
                 
-                if let userCoordinates {
-                    if !tierheimPLZ.isEmpty {
-                        let distance = DistanceCalculator.calculateDistance(
-                            from: userCoordinates,
-                            toPLZ: tierheimPLZ
-                        )
-                        Text(String(format: "%.1f km entfernt", distance))
-                            .font(.footnote)
-                            .foregroundStyle(.gray)
-                    }
-                }
+//                if let userCoordinates {
+//                    if !tierheimPLZ.isEmpty {
+//                        let distance = DistanceCalculator.calculateDistance(
+//                            from: userCoordinates,
+//                            toPLZ: tierheimPLZ
+//                        )
+//                        Text(String(format: "%.1f km entfernt", distance))
+//                            .font(.footnote)
+//                            .foregroundStyle(.gray)
+//                    }
+//                }
             }
         }
         .onAppear {
@@ -82,9 +82,9 @@ struct AnimalsView: View {
 }
 
 
-#Preview {
-    AnimalsView(animal: Animal(name: "Test", tierart: "Hund", rasse: "Mischling", alter: "2 Jahre", groesse: "Mittel", geschlecht: "weiblich", farbe: "schwarz", gesundheit: "gesund", beschreibung: "Sehr verspielt", schutzgebuehr: "250", bilder: ["https//placekitten.com/400/300"], erstelltAm: Date(), tierheimID: "12345"), userCoordinates: (latitude: 50.1109, longitude: 8.6821))
-}
+//#Preview {
+//    AnimalsView(animal: Animal(name: "Test", tierart: "Hund", rasse: "Mischling", alter: "2 Jahre", groesse: "Mittel", geschlecht: "weiblich", farbe: "schwarz", gesundheit: "gesund", beschreibung: "Sehr verspielt", schutzgebuehr: "250", bilder: ["https//placekitten.com/400/300"], erstelltAm: Date(), tierheimID: "12345"), userCoordinates: (latitude: 50.1109, longitude: 8.6821))
+//}
 
 
 
