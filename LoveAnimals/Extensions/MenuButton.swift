@@ -24,7 +24,7 @@ struct MenuButton: View {
                 Text(title)
                     .foregroundStyle(isDestructive ? .red : .primary)
             }
-            .padding(.vertical, 8)
+            .padding(.vertical, 10)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 16)
         }

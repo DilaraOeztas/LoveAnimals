@@ -106,10 +106,10 @@ struct UserHomeView: View {
                     }
                 }
                 .frame(width: 230)
-                .background(Color.white)
+                .background(Color(UIColor.systemBackground))
                 .cornerRadius(10)
                 .shadow(radius: 10)
-                .position(x: menuPosition.x - 100, y: menuPosition.y + 150)
+                .position(x: menuPosition.x - 100, y: menuPosition.y + 180)
                 .transition(.opacity)
             }
         }
