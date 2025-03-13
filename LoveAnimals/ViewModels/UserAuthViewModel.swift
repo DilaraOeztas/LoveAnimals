@@ -73,7 +73,9 @@ final class UserAuthViewModel: ObservableObject {
                 searchRadius: searchRadius,
                 signedUpOn: Date(),
                 userType: .user
-            )            
+            )
+            
+            NotificationManager.shared.scheduleDailyNotification()
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -141,6 +143,7 @@ final class UserAuthViewModel: ObservableObject {
             let result = try await auth.signIn(withEmail: email, password: password)
             user = result.user
             errorMessage = nil
+
             AuthManager.shared.saveLoginData(email: email, password: password)
             UserDefaults.standard.set(true, forKey: "isLoggedIn")
             UserDefaults.standard.set("user", forKey: "loggedInUsertype")
@@ -209,29 +212,7 @@ final class UserAuthViewModel: ObservableObject {
         }
     }
     
-    func scheduleDailyNotification() {
-        let center = UNUserNotificationCenter.current()
-        let content = UNMutableNotificationContent()
-        content.title = "LoveAnimals Erinnerung"
-        content.body = "Vergiss nicht, neue Tiere zu entdecken!"
-        content.sound = .default
-        
-        var dateComponents = DateComponents()
-        dateComponents.hour = 10
-        dateComponents.minute = 0
-        
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-        
-        let request = UNNotificationRequest(identifier: "dailyReminder", content: content, trigger: trigger)
-        
-        center.add(request) { error in
-            if let error = error {
-                print("Fehler beim Planen der täglichen Benachrichtigung: \(error.localizedDescription)")
-            } else {
-                print("Tägliche Benachrichtigung geplant ✅")
-            }
-        }
-    }
+   
 
 //    func ladeUserKoordinaten() {
 //        GeoapifyService.shared.fetchCoordinates(for: userPLZ) { latitude, longitude in

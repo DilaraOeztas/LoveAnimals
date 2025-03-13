@@ -76,6 +76,7 @@ struct UserHomeView: View {
                 }
                 .onAppear {
                     UNUserNotificationCenter.current().delegate = NotificationManager.shared
+                    NotificationManager.shared.requestPermission()
                 }
             }
             if showMenu {
@@ -93,7 +94,6 @@ struct UserHomeView: View {
                 
                 VStack(alignment: .leading, spacing: 10) {
                     MenuButton(title: "Profil", systemImage: "person.circle") { }
-                    MenuButton(title: "Meine Anzeigen", systemImage: "list.bullet.rectangle") { }
                     MenuButton(title: "Einstellungen", systemImage: "gearshape") { }
                     MenuButton(title: "Benachrichtigungen", systemImage: "bell") { }
                     MenuButton(title: "App bewerten", systemImage: "star") { }

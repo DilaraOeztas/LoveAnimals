@@ -30,5 +30,28 @@ class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     }
     
     
+    func scheduleDailyNotification() {
+        let center = UNUserNotificationCenter.current()
+        let content = UNMutableNotificationContent()
+        content.title = "LoveAnimals Erinnerung"
+        content.body = "Vergiss nicht, neue Tiere zu entdecken!"
+        content.sound = .default
+        
+        var dateComponents = DateComponents()
+        dateComponents.hour = 10
+        dateComponents.minute = 0
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        
+        let request = UNNotificationRequest(identifier: "dailyReminder", content: content, trigger: trigger)
+        
+        center.add(request) { error in
+            if let error = error {
+                print("Fehler beim Planen der täglichen Benachrichtigung: \(error.localizedDescription)")
+            } else {
+                print("Tägliche Benachrichtigung geplant ✅")
+            }
+        }
+    }
 }
 

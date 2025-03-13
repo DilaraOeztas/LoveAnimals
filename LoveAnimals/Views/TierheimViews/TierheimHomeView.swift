@@ -93,6 +93,7 @@ struct TierheimHomeView: View {
                 }
                 .onAppear {
                     UNUserNotificationCenter.current().delegate = NotificationManager.shared
+                    NotificationManager.shared.requestPermission() 
                 }
             }
             if showMenu {
@@ -111,11 +112,7 @@ struct TierheimHomeView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     MenuButton(title: "Profil", systemImage: "person.circle") { }
                     MenuButton(title: "Meine Anzeigen", systemImage: "list.bullet.rectangle") {
-                        Task {
-                            
-                            await viewModel.ladeAlleTiere()
                             navigateToMeineAnzeigen = true
-                        }
                     }
                     MenuButton(title: "Einstellungen", systemImage: "gearshape") { }
                     MenuButton(title: "Benachrichtigungen", systemImage: "bell") { }

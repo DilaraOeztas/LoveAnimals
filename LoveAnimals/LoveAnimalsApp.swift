@@ -11,7 +11,8 @@ import UserNotifications
 
 @main
 struct LoveAnimalsApp: App {
-    @AppStorage("hasRequestedNotificationPermission") private var hasRequestedNotificationPermission: Bool = false
+
+//    @AppStorage("hasRequestedNotificationPermission") private var hasRequestedNotificationPermission: Bool = false
     
     @StateObject private var authViewModel = UserAuthViewModel()
     @StateObject private var tierheimAuthViewModel = TierheimAuthViewModel()
