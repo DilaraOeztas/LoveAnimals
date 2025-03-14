@@ -16,6 +16,8 @@ struct TierEinstellenView: View {
     @State private var isCameraSelected = false
     @State private var showGalleryPicker = false
     
+    @State var animal: Animal?
+    
     var body: some View {
         ScrollView {
             VStack {
@@ -26,10 +28,15 @@ struct TierEinstellenView: View {
                 
                 FormularView(viewModel: viewModel)
                 
-                ButtonLeisteView(viewModel: viewModel, selectedTab: $selectedTab)
+                ButtonLeisteView(viewModel: viewModel, selectedTab: $selectedTab, animal: $animal)
             }
         }
-        .navigationTitle("Tier einstellen")
+        .navigationTitle(animal != nil ? "Tier bearbeiten" : "Tier einstellen")
+        .onAppear {
+            if let animal = animal {
+                viewModel.ladeTierDaten(animal)
+            }
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Abbrechen") {
@@ -54,7 +61,7 @@ struct TierEinstellenView: View {
 
 
 
-#Preview {
-    TierEinstellenView(selectedTab: .constant(1))
-        .environmentObject(TierEinstellenViewModel())
-}
+//#Preview {
+//    TierEinstellenView(selectedTab: .constant(1))
+//        .environmentObject(TierEinstellenViewModel())
+//}

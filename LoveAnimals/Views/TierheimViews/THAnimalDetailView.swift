@@ -1,17 +1,19 @@
 //
-//  AnimalDetailView.swift
+//  THAnimalDetailView.swift
 //  LoveAnimals
 //
-//  Created by Dilara Öztas on 05.03.25.
+//  Created by Dilara Öztas on 14.03.25.
 //
 
 import SwiftUI
 
-struct AnimalDetailView: View {
+struct THAnimalDetailView: View {
     @EnvironmentObject var viewModel: AnimalsViewModel
+    @EnvironmentObject var thAuthVM: TierheimAuthViewModel
     @State private var isFavorite: Bool = false
-    let animal: Animal
-    
+    @State private var showEditView = false
+    @Binding var selectedTab: Int
+    @State var animal: Animal
     @State private var selectedImageIndex: Int?
     
     let altersangaben: [String: String] = [
@@ -134,24 +136,12 @@ struct AnimalDetailView: View {
         .navigationTitle("Über das Tier")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(action: {
-                    Task {
-                        if isFavorite {
-                            await viewModel.removeFavorite(animalID: animal.id ?? "")
-                            isFavorite = false
-                        } else {
-                            await viewModel.addFavorite(animal: animal)
-                            isFavorite = true
-                        }
+                if animal.tierheimID == thAuthVM.userId {
+                    NavigationLink(destination: TierEinstellenView(selectedTab: $selectedTab, animal: animal)) {
+                        Text("Bearbeiten")
                     }
-                }) {
-                    Image(systemName: isFavorite ? "heart.fill" : "heart")
-                        .foregroundStyle(.red)
                 }
             }
-        }
-        .onAppear {
-            isFavorite = viewModel.favoriten.contains(where: { $0.id == animal.id })
         }
         .fullScreenCover(isPresented: Binding<Bool>(
             get: { selectedImageIndex != nil },
@@ -189,8 +179,8 @@ struct AnimalDetailView: View {
 
 
 
-
-#Preview {
-    AnimalDetailView(animal: Animal(name: "Test", tierart: "Hund", rasse: "Mischling", alter: "2 Jahre", groesse: "Mittel", geschlecht: "weiblich", farbe: "schwarz", gesundheit: "gesund", beschreibung: "Sehr verspielt", schutzgebuehr: "250", bilder: ["https//placekitten.com/400/300"], erstelltAm: Date(), tierheimID: "12345"))
-        .environmentObject(AnimalsViewModel())
-}
+//
+//#Preview {
+//    THAnimalDetailView(animal: Animal(name: "Test", tierart: "Hund", rasse: "Mischling", alter: "2 Jahre", groesse: "Mittel", geschlecht: "weiblich", farbe: "schwarz", gesundheit: "gesund", beschreibung: "Sehr verspielt", schutzgebuehr: "250", bilder: ["https//placekitten.com/400/300"], erstelltAm: Date(), tierheimID: "12345"))
+//        .environmentObject(AnimalsViewModel())
+//}

@@ -70,7 +70,7 @@ struct UserHomeView: View {
                     }
                     .navigationDestination(isPresented: $showDetailView) {
                         if let animal = selectedAnimal {
-                            AnimalDetailView(animal: animal)
+                            UserAnimalDetailView(animal: animal)
                         }
                     }
                 }

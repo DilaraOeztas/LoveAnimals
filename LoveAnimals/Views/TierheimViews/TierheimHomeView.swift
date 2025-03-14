@@ -11,7 +11,7 @@ struct TierheimHomeView: View {
     @EnvironmentObject var userAuthVM: UserAuthViewModel
     @EnvironmentObject var viewModel: AnimalsViewModel
     @EnvironmentObject var thAuthVM: TierheimAuthViewModel
-    
+    @Binding var selectedTab: Int
     @State private var searchText = ""
     @State private var profileImage: UIImage? = UIImage(named: "Dilara.jpeg")
     @State private var selectedAnimal: Animal?
@@ -25,7 +25,8 @@ struct TierheimHomeView: View {
     @State private var navigateToLogin = false
     @State private var navigateToMeineAnzeigen = false
     
-    let userCoordinates: (latitude: Double, longitude: Double)?
+    
+//    let userCoordinates: (latitude: Double, longitude: Double)?
     
     @State private var showToast = false
     @AppStorage("showPostUploadToast") var showPostUploadToast = false
@@ -88,7 +89,7 @@ struct TierheimHomeView: View {
                 )
                 .navigationDestination(isPresented: $showDetailView) {
                     if let animal = selectedAnimal {
-                        AnimalDetailView(animal: animal)
+                        THAnimalDetailView(selectedTab: $selectedTab, animal: animal)
                     }
                 }
                 .onAppear {
@@ -189,8 +190,8 @@ struct TierheimHomeView: View {
 
 
 
-#Preview {
-    TierheimHomeView(userCoordinates: (latitude: 50.1109, longitude: 8.6821))
-        .environmentObject(UserAuthViewModel())
-        .environmentObject(AnimalsViewModel())
-}
+//#Preview {
+//    TierheimHomeView(userCoordinates: (latitude: 50.1109, longitude: 8.6821))
+//        .environmentObject(UserAuthViewModel())
+//        .environmentObject(AnimalsViewModel())
+//}

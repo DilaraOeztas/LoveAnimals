@@ -28,7 +28,7 @@ struct FavoritesView: View {
                 .navigationTitle("Favoriten")
             } else {
                 List(viewModel.favoriten) { animal in
-                    NavigationLink(destination: AnimalDetailView(animal: animal)) {
+                    NavigationLink(destination: UserAnimalDetailView(animal: animal)) {
                         HStack {
                             if let firstImage = animal.bilder.first, let url = URL(string: firstImage) {
                                 AsyncImage(url: url) { phase in
