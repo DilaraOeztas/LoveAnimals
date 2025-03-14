@@ -23,6 +23,8 @@ struct UserHomeView: View {
     @State private var showMenu = false
     @State private var menuPosition: CGPoint = .zero
     @State private var navigateToLogin = false
+    @State private var selectedOtherCategory: String? = nil
+    @State private var showOtherCategories = false
 
     let userCoordinates: (latitude: Double, longitude: Double)?
 
@@ -48,29 +50,71 @@ struct UserHomeView: View {
                         filterButton(title: "Alle", category: "Alle")
                         filterButton(title: "Hunde", category: "Hund")
                         filterButton(title: "Katzen", category: "Katze")
-                        filterButton(title: "Weitere Tiere", category: "Weitere Tiere")
+                        
+                        Button(action: {
+                            
+                            if selectedCategory == "Weitere Tiere" {
+                                showOtherCategories.toggle()
+                            } else {
+                                selectedCategory = "Weitere Tiere"
+                                showOtherCategories = true
+                            }
+                           
+                        }) {
+                            Text("Weitere Tiere")
+                                .font(.system(size: 14, weight: .bold))
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 12)
+                                .background(selectedCategory == "Weitere Tiere" ? Color.customLightBrown : Color.gray.opacity(0.5))
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 20)
                     
-                    ScrollView {
-                        LazyVGrid(columns: columns, spacing: 16) {
-                            ForEach(filteredAnimals()) { animal in
-                                Button {
-                                    selectedAnimal = animal
-                                    showDetailView = true
-                                } label: {
-                                    AnimalsView(animal: animal)
-                                        .foregroundStyle(.primary)
+                    if showOtherCategories {
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Wähle eine Tierart:")
+                                    .font(.headline)
+                                    .padding(.top, 10)
+                                
+                                LazyVStack(alignment: .leading, spacing: 8) {
+                                    ForEach(detectOtherCategories(), id: \.self) { tierart in
+                                        Button(action: {
+                                            selectedOtherCategory = tierart
+                                            showOtherCategories = false
+                                            selectedCategory = "Weitere Tiere"
+                                        }) {
+                                            Text(tierart)
+                                                .padding()
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                .background(Color.gray.opacity(0.2))
+                                                .cornerRadius(8)
+                                        }
+                                    }
                                 }
-                                .buttonStyle(PlainButtonStyle())
+                                .padding(.horizontal)
                             }
+                            .padding()
                         }
-                        .padding(.horizontal)
-                    }
-                    .navigationDestination(isPresented: $showDetailView) {
-                        if let animal = selectedAnimal {
-                            UserAnimalDetailView(animal: animal)
+                        .frame(maxHeight: .infinity)
+                    } else {
+                        ScrollView {
+                            LazyVGrid(columns: columns, spacing: 16) {
+                                ForEach(filteredAnimals()) { animal in
+                                    Button {
+                                        selectedAnimal = animal
+                                        showDetailView = true
+                                    } label: {
+                                        AnimalsView(animal: animal)
+                                            .foregroundStyle(.primary)
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
+                                }
+                            }
+                            .padding(.horizontal)
                         }
                     }
                 }
@@ -131,16 +175,21 @@ struct UserHomeView: View {
         if selectedCategory == "Alle" {
             return viewModel.animals
         } else if selectedCategory == "Weitere Tiere" {
-            return viewModel.animals.filter { otherCategories.contains($0.tierart) }
+            if let selectedOtherCategory = selectedOtherCategory {
+                return viewModel.animals.filter { $0.tierart == selectedOtherCategory }
+            } else {
+                return []
+            }
         } else {
             return viewModel.animals.filter { $0.tierart == selectedCategory }
         }
     }
     
-    private func detectOtherCategories() {
+    private func detectOtherCategories() -> [String] {
         let allCategories = Set(viewModel.animals.map { $0.tierart })
         let excluded = ["Hund", "Katze"]
-        otherCategories = allCategories.filter { !excluded.contains($0) }
+        let otherCategories = allCategories.filter { !excluded.contains($0) }
+        return Array(otherCategories)
     }
     
     struct MenuButton: View {
