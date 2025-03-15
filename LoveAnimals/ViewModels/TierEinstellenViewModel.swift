@@ -57,6 +57,7 @@ class TierEinstellenViewModel: ObservableObject {
     }
     
     func ladeTierDaten(_ animal: Animal) {
+        self.tierID = animal.id ?? ""
         self.tierName = animal.name
         self.ausgewaehlteTierart = animal.tierart
         self.ausgewaehlteRasse = animal.rasse
@@ -122,17 +123,17 @@ class TierEinstellenViewModel: ObservableObject {
                 print("Fehler beim Hochladen von Bild \(index + 1): \(error.localizedDescription)")
             }
         }
-        
         print("Upload abgeschlossen: \(uploadedImageURLs.count) von \(selectedImages.count) Bildern erfolgreich.")
-        
         if uploadedImageURLs.isEmpty {
             print("Keine Bilder erfolgreich hochgeladen - Abbruch.")
             isUploading = false
             return
         }
-        
-        await speichereTierInFirestore(bildUrls: uploadedImageURLs)
-        
+        if !tierID.isEmpty {
+            await aktualisiereTierInFirestore()
+        } else {
+            await speichereTierInFirestore(bildUrls: uploadedImageURLs)
+        }
         resetForm()
         isUploading = false
     }
@@ -161,11 +162,9 @@ class TierEinstellenViewModel: ObservableObject {
             "erstelltAm": Timestamp(date: Date()),
             "tierheimID": tierheimID
         ]
-        
         if let geburtsdatum = ausgewaehltesGeburtsdatum {
             tierDaten["geburtsdatum"] = Timestamp(date: geburtsdatum)
         }
-        
         do {
             try await tierRef.setData(tierDaten)
             print("Tier erfolgreich gespeichert!")
@@ -180,13 +179,14 @@ class TierEinstellenViewModel: ObservableObject {
     
     func aktualisiereTierInFirestore() async {
         guard let tierheimID = Auth.auth().currentUser?.uid, !tierID.isEmpty else {
-            print("❌ Fehler: Keine gültige `tierID` oder kein eingeloggtes Tierheim gefunden")
+            print("Fehler: Keine gültige `tierID` oder kein eingeloggtes Tierheim gefunden")
             return
         }
         
         let db = Firestore.firestore()
         let tierRef = db.collection("tierheime").document(tierheimID).collection("Tiere").document(tierID)
         
+        let neueBilder = !uploadedImageURLs.isEmpty ? uploadedImageURLs : bilder
         let tierDaten: [String: Any] = [
             "name": tierName,
             "tierart": ausgewaehlteTierart,
@@ -199,15 +199,15 @@ class TierEinstellenViewModel: ObservableObject {
             "gesundheit": ausgewaehlteGesundheit,
             "beschreibung": tierBeschreibung,
             "schutzgebuehr": schutzgebuehr,
-            "bilder": !uploadedImageURLs.isEmpty ? uploadedImageURLs : bilder,
+            "bilder": neueBilder,
             "tierheimID": tierheimID
         ]
         
         do {
             try await tierRef.setData(tierDaten, merge: true)
-            print("✅ Tier erfolgreich aktualisiert! (\(tierRef.documentID))")
+            print("Tier erfolgreich aktualisiert! (\(tierRef.documentID))")
         } catch {
-            print("❌ Fehler beim Aktualisieren: \(error.localizedDescription)")
+            print("Fehler beim Aktualisieren: \(error.localizedDescription)")
         }
     }
     

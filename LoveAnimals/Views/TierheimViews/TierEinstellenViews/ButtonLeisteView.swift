@@ -14,7 +14,7 @@ struct ButtonLeisteView: View {
     @Binding var animal: Animal?
     
     @AppStorage("showPostUploadToast") var showPostUploadToast = false
-
+    
     
     var body: some View {
         VStack(alignment: .center) {
@@ -29,13 +29,11 @@ struct ButtonLeisteView: View {
                         await viewModel.speichereBenutzerdefinierteFarben(farbe: viewModel.ausgewaehlteFarbe)
                     }
                     
-                    if let _ = animal {
-                        await viewModel.aktualisiereTierInFirestore()
-                    } else {
-                        await viewModel.uploadAllImagesAndSave()
-                    }
+                    await viewModel.uploadAllImagesAndSave()
                     await animalsViewModel.ladeAlleTiere()
                     await viewModel.ladeBenutzerdefinierteFarben()
+                    
+                    
                 }
             }) {
                 Text(animal == nil ? "Tier einstellen" : "Änderungen speichern")
