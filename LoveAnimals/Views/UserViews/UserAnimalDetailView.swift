@@ -32,32 +32,44 @@ struct UserAnimalDetailView: View {
             VStack(alignment: .leading, spacing: 10) {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
-                        ForEach(animal.bilder, id: \.self) { bild in
-                            if let url = URL(string: bild) {
-                                AsyncImage(url: url) { phase in
-                                    switch phase {
-                                    case .empty:
-                                        ProgressView()
-                                            .frame(width: 250, height: 150)
-                                    case .success(let image):
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width: 350, height: 250)
-                                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                                            .onTapGesture {
-                                                if let index = animal.bilder.firstIndex(of: bild) {
-                                                    selectedImageIndex = index
+                        if animal.bilder.isEmpty {
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.2))
+                                .frame(width: 350, height: 250)
+                                .overlay(
+                                    Text("Keine Bilder vorhanden")
+                                        .foregroundStyle(.black)
+                                        .bold()
+                                )
+                                .cornerRadius(10)
+                        } else {
+                            ForEach(animal.bilder, id: \.self) { bild in
+                                if let url = URL(string: bild) {
+                                    AsyncImage(url: url) { phase in
+                                        switch phase {
+                                        case .empty:
+                                            ProgressView()
+                                                .frame(width: 250, height: 150)
+                                        case .success(let image):
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 350, height: 250)
+                                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                                .onTapGesture {
+                                                    if let index = animal.bilder.firstIndex(of: bild) {
+                                                        selectedImageIndex = index
+                                                    }
                                                 }
-                                            }
-                                    case .failure:
-                                        Image(systemName: "photo")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 350, height: 250)
-                                            .foregroundColor(.gray)
-                                    @unknown default:
-                                        EmptyView()
+                                        case .failure:
+                                            Image(systemName: "photo")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 350, height: 250)
+                                                .foregroundColor(.gray)
+                                        @unknown default:
+                                            EmptyView()
+                                        }
                                     }
                                 }
                             }
