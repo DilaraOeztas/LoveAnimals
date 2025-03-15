@@ -11,7 +11,8 @@ struct THAnimalDetailView: View {
     @EnvironmentObject var viewModel: AnimalsViewModel
     @EnvironmentObject var thAuthVM: TierheimAuthViewModel
     @State private var isFavorite: Bool = false
-    @State private var showEditView = false
+    @State private var navigateBack = false
+    
     @Binding var selectedTab: Int
     @State var animal: Animal
     @State private var selectedImageIndex: Int?
@@ -155,7 +156,7 @@ struct THAnimalDetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 if animal.tierheimID == thAuthVM.userId {
-                    NavigationLink(destination: TierEinstellenView(selectedTab: $selectedTab, animal: animal)) {
+                    NavigationLink(destination: TierEinstellenView(navigateBack: $navigateBack, selectedTab: $selectedTab, animal: animal)) {
                         Text("Bearbeiten")
                     }
                 }

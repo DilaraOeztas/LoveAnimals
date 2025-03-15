@@ -118,6 +118,27 @@ class AnimalsViewModel: ObservableObject {
             print("Fehler beim Laden der Favoriten: \(error.localizedDescription)")
         }
     }
+    
+   
+    func loescheTier(_ animal: Animal, completion: @escaping (Bool) -> Void) {
+        let db = Firestore.firestore()
+        db.collection("tierheime").document(animal.tierheimID).collection("Tiere").document(animal.id!).delete { error in
+            if let error = error {
+                print("Fehler beim Löschen: \(error.localizedDescription)")
+                completion(false)
+            } else {
+                DispatchQueue.main.async {
+                    self.animals.removeAll { $0.id == animal.id }
+                }
+                completion(true)
+            }
+        }
+    }
+    
+    
 }
 
+
+
+    
 

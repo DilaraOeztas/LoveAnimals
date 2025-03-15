@@ -10,6 +10,7 @@ import SwiftUI
 struct TierheimHomeView2: View {
     @State private var selectedTab = 0
     @State private var selectedAnimal: Animal? = nil
+    @State private var navigateBack = false
     @EnvironmentObject var animalsViewModel: AnimalsViewModel
     
     var body: some View {
@@ -23,7 +24,7 @@ struct TierheimHomeView2: View {
                     .tag(0)
                 
                 NavigationStack {
-                    TierEinstellenView(selectedTab: $selectedTab, animal: selectedAnimal)
+                    TierEinstellenView(navigateBack: $navigateBack, selectedTab: $selectedTab, animal: selectedAnimal)
                         .environmentObject(animalsViewModel)
                 }
                     .tabItem {

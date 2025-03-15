@@ -10,6 +10,9 @@ import PhotosUI
 
 struct TierEinstellenView: View {
     @StateObject private var viewModel = TierEinstellenViewModel()
+    @EnvironmentObject var animalsViewModel: AnimalsViewModel
+    @Environment(\.dismiss) private var dismiss
+    @Binding var navigateBack: Bool
     @Binding var selectedTab: Int
     @State private var showAbbrechenAlert = false
     @State private var showImageSourceDialog = false
@@ -52,6 +55,26 @@ struct TierEinstellenView: View {
             Button("Fortfahren", role: .cancel) { }
         } message: {
             Text("Wenn du abbrichst, gehen alle Eingaben verloren. Möchtest du wirklich abbrechen?")
+        }
+        
+        if let animal = animal {
+            Button(role: .destructive) {
+                animalsViewModel.loescheTier(animal) { success in
+                if success {
+                    navigateBack = true
+                        dismiss()
+                    }
+                }
+            } label: {
+                Text("Tier löschen")
+                    .bold()
+                    .padding()
+                    .background(Color.red)
+                    .foregroundStyle(.white)
+                    .cornerRadius(10)
+            }
+            .padding(.top, 8)
+            .padding(.bottom)
         }
     }
 }
