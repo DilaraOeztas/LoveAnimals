@@ -14,6 +14,7 @@ struct TierheimUser: Codable, Identifiable {
     var straße: String
     var plz: String
     var ort: String
+    var telefon: String
     var email: String
     var homepage: String?
     var nimmtSpendenAn: Bool

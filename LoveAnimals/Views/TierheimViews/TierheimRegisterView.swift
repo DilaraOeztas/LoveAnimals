@@ -13,6 +13,7 @@ struct TierheimRegisterView: View {
     @State private var straße: String = ""
     @State private var plz: String = ""
     @State private var ort: String = ""
+    @State private var telefon: String = ""
     @State private var email: String = ""
     @State private var homepage: String = ""
     @State private var akzeptiertBarzahlung: Bool = false
@@ -46,6 +47,7 @@ struct TierheimRegisterView: View {
         && !straße.isEmpty
         && !plz.isEmpty
         && !ort.isEmpty
+        && !telefon.isEmpty
         && !email.isEmpty
         && !passwort.isEmpty
         && !confirmPassword.isEmpty
@@ -66,6 +68,13 @@ struct TierheimRegisterView: View {
                     .keyboardType(.asciiCapable)
                 
                 TextField("Homepage (optional)", text: $homepage)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal)
+                    .autocorrectionDisabled(true)
+                    .textInputAutocapitalization(.words)
+                    .keyboardType(.asciiCapable)
+                
+                TextField("Telefon", text: $telefon)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal)
                     .autocorrectionDisabled(true)
@@ -305,6 +314,7 @@ struct TierheimRegisterView: View {
                                                 straße: straße,
                                                 plz: plz,
                                                 ort: ort,
+                                                telefon: telefon,
                                                 email: email,
                                                 homepage: homepage,
                                                 nimmtSpendenAn: nimmtSpendenAn,

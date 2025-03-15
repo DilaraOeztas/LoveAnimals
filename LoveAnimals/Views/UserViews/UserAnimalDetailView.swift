@@ -13,7 +13,8 @@ struct UserAnimalDetailView: View {
     let animal: Animal
     
     @State private var selectedImageIndex: Int?
-    
+    @StateObject private var tierheimVM = TierheimAuthViewModel()
+
     let altersangaben: [String: String] = [
         "Jung": "< 1 Jahr",
         "Erwachsen": "1 - 6 Jahre",
@@ -115,6 +116,21 @@ struct UserAnimalDetailView: View {
                 Divider()
                 detailText(title: "Beschreibung:", value: animal.beschreibung)
                 
+                
+                if let tierheim = tierheimVM.tierheim {
+                    Divider()
+                    Text("Informationen zum Tierheim")
+                        .font(.headline)
+                        .padding(.top, 10)
+                    
+                    detailText(title: "Name:", value: tierheim.tierheimName)
+                    detailText(title: "Homepage:", value: tierheim.homepage ?? "Nicht angegeben")
+                    detailText(title: "Telefon:", value: tierheim.telefon)
+                    detailText(title: "Adresse:", value: tierheim.straße)
+                    detailText(title: "Ort:", value: "\(tierheim.plz), \(tierheim.ort)")
+                    detailText(title: "E-Mail:", value: tierheim.email)
+                }
+                
                 Button(action: {
                    
                 }) {
@@ -132,6 +148,9 @@ struct UserAnimalDetailView: View {
             .padding(.horizontal)
         }
         .navigationTitle("Über das Tier")
+        .onAppear {
+            tierheimVM.ladeTierheimDaten(tierheimID: animal.tierheimID)
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: {

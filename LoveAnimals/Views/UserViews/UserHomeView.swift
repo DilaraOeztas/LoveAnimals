@@ -13,7 +13,7 @@ struct UserHomeView: View {
 
     @State private var searchText = ""
     @State private var profileImage: UIImage? = UIImage(named: "Dilara.jpeg")
-
+//    @Binding var selectedTab: Int
     @State private var selectedAnimal: Animal?
     @State private var showDetailView = false
 
@@ -116,6 +116,11 @@ struct UserHomeView: View {
                             }
                             .padding(.horizontal)
                         }
+                    }
+                }
+                .navigationDestination(isPresented: $showDetailView) {
+                    if let animal = selectedAnimal {
+                        UserAnimalDetailView(animal: animal)
                     }
                 }
                 .onAppear {

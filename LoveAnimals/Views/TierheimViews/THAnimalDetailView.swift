@@ -117,6 +117,21 @@ struct THAnimalDetailView: View {
                 Divider()
                 detailText(title: "Beschreibung:", value: animal.beschreibung)
                 
+                
+                if let tierheim = thAuthVM.tierheim {
+                    Divider()
+                    Text("Informationen zum Tierheim")
+                        .font(.headline)
+                        .padding(.top, 10)
+                    
+                    detailText(title: "Name:", value: tierheim.tierheimName)
+                    detailText(title: "Homepage:", value: tierheim.homepage ?? "Nicht angegeben")
+                    detailText(title: "Telefon:", value: tierheim.telefon)
+                    detailText(title: "Adresse:", value: tierheim.straße)
+                    detailText(title: "Ort:", value: "\(tierheim.plz), \(tierheim.ort)")
+                    detailText(title: "E-Mail:", value: tierheim.email)
+                }
+                
                 Button(action: {
                    
                 }) {
@@ -134,6 +149,9 @@ struct THAnimalDetailView: View {
             .padding(.horizontal)
         }
         .navigationTitle("Über das Tier")
+        .onAppear {
+            thAuthVM.ladeTierheimDaten(tierheimID: animal.tierheimID)
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 if animal.tierheimID == thAuthVM.userId {

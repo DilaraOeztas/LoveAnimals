@@ -13,7 +13,7 @@ import Combine
 final class TierheimAuthViewModel: ObservableObject {
     private var auth = Auth.auth()
     @Published var userT: FirebaseAuth.User?
-    @Published var tierheimUser: TierheimUser?
+    @Published var tierheim: TierheimUser?
     @Published var errorMessage: String?
     @Published var animals: [Animal] = []
     @Published var aktuelleTierID: String = UUID().uuidString
@@ -34,7 +34,7 @@ final class TierheimAuthViewModel: ObservableObject {
         userT = auth.currentUser
     }
     
-    func registerTierheim(tierheimName: String, straße: String, plz: String, ort: String, email: String, homepage: String? = nil, nimmtSpendenAn: Bool, passwort: String, signedUpOn: Date) async {
+    func registerTierheim(tierheimName: String, straße: String, plz: String, ort: String, telefon: String, email: String, homepage: String? = nil, nimmtSpendenAn: Bool, passwort: String, signedUpOn: Date) async {
         
         do {
             let result = try await auth.createUser(withEmail: email, password: passwort)
@@ -50,6 +50,7 @@ final class TierheimAuthViewModel: ObservableObject {
                 straße: straße,
                 plz: plz,
                 ort: ort,
+                telefon: telefon,
                 email: email,
                 homepage: homepage,
                 nimmtSpendenAn: false,
@@ -62,7 +63,7 @@ final class TierheimAuthViewModel: ObservableObject {
         }
     }
     
-    func createUserT(userId: String, tierheimName: String, straße: String, plz: String, ort: String, email: String, homepage: String? = nil, nimmtSpendenAn: Bool, passwort: String, signedUpOn: Date, userType: UserType) async {
+    func createUserT(userId: String, tierheimName: String, straße: String, plz: String, ort: String, telefon: String, email: String, homepage: String? = nil, nimmtSpendenAn: Bool, passwort: String, signedUpOn: Date, userType: UserType) async {
         
         let userT = TierheimUser(
             id: userId,
@@ -70,6 +71,7 @@ final class TierheimAuthViewModel: ObservableObject {
             straße: straße,
             plz: plz,
             ort: ort,
+            telefon: telefon,
             email: email,
             homepage: homepage,
             nimmtSpendenAn: false,
@@ -97,9 +99,9 @@ final class TierheimAuthViewModel: ObservableObject {
                     .collection("tierheime")
                     .document(userId)
                     .getDocument()
-                self.tierheimUser = try snapshot.data(as: TierheimUser.self)
+                self.tierheim = try snapshot.data(as: TierheimUser.self)
                 
-                if let userType = tierheimUser?.userType {
+                if let userType = tierheim?.userType {
                     UserDefaults.standard.set(userType.rawValue, forKey: "userType")
                 }
             } catch {
@@ -144,6 +146,35 @@ final class TierheimAuthViewModel: ObservableObject {
             errorMessage = error.localizedDescription
         }
     }
+    
+   
+
+        func ladeTierheimDaten(tierheimID: String) {
+            let db = Firestore.firestore()
+            
+            db.collection("tierheime").document(tierheimID).getDocument { snapshot, error in
+                if let data = snapshot?.data(), error == nil {
+                    DispatchQueue.main.async {
+                        self.tierheim = TierheimUser(
+                            id: data["id"] as? String ?? "",
+                            tierheimName: data["tierheimName"] as? String ?? "Unbekannt",
+                            straße: data["straße"] as? String ?? "Unbekannt",
+                            plz: data["plz"] as? String ?? "00000",
+                            ort: data["ort"] as? String ?? "Unbekannt",
+                            telefon: data["telefon"] as? String ?? "Unbekannt",
+                            email: data["email"] as? String ?? "Unbekannt",
+                            homepage: data["homepage"] as? String ?? "Nicht angegeben",
+                            nimmtSpendenAn: data["nimmtSpendenAn"] as? Bool ?? false,
+                            signedUpOn: (data["signedUpOn"] as? Timestamp)?.dateValue() ?? Date(),
+                            userType: UserType(rawValue: data["userType"] as? String ?? "") ?? .tierheim
+                        )
+                    }
+                } else {
+                    print("Fehler beim Laden der Tierheim-Daten: \(error?.localizedDescription ?? "Unbekannt")")
+                }
+            }
+        }
+    
 }
 
 
