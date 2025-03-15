@@ -18,7 +18,9 @@ struct TierEinstellenView: View {
     @State private var showImageSourceDialog = false
     @State private var isCameraSelected = false
     @State private var showGalleryPicker = false
-    
+    var isEditing: Bool {
+        return animal != nil
+    }
     @State var animal: Animal?
     
     var body: some View {
@@ -41,9 +43,11 @@ struct TierEinstellenView: View {
             }
         }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Abbrechen") {
-                    showAbbrechenAlert = true
+            if !isEditing {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Abbrechen") {
+                        showAbbrechenAlert = true
+                    }
                 }
             }
         }

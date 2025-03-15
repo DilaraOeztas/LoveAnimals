@@ -47,7 +47,6 @@ class TierEinstellenViewModel: ObservableObject {
     @Published var showFarbenSheet = false
     @Published var showGesundheitSheet = false
     @Published var tierID: String = ""
-    
     @Published var isUploading = false
     
     init() {
@@ -209,6 +208,7 @@ class TierEinstellenViewModel: ObservableObject {
         } catch {
             print("Fehler beim Aktualisieren: \(error.localizedDescription)")
         }
+        
     }
     
     func addImage(_ image: UIImage) {

@@ -32,8 +32,7 @@ struct ButtonLeisteView: View {
                     await viewModel.uploadAllImagesAndSave()
                     await animalsViewModel.ladeAlleTiere()
                     await viewModel.ladeBenutzerdefinierteFarben()
-                    
-                    
+
                 }
             }) {
                 Text(animal == nil ? "Tier einstellen" : "Änderungen speichern")
