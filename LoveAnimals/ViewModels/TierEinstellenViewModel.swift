@@ -125,6 +125,7 @@ class TierEinstellenViewModel: ObservableObject {
         }
         print("Upload abgeschlossen: \(uploadedImageURLs.count) von \(selectedImages.count) Bildern erfolgreich.")
         if uploadedImageURLs.isEmpty {
+            uploadedImageURLs = []
             print("Keine Bilder erfolgreich hochgeladen - Abbruch.")
         }
         if !tierID.isEmpty {
@@ -184,7 +185,8 @@ class TierEinstellenViewModel: ObservableObject {
         let db = Firestore.firestore()
         let tierRef = db.collection("tierheime").document(tierheimID).collection("Tiere").document(tierID)
         
-        let neueBilder = !uploadedImageURLs.isEmpty ? [] : uploadedImageURLs
+        let neueBilder = !uploadedImageURLs.isEmpty ? uploadedImageURLs : []
+        
         let tierDaten: [String: Any] = [
             "name": tierName,
             "tierart": ausgewaehlteTierart,
