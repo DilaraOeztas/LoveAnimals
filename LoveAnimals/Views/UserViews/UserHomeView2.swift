@@ -20,7 +20,7 @@ struct UserHomeView2: View {
                     Label("Favoriten", systemImage: "heart")
                 }
 
-            ChatsView()
+            UserChatsView()
                 .tabItem {
                     Label("Chats", systemImage: "bubble.left.and.bubble.right")
                 }

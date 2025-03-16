@@ -32,7 +32,7 @@ struct TierheimHomeView2: View {
                     }
                     .tag(1)
                 
-                ChatsView()
+                ThChatsView()
                     .tabItem {
                         Label("Chats", systemImage: "bubble.left.and.bubble.right")
                     }
