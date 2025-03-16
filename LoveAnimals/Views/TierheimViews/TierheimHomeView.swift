@@ -23,7 +23,13 @@ struct TierheimHomeView: View {
     @State private var showMenu = false
     @State private var menuPosition: CGPoint = .zero
     @State private var navigateToLogin = false
+    @State private var navigateToProfile = false
     @State private var navigateToMeineAnzeigen = false
+    @State private var navigateToEinstellungen = false
+    @State private var navigateToNotification = false
+    @State private var navigateToBewerten = false
+    @State private var navigateToHelp = false
+    @State private var navigateToContact = false
     @State private var selectedOtherCategory: String? = nil
     @State private var showOtherCategories = false
     
@@ -159,15 +165,27 @@ struct TierheimHomeView: View {
                     }
                 
                 VStack(alignment: .leading, spacing: 10) {
-                    MenuButton(title: "Profil", systemImage: "person.circle") { }
+                    MenuButton(title: "Profil", systemImage: "person.circle") {
+                        navigateToProfile = true
+                    }
                     MenuButton(title: "Meine Anzeigen", systemImage: "list.bullet.rectangle") {
                             navigateToMeineAnzeigen = true
                     }
-                    MenuButton(title: "Einstellungen", systemImage: "gearshape") { }
-                    MenuButton(title: "Benachrichtigungen", systemImage: "bell") { }
-                    MenuButton(title: "App bewerten", systemImage: "star") { }
-                    MenuButton(title: "Hilfebereich", systemImage: "questionmark.circle") { }
-                    MenuButton(title: "Kontaktiere uns", systemImage: "envelope") { }
+                    MenuButton(title: "Einstellungen", systemImage: "gearshape") {
+                        navigateToEinstellungen = true
+                    }
+                    MenuButton(title: "Benachrichtigungen", systemImage: "bell") {
+                        navigateToNotification = true
+                    }
+                    MenuButton(title: "App bewerten", systemImage: "star") {
+                        navigateToBewerten = true
+                    }
+                    MenuButton(title: "Hilfebereich", systemImage: "questionmark.circle") {
+                        navigateToHelp = true
+                    }
+                    MenuButton(title: "Kontaktiere uns", systemImage: "envelope") {
+                        navigateToContact = true
+                    }
                     Divider()
                     MenuButton(title: "Ausloggen", systemImage: "rectangle.portrait.and.arrow.right", isDestructive: true) {
                         thAuthVM.logout()
@@ -182,6 +200,24 @@ struct TierheimHomeView: View {
                 .transition(.opacity)
                 .navigationDestination(isPresented: $navigateToMeineAnzeigen) {
                     MeineAnzeigenView()
+                }
+                .navigationDestination(isPresented: $navigateToEinstellungen) {
+                    THSettingsView()
+                }
+                .navigationDestination(isPresented: $navigateToProfile) {
+                    ThProfileView()
+                }
+                .navigationDestination(isPresented: $navigateToNotification) {
+                    ThNotificationView()
+                }
+                .navigationDestination(isPresented: $navigateToBewerten) {
+                    THAppBewertenView()
+                }
+                .navigationDestination(isPresented: $navigateToHelp) {
+                    ThHelpView()
+                }
+                .navigationDestination(isPresented: $navigateToContact) {
+                    ThContactView()
                 }
             }
             
