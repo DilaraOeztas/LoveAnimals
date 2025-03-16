@@ -11,7 +11,7 @@ struct TierStatistik: Identifiable {
     let id = UUID()
     let name: String
     let aufrufe: Int
-    let vermittlungen: Int
+    let interessenten: Int
     let favoriten: Int
 }
 

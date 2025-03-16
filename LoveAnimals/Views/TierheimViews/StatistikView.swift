@@ -11,14 +11,14 @@ import Charts
 struct StatistikView: View {
     @State private var selectedCategory = "Aufrufe"
     
-    let categories = ["Aufrufe", "Vermittlungen", "Favoriten"]
+    let categories = ["Aufrufe", "Interessenten", "Favoriten"]
     
     let tiereStats: [TierStatistik] = [
-        TierStatistik(name: "Bella", aufrufe: 120, vermittlungen: 5, favoriten: 35),
-        TierStatistik(name: "Rocky", aufrufe: 85, vermittlungen: 3, favoriten: 20),
-        TierStatistik(name: "Luna", aufrufe: 150, vermittlungen: 7, favoriten: 50),
-        TierStatistik(name: "Max", aufrufe: 60, vermittlungen: 2, favoriten: 18),
-        TierStatistik(name: "Milo", aufrufe: 90, vermittlungen: 4, favoriten: 25)
+        TierStatistik(name: "Bella", aufrufe: 120, interessenten: 5, favoriten: 35),
+        TierStatistik(name: "Rocky", aufrufe: 85, interessenten: 3, favoriten: 20),
+        TierStatistik(name: "Luna", aufrufe: 150, interessenten: 7, favoriten: 50),
+        TierStatistik(name: "Max", aufrufe: 60, interessenten: 2, favoriten: 18),
+        TierStatistik(name: "Milo", aufrufe: 90, interessenten: 4, favoriten: 25)
     ]
     
     var body: some View {
@@ -35,10 +35,10 @@ struct StatistikView: View {
                 Chart {
                     ForEach(tiereStats) { tier in
                         BarMark(
-                            x: .value("Anzahl", selectedCategory == "Aufrufe" ? tier.aufrufe : selectedCategory == "Vermittlungen" ? tier.vermittlungen : tier.favoriten),
+                            x: .value("Anzahl", selectedCategory == "Aufrufe" ? tier.aufrufe : selectedCategory == "Interessenten" ? tier.interessenten : tier.favoriten),
                             y: .value("Tier", tier.name)
                         )
-                        .foregroundStyle(selectedCategory == "Aufrufe" ? .blue : selectedCategory == "Vermittlungen" ? .green : .purple)
+                        .foregroundStyle(selectedCategory == "Aufrufe" ? .blue : selectedCategory == "Interessenten" ? .green : .purple)
                     }
                 }
                 .frame(height: 300)
@@ -50,7 +50,7 @@ struct StatistikView: View {
                             Text(tier.name)
                                 .fontWeight(.bold)
                             Spacer()
-                            Text("\(selectedCategory == "Aufrufe" ? tier.aufrufe : selectedCategory == "Vermittlungen" ? tier.vermittlungen : tier.favoriten)")
+                            Text("\(selectedCategory == "Aufrufe" ? tier.aufrufe : selectedCategory == "Interessenten" ? tier.interessenten : tier.favoriten)")
                                 .font(.headline)
                         }
                     }
