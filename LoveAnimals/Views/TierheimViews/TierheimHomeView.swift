@@ -76,7 +76,7 @@ struct TierheimHomeView: View {
                                 .padding(.vertical, 8)
                                 .padding(.horizontal, 12)
                                 .background(selectedCategory == "Weitere Tiere" ? Color.customLightBrown : Color.gray.opacity(0.5))
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .cornerRadius(8)
                         }
                     }
