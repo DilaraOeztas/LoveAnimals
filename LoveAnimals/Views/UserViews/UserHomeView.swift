@@ -23,10 +23,16 @@ struct UserHomeView: View {
     @State private var showMenu = false
     @State private var menuPosition: CGPoint = .zero
     @State private var navigateToLogin = false
+    @State private var navigateToProfile = false
+    @State private var navigateToEinstellungen = false
+    @State private var navigateToNotification = false
+    @State private var navigateToBewerten = false
+    @State private var navigateToHelp = false
+    @State private var navigateToContact = false
     @State private var selectedOtherCategory: String? = nil
     @State private var showOtherCategories = false
 
-    let userCoordinates: (latitude: Double, longitude: Double)?
+//    let userCoordinates: (latitude: Double, longitude: Double)?
 
     let columns = [
         GridItem(.flexible()),
@@ -66,7 +72,7 @@ struct UserHomeView: View {
                                 .padding(.vertical, 8)
                                 .padding(.horizontal, 12)
                                 .background(selectedCategory == "Weitere Tiere" ? Color.customLightBrown : Color.gray.opacity(0.5))
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .cornerRadius(8)
                         }
                     }
@@ -142,12 +148,24 @@ struct UserHomeView: View {
                     }
                 
                 VStack(alignment: .leading, spacing: 10) {
-                    MenuButton(title: "Profil", systemImage: "person.circle") { }
-                    MenuButton(title: "Einstellungen", systemImage: "gearshape") { }
-                    MenuButton(title: "Benachrichtigungen", systemImage: "bell") { }
-                    MenuButton(title: "App bewerten", systemImage: "star") { }
-                    MenuButton(title: "Hilfebereich", systemImage: "questionmark.circle") { }
-                    MenuButton(title: "Kontaktiere uns", systemImage: "envelope") { }
+                    MenuButton(title: "Profil", systemImage: "person.circle") {
+                        navigateToProfile = true
+                    }
+                    MenuButton(title: "Einstellungen", systemImage: "gearshape") {
+                        navigateToEinstellungen = true
+                    }
+                    MenuButton(title: "Benachrichtigungen", systemImage: "bell") {
+                        navigateToNotification = true
+                    }
+                    MenuButton(title: "App bewerten", systemImage: "star") {
+                    navigateToBewerten = true
+                    }
+                    MenuButton(title: "Hilfebereich", systemImage: "questionmark.circle") {
+                        navigateToHelp = true
+                    }
+                    MenuButton(title: "Kontaktiere uns", systemImage: "envelope") {
+                        navigateToContact = true
+                    }
                     Divider()
                     MenuButton(title: "Ausloggen", systemImage: "rectangle.portrait.and.arrow.right", isDestructive: true) {
                         userAuthVM.logout()
@@ -160,6 +178,24 @@ struct UserHomeView: View {
                 .shadow(radius: 10)
                 .position(x: menuPosition.x - 100, y: menuPosition.y + 180)
                 .transition(.opacity)
+                .navigationDestination(isPresented: $navigateToEinstellungen) {
+                    UserSettingsView()
+                }
+                .navigationDestination(isPresented: $navigateToProfile) {
+                    UserProfileView()
+                }
+                .navigationDestination(isPresented: $navigateToNotification) {
+                    NotificationView()
+                }
+                .navigationDestination(isPresented: $navigateToBewerten) {
+                    AppBewertenView()
+                }
+                .navigationDestination(isPresented: $navigateToHelp) {
+                    HelpView()
+                }
+                .navigationDestination(isPresented: $navigateToContact) {
+                    ContactView()
+                }
             }
         }
     }
@@ -197,32 +233,11 @@ struct UserHomeView: View {
         return Array(otherCategories)
     }
     
-    struct MenuButton: View {
-        var title: String
-        var systemImage: String
-        var isDestructive: Bool = false
-        var action: () -> Void
-
-        var body: some View {
-            Button(action: {
-                action()
-            }) {
-                HStack {
-                    Image(systemName: systemImage)
-                        .foregroundStyle(isDestructive ? .red : .primary)
-                    Text(title)
-                        .foregroundStyle(isDestructive ? .red : .primary)
-                }
-                .padding(.vertical, 8)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 16)
-            }
-        }
-    }
+  
 }
 
 #Preview {
-    UserHomeView(userCoordinates: (latitude: 50.1109, longitude: 8.6821))
+    UserHomeView()
         .environmentObject(UserAuthViewModel())
         .environmentObject(AnimalsViewModel())
 }

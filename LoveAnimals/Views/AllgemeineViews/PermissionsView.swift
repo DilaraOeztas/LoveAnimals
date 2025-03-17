@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreLocation
 
-struct ThPermissionsView: View {
+struct PermissionsView: View {
     @State private var locationStatus: CLAuthorizationStatus?
 
     var body: some View {

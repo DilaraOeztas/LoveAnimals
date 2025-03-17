@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ThHelpView: View {
+struct HelpView: View {
     var body: some View {
         Form {
             Section(header: Text("Hilfe & Support")) {

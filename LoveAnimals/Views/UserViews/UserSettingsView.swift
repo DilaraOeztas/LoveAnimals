@@ -1,14 +1,14 @@
 //
-//  THSettingsView.swift
+//  UserSettingsView.swift
 //  LoveAnimals
 //
-//  Created by Dilara Öztas on 04.03.25.
+//  Created by Dilara Öztas on 16.03.25.
 //
 
 import SwiftUI
 import UserNotifications
 
-struct THSettingsView: View {
+struct UserSettingsView: View {
     @AppStorage("isDarkMode") private var isDarkMode = false
     @State private var notificationsEnabled = true
     @State private var showProfileEditor = false
@@ -50,8 +50,6 @@ struct THSettingsView: View {
                                 window.overrideUserInterfaceStyle = newValue ? .dark : .light
                             }
                         }
-                    
-                    NavigationLink("Tierheim-Einstellungen", destination: TierheimSettingsView())
                 }
                 
                 Section(header: Text("Datenschutz & Sicherheit")) {
@@ -68,12 +66,3 @@ struct THSettingsView: View {
         }
     }
 }
-
-#Preview {
-    THSettingsView()
-}
-
-
-
-
-

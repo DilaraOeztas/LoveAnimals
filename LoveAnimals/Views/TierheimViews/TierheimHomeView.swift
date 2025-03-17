@@ -208,19 +208,18 @@ struct TierheimHomeView: View {
                     ThProfileView()
                 }
                 .navigationDestination(isPresented: $navigateToNotification) {
-                    ThNotificationView()
+                    NotificationView()
                 }
                 .navigationDestination(isPresented: $navigateToBewerten) {
-                    THAppBewertenView()
+                    AppBewertenView()
                 }
                 .navigationDestination(isPresented: $navigateToHelp) {
-                    ThHelpView()
+                    HelpView()
                 }
                 .navigationDestination(isPresented: $navigateToContact) {
-                    ThContactView()
+                    ContactView()
                 }
             }
-            
         }
     }
     

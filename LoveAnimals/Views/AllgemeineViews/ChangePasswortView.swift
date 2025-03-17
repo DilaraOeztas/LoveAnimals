@@ -1,5 +1,5 @@
 //
-//  ThChangePasswortView.swift
+//  ChangePasswortView.swift
 //  LoveAnimals
 //
 //  Created by Dilara Öztas on 16.03.25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ThChangePasswordView: View {
+struct ChangePasswordView: View {
     @State private var currentPassword = ""
     @State private var newPassword = ""
     @State private var confirmPassword = ""

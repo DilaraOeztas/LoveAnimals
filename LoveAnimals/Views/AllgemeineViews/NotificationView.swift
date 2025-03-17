@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ThNotificationView: View {
+struct NotificationView: View {
     @State private var pushNotificationsEnabled = true
     @State private var emailNotificationsEnabled = false
 

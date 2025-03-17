@@ -10,7 +10,7 @@ import SwiftUI
 struct UserHomeView2: View {
     var body: some View {
         TabView {
-            UserHomeView(userCoordinates: (latitude: 50.1109, longitude: 8.6821))
+            UserHomeView()
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }

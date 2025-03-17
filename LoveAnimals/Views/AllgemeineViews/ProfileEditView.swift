@@ -8,7 +8,7 @@
 import SwiftUI
 import PhotosUI
 
-struct ThProfileEditView: View {
+struct ProfileEditView: View {
     @State private var name = "Max Mustermann"
     @State private var email = "max@example.com"
     @State private var phone = "+49 123 456789"

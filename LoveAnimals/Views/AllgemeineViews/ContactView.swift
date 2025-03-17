@@ -8,7 +8,7 @@
 import SwiftUI
 import MessageUI
 
-struct ThContactView: View {
+struct ContactView: View {
     let supportEmail = "support@example.com"
     let supportPhone = "+49 123 456789"
 

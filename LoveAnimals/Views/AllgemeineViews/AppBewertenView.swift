@@ -1,5 +1,5 @@
 //
-//  ThAppBewertenView.swift
+//  AppBewertenView.swift
 //  LoveAnimals
 //
 //  Created by Dilara Öztas on 16.03.25.
@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct THAppBewertenView: View {
-    let appStoreURL = "https://apps.apple.com/app/id123456789" // Deine App Store ID
+struct AppBewertenView: View {
+    let appStoreURL = "https://apps.apple.com/app/id123456789" 
 
     var body: some View {
         VStack {
