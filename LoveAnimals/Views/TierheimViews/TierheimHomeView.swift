@@ -205,7 +205,7 @@ struct TierheimHomeView: View {
                     THSettingsView()
                 }
                 .navigationDestination(isPresented: $navigateToProfile) {
-                    ThProfileView()
+                    ThProfileView(tierheimViewModel: thAuthVM)
                 }
                 .navigationDestination(isPresented: $navigateToNotification) {
                     NotificationView()
