@@ -10,26 +10,26 @@ import SwiftUI
 struct UserProfileView: View {
     @ObservedObject var userAuthViewModel: UserAuthViewModel
     @State private var showImagePicker = false
-    @State private var profileImageUrl: String = ""
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var email: String = ""
     @State private var postalCode: String = ""
     @State private var city: String = ""
     @State private var isEditing = false
-
+    
     var body: some View {
         NavigationStack {
             VStack {
-                if let profileImageUrl = userAuthViewModel.profileImageUrl {
-                    AsyncImage(url: URL(string: profileImageUrl)) { image in
-                        image.resizable()
+                if !userAuthViewModel.profileImageUrl.isEmpty {
+                    AsyncImage(url: URL(string: userAuthViewModel.profileImageUrl)) { image in
+                        image
+                            .resizable()
                             .scaledToFill()
                             .frame(width: 120, height: 120)
                             .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.gray, lineWidth: 2))
                     } placeholder: {
                         ProgressView()
+                            .frame(width: 120, height: 120)
                     }
                 } else {
                     Image(systemName: "person.circle.fill")
@@ -37,29 +37,38 @@ struct UserProfileView: View {
                         .scaledToFill()
                         .frame(width: 120, height: 120)
                         .clipShape(Circle())
-                        .overlay(Circle().stroke(style: StrokeStyle(lineWidth: 2)))
                         .foregroundStyle(.gray)
                 }
                 
-                
-                Button(action: {
-                    if userAuthViewModel.profileImageUrl != nil {
-                        userAuthViewModel.deleteProfileImage()
+                HStack {
+                    if userAuthViewModel.profileImageUrl.isEmpty {
+                        Button(action: {
+                            showImagePicker = true
+                        }) {
+                            Text("Profilbild hinzufügen")
+                                .foregroundStyle(.blue)
+                        }
                     } else {
-                        showImagePicker = true
-                        userAuthViewModel.loadProfileImage()
+                        Button(action: {
+                            userAuthViewModel.deleteProfileImage()
+                        }) {
+                            Text("Löschen")
+                                .foregroundStyle(.red)
+                        }
+                        Text("/")
+                            .foregroundStyle(.gray)
+                        Button(action: {
+                            showImagePicker = true
+                            userAuthViewModel.loadProfileImage()
+                        }) {
+                            Text("Ändern")
+                                .foregroundStyle(.blue)
+                        }
                     }
-                }) {
-                    Text(userAuthViewModel.profileImageUrl != nil ? "Profilbild löschen" : "Profilbild hinzufügen")
-                        .foregroundStyle(userAuthViewModel.profileImageUrl != nil ? .red : .blue)
                 }
+                
                 .padding()
-                .sheet(isPresented: $showImagePicker) {
-                    ImagePickerView(sourceType: .photoLibrary) { image in
-                        userAuthViewModel.profileImage = image
-                        userAuthViewModel.uploadProfileImage()
-                    }
-                }
+                
                 Form {
                     Section(header: Text("Persönliche Daten")) {
                         TextField("Name", text: $firstName)
@@ -100,6 +109,12 @@ struct UserProfileView: View {
                 loadData()
                 userAuthViewModel.loadProfileImage()
             }
+            .sheet(isPresented: $showImagePicker) {
+                ImagePickerView(sourceType: .photoLibrary) { image in
+                    userAuthViewModel.profileImage = image
+                    userAuthViewModel.uploadProfileImage()
+                }
+            }
             
         }
     }
@@ -116,5 +131,5 @@ struct UserProfileView: View {
         city = userAuthViewModel.fireUser?.city ?? ""
     }
     
-
+    
 }

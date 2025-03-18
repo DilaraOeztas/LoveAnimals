@@ -26,15 +26,16 @@ struct ThProfileView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                if let profileImageUrl = tierheimViewModel.profileImageUrl {
-                    AsyncImage(url: URL(string: profileImageUrl)) { image in
-                        image.resizable()
+                if !tierheimViewModel.profileImageUrl.isEmpty {
+                    AsyncImage(url: URL(string: tierheimViewModel.profileImageUrl)) { image in
+                        image
+                            .resizable()
                             .scaledToFill()
                             .frame(width: 120, height: 120)
                             .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.gray, lineWidth: 2))
                     } placeholder: {
                         ProgressView()
+                            .frame(width: 120, height: 120)
                     }
                 } else {
                     Image(systemName: "person.circle.fill")
@@ -42,29 +43,38 @@ struct ThProfileView: View {
                         .scaledToFill()
                         .frame(width: 120, height: 120)
                         .clipShape(Circle())
-                        .overlay(Circle().stroke(style: StrokeStyle(lineWidth: 2)))
                         .foregroundStyle(.gray)
                 }
                 
-                
-                Button(action: {
-                    if tierheimViewModel.profileImageUrl != nil {
-                        tierheimViewModel.deleteProfileImage()
+                HStack {
+                    if tierheimViewModel.profileImageUrl.isEmpty {
+                        Button(action: {
+                            showImagePicker = true
+                        }) {
+                            Text("Profilbild hinzufügen")
+                                .foregroundStyle(.blue)
+                        }
                     } else {
-                        showImagePicker = true
-                        tierheimViewModel.loadProfileImage()
+                        Button(action: {
+                            tierheimViewModel.deleteProfileImage()
+                        }) {
+                            Text("Löschen")
+                                .foregroundStyle(.red)
+                        }
+                        Text("/")
+                            .foregroundStyle(.gray)
+                        Button(action: {
+                            showImagePicker = true
+                            tierheimViewModel.loadProfileImage()
+                        }) {
+                            Text("Ändern")
+                                .foregroundStyle(.blue)
+                        }
                     }
-                }) {
-                    Text(tierheimViewModel.profileImageUrl != nil ? "Profilbild löschen" : "Profilbild hinzufügen")
-                        .foregroundStyle(tierheimViewModel.profileImageUrl != nil ? .red : .blue)
                 }
+                
                 .padding()
-                .sheet(isPresented: $showImagePicker) {
-                    ImagePickerView(sourceType: .photoLibrary) { image in
-                        tierheimViewModel.profileImage = image
-                        tierheimViewModel.uploadProfileImage()
-                    }
-                }
+                
                 Form {
                     Section(header: Text("Persönliche Daten")) {
                         TextField("Name", text: $tierheimName)
@@ -110,6 +120,12 @@ struct ThProfileView: View {
             .onAppear {
                 loadData()
                 tierheimViewModel.loadProfileImage()
+            }
+            .sheet(isPresented: $showImagePicker) {
+                ImagePickerView(sourceType: .photoLibrary) { image in
+                    tierheimViewModel.profileImage = image
+                    tierheimViewModel.uploadProfileImage()
+                }
             }
             
         }

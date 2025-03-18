@@ -32,9 +32,7 @@ struct TierheimHomeView: View {
     @State private var navigateToContact = false
     @State private var selectedOtherCategory: String? = nil
     @State private var showOtherCategories = false
-    
-//    let userCoordinates: (latitude: Double, longitude: Double)?
-    
+        
     @State private var showToast = false
     @AppStorage("showPostUploadToast") var showPostUploadToast = false
     
@@ -54,7 +52,7 @@ struct TierheimHomeView: View {
                         .frame(height: 100)
                         .padding(.top, 16)
                     
-                    HeaderView(profileImage: profileImage, searchText: $searchText, showBackgroundOverlay: $showBackgroundOverlay, showMenu: $showMenu, menuPosition: $menuPosition)
+                    ThHeaderView(tierheimAuthViewModel: thAuthVM, searchText: $searchText, showBackgroundOverlay: $showBackgroundOverlay, showMenu: $showMenu, menuPosition: $menuPosition)
                     
                     HStack(spacing: 10) {
                         filterButton(title: "Alle", category: "Alle")
@@ -271,15 +269,5 @@ struct TierheimHomeView: View {
                 .padding(.bottom, 50)
         }
     }
-    
-    
 }
 
-
-
-
-//#Preview {
-//    TierheimHomeView(userCoordinates: (latitude: 50.1109, longitude: 8.6821))
-//        .environmentObject(UserAuthViewModel())
-//        .environmentObject(AnimalsViewModel())
-//}

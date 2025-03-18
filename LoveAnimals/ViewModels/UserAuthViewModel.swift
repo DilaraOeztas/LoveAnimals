@@ -32,9 +32,8 @@ final class UserAuthViewModel: ObservableObject {
     @Published var isTierheim: Bool = false
     
     @Published var profileImage: UIImage? = nil
-    @Published var profileImageUrl: String?
+    @Published var profileImageUrl: String = ""
     
-//    @Published var userCoordinates: (latitude: Double, longitude: Double)? = nil
 
     let userPLZ = "50825"
     
@@ -62,7 +61,7 @@ final class UserAuthViewModel: ObservableObject {
     }
     
     
-    func register(firstName: String, lastName: String, email: String, password: String, postalCode: String, city: String, birthdate: Date, searchRadius: Int, signedUpOn: Date) async {
+    func register(firstName: String, lastName: String, email: String, password: String, postalCode: String, city: String, birthdate: Date, signedUpOn: Date) async {
         do {
             let result = try await auth.createUser(withEmail: email, password: password)
             user = result.user
@@ -78,7 +77,6 @@ final class UserAuthViewModel: ObservableObject {
                 postalCode: postalCode,
                 city: city,
                 birthdate: birthdate,
-                searchRadius: searchRadius,
                 signedUpOn: Date(),
                 userType: .user
             )
@@ -89,7 +87,7 @@ final class UserAuthViewModel: ObservableObject {
         }
     }
     
-    func createUser(userID: String, firstName: String, lastName: String, email: String, password: String, postalCode: String, city: String, birthdate: Date, searchRadius: Int, signedUpOn: Date, userType: UserType) async {
+    func createUser(userID: String, firstName: String, lastName: String, email: String, password: String, postalCode: String, city: String, birthdate: Date, signedUpOn: Date, userType: UserType) async {
         let user = FireUser(
             id: userID,
             firstName: firstName,
@@ -98,7 +96,6 @@ final class UserAuthViewModel: ObservableObject {
             postalCode: postalCode,
             city: city,
             birthdate: birthdate,
-//            searchRadius: searchRadius,
             signedUpOn: Date(),
             userType: .user
         )
@@ -238,7 +235,6 @@ final class UserAuthViewModel: ObservableObject {
                         signedUpOn: (data["signedUpOn"] as? Timestamp)?.dateValue() ?? Date(),
                         userType: UserType(rawValue: data["userType"] as? String ?? "") ?? .user
                     )
-                    self.loadProfileImage()
                 }
             } else {
                 print("Fehler beim Laden der User-Daten: \(error?.localizedDescription ?? "Unbekannt")")
@@ -254,13 +250,13 @@ final class UserAuthViewModel: ObservableObject {
                 print("Fehler beim Laden des Profilbildes: \(error.localizedDescription)")
                 return
             }
-
             if let data = snapshot?.data(), let profileImageUrl = data["profileImageUrl"] as? String {
-                self.profileImageUrl = profileImageUrl
+                DispatchQueue.main.async {
+                    self.profileImageUrl = profileImageUrl
+                }
             }
         }
     }
-    
     
     func uploadProfileImage() {
         guard let profileImage = profileImage else {
@@ -284,7 +280,6 @@ final class UserAuthViewModel: ObservableObject {
             print("Kein eingeloggt Tierheim gefunden")
             return
         }
-        
         let db = Firestore.firestore()
         db.collection("users").document(userID).updateData([
             "profileImageUrl": imageUrl
@@ -293,6 +288,7 @@ final class UserAuthViewModel: ObservableObject {
                 print("Fehler beim Speichern des Profilbildes: \(error.localizedDescription)")
             } else {
                 print("Profilbild erfolgreich gespeichert")
+                self.profileImageUrl = imageUrl
             }
         }
     }
@@ -300,7 +296,6 @@ final class UserAuthViewModel: ObservableObject {
     func deleteProfileImage() {
         guard let tierheimID = Auth.auth().currentUser?.uid else { return }
         let db = Firestore.firestore()
-        
         db.collection("users").document(tierheimID).updateData([
             "profileImageUrl": FieldValue.delete()
         ]) { error in
@@ -308,7 +303,8 @@ final class UserAuthViewModel: ObservableObject {
                 print("Fehler beim Löschen des Profilbildes: \(error.localizedDescription)")
             } else {
                 print("Profilbild erfolgreich gelöscht")
-                self.profileImageUrl = nil
+                self.profileImageUrl = ""
+                self.loadProfileImage()
             }
         }
     }
@@ -343,16 +339,5 @@ final class UserAuthViewModel: ObservableObject {
             }
         }
     }
-   
-
-//    func ladeUserKoordinaten() {
-//        GeoapifyService.shared.fetchCoordinates(for: userPLZ) { latitude, longitude in
-//            DispatchQueue.main.async {
-//                if let lat = latitude, let lon = longitude {
-//                    self.userCoordinates = (lat, lon)
-//                }
-//            }
-//        }
-//    }
 }
 

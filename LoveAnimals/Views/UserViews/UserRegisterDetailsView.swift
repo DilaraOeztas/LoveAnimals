@@ -25,7 +25,6 @@ struct UserRegisterDetailsView: View {
     var email: String
     var postalCode: String
     var city: String
-    var searchRadius: Int
     var password: String
     
     let professionOptions = [
@@ -162,7 +161,6 @@ struct UserRegisterDetailsView: View {
                                 postalCode: postalCode,
                                 city: city,
                                 birthdate: birthdate,
-                                searchRadius: searchRadius,
                                 signedUpOn: Date()
                             )
                             await authViewModel.saveUserDetails(isSkipped: false)
@@ -204,7 +202,6 @@ struct UserRegisterDetailsView: View {
                                         postalCode: postalCode,
                                         city: city,
                                         birthdate: birthdate,
-                                        searchRadius: searchRadius,
                                         signedUpOn: Date()
                                     )
                                     await authViewModel.saveUserDetails(isSkipped: true)
@@ -282,7 +279,7 @@ struct UserRegisterDetailsView: View {
 
 
 #Preview {
-    UserRegisterDetailsView(firstName: "test", lastName: "test", birthdate: Date(), email: "test@test.com", postalCode: "33333", city: "test", searchRadius: 10, password: "test12345")
+    UserRegisterDetailsView(firstName: "test", lastName: "test", birthdate: Date(), email: "test@test.com", postalCode: "33333", city: "test", password: "test12345")
         .environmentObject(UserAuthViewModel())
         .environmentObject(TierheimAuthViewModel())
 }

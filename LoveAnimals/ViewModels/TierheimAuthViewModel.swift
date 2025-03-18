@@ -18,7 +18,7 @@ final class TierheimAuthViewModel: ObservableObject {
     @Published var animals: [Animal] = []
     @Published var aktuelleTierID: String = UUID().uuidString
     @Published var profileImage: UIImage? = nil
-    @Published var profileImageUrl: String?
+    @Published var profileImageUrl: String = ""
     
     var userId: String? {
         userT?.uid
@@ -230,6 +230,7 @@ final class TierheimAuthViewModel: ObservableObject {
                 print("Fehler beim Speichern des Profilbildes: \(error.localizedDescription)")
             } else {
                 print("Profilbild erfolgreich gespeichert")
+                self.profileImageUrl = imageUrl
             }
         }
     }
@@ -245,7 +246,8 @@ final class TierheimAuthViewModel: ObservableObject {
                 print("Fehler beim Löschen des Profilbildes: \(error.localizedDescription)")
             } else {
                 print("Profilbild erfolgreich gelöscht")
-                self.profileImageUrl = nil
+                self.profileImageUrl = ""
+                self.loadProfileImage()
             }
         }
     }

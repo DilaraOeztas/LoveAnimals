@@ -1,14 +1,14 @@
 //
-//  HeaderView.swift
+//  ThHeaderView.swift
 //  LoveAnimals
 //
-//  Created by Dilara Öztas on 07.03.25.
+//  Created by Dilara Öztas on 18.03.25.
 //
 
 import SwiftUI
 
-struct HeaderView: View {
-    let profileImage: UIImage?
+struct ThHeaderView: View {
+    @ObservedObject var tierheimAuthViewModel: TierheimAuthViewModel
     @Binding var searchText: String
     @Binding var showBackgroundOverlay: Bool
     @Binding var showMenu: Bool
@@ -16,14 +16,27 @@ struct HeaderView: View {
 
     var body: some View {
         HStack {
-            Image(uiImage: profileImage ?? UIImage(named: "Kein-Foto")!)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 40, height: 40)
-                .clipShape(Circle())
-
+            if !tierheimAuthViewModel.profileImageUrl.isEmpty {
+                AsyncImage(url: URL(string: tierheimAuthViewModel.profileImageUrl)) { image in
+                    image.resizable()
+                        .scaledToFill()
+                        .frame(width: 40, height: 40)
+                        .clipShape(Circle())
+                } placeholder: {
+                    ProgressView()
+                }
+            } else {
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 40, height: 40)
+                    .clipShape(Circle())
+                    .foregroundStyle(.gray)
+            }
+            
             TextField("Suche...", text: $searchText)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .foregroundStyle(.primary)
 
             Button(action: {
                 withAnimation {
@@ -45,9 +58,13 @@ struct HeaderView: View {
                         .onChange(of: showMenu) { _, _ in
                             menuPosition = geo.frame(in: .global).origin
                         }
+                        
                 }
             )
         }
         .padding()
+        .onAppear {
+            tierheimAuthViewModel.loadProfileImage()
+        }
     }
 }

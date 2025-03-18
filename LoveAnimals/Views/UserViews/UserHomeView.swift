@@ -9,11 +9,10 @@ import SwiftUI
 
 struct UserHomeView: View {
     @EnvironmentObject var userAuthVM: UserAuthViewModel
+    @EnvironmentObject var thAuthVM: TierheimAuthViewModel
     @StateObject private var viewModel = AnimalsViewModel()
 
     @State private var searchText = ""
-    @State private var profileImage: UIImage? = UIImage(named: "Dilara.jpeg")
-//    @Binding var selectedTab: Int
     @State private var selectedAnimal: Animal?
     @State private var showDetailView = false
 
@@ -32,8 +31,6 @@ struct UserHomeView: View {
     @State private var selectedOtherCategory: String? = nil
     @State private var showOtherCategories = false
 
-//    let userCoordinates: (latitude: Double, longitude: Double)?
-
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -50,7 +47,7 @@ struct UserHomeView: View {
                         .frame(height: 100)
                         .padding(.top, 16)
                     
-                    HeaderView(profileImage: profileImage, searchText: $searchText, showBackgroundOverlay: $showBackgroundOverlay, showMenu: $showMenu, menuPosition: $menuPosition)
+                    UserHeaderView(userAuthViewModel: userAuthVM, searchText: $searchText, showBackgroundOverlay: $showBackgroundOverlay, showMenu: $showMenu, menuPosition: $menuPosition)
                     
                     HStack(spacing: 10) {
                         filterButton(title: "Alle", category: "Alle")
