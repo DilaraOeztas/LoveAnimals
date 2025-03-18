@@ -279,7 +279,7 @@ struct UserRegisterView: View {
                 .opacity(isFormValid ? 1.0 : 0.5)
 
                 .navigationDestination(isPresented: $navigateToUserDetails) {
-                    UserRegisterDetailsView(firstName: firstName, lastName: lastName, birthdate: birthdate, email: email, postalCode: postalCode, city: city, searchRadius: Int(searchRadius), password: password)
+                    UserRegisterDetailsView(firstName: firstName, lastName: lastName, birthdate: birthdate, email: email, postalCode: postalCode, city: city, password: password)
                 }
                 
                 Button(action: {
