@@ -179,7 +179,7 @@ struct UserHomeView: View {
                 .position(x: menuPosition.x - 100, y: menuPosition.y + 155)
                 .transition(.opacity)
                 .navigationDestination(isPresented: $navigateToProfile) {
-                    UserProfileView()
+                    UserProfileView(userAuthViewModel: userAuthVM)
                 }
                 .navigationDestination(isPresented: $navigateToEinstellungen) {
                     UserSettingsView()

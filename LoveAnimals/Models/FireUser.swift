@@ -16,7 +16,7 @@ struct FireUser: Codable, Identifiable {
     var postalCode: String
     var city: String
     var birthdate: Date
-    var searchRadius: Int
+//    var searchRadius: Int
     var signedUpOn: Date
     var userType: UserType
 }

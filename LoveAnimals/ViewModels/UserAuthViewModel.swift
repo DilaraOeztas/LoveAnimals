@@ -31,7 +31,10 @@ final class UserAuthViewModel: ObservableObject {
     @Published var navigateToHome: Bool = false
     @Published var isTierheim: Bool = false
     
-    @Published var userCoordinates: (latitude: Double, longitude: Double)? = nil
+    @Published var profileImage: UIImage? = nil
+    @Published var profileImageUrl: String?
+    
+//    @Published var userCoordinates: (latitude: Double, longitude: Double)? = nil
 
     let userPLZ = "50825"
     
@@ -50,7 +53,12 @@ final class UserAuthViewModel: ObservableObject {
     
     
     private func checkAuth() {
+        guard let currentUser = auth.currentUser else {
+            fireUser = FireUser(id: "", firstName: "", lastName: "", email: "", postalCode: "", city: "", birthdate: Date(), signedUpOn: Date(), userType: .user)
+            return
+        }
         user = auth.currentUser
+        ladeUserDaten(userID: currentUser.uid)
     }
     
     
@@ -90,7 +98,7 @@ final class UserAuthViewModel: ObservableObject {
             postalCode: postalCode,
             city: city,
             birthdate: birthdate,
-            searchRadius: searchRadius,
+//            searchRadius: searchRadius,
             signedUpOn: Date(),
             userType: .user
         )
@@ -212,6 +220,129 @@ final class UserAuthViewModel: ObservableObject {
         }
     }
     
+    
+    func ladeUserDaten(userID: String) {
+        let db = Firestore.firestore()
+        
+        db.collection("users").document(userID).getDocument { snapshot, error in
+            if let data = snapshot?.data(), error == nil {
+                DispatchQueue.main.async {
+                    self.fireUser = FireUser(
+                        id: data["id"] as? String ?? "",
+                        firstName: data["firstName"] as? String ?? "Unbekannt",
+                        lastName: data["lastName"] as? String ?? "Unbekannt",
+                        email: data["email"] as? String ?? "Unbekannt",
+                        postalCode: data["postalCode"] as? String ?? "00000",
+                        city: data["city"] as? String ?? "Unbekannt",
+                        birthdate: data["birthdate"] as? Date ?? Date(),
+                        signedUpOn: (data["signedUpOn"] as? Timestamp)?.dateValue() ?? Date(),
+                        userType: UserType(rawValue: data["userType"] as? String ?? "") ?? .user
+                    )
+                    self.loadProfileImage()
+                }
+            } else {
+                print("Fehler beim Laden der User-Daten: \(error?.localizedDescription ?? "Unbekannt")")
+            }
+        }
+    }
+    
+    func loadProfileImage() {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+        db.collection("users").document(userId).getDocument { snapshot, error in
+            if let error = error {
+                print("Fehler beim Laden des Profilbildes: \(error.localizedDescription)")
+                return
+            }
+
+            if let data = snapshot?.data(), let profileImageUrl = data["profileImageUrl"] as? String {
+                self.profileImageUrl = profileImageUrl
+            }
+        }
+    }
+    
+    
+    func uploadProfileImage() {
+        guard let profileImage = profileImage else {
+            print("Kein Bild zum Hochladen")
+            return
+        }
+        self.objectWillChange.send()
+        Task {
+            do {
+                let imageUrl = try await ImgurService.uploadImage(profileImage)
+                saveProfileImageURLToFirestore(imageUrl)
+                loadProfileImage()
+            } catch {
+                print("Fehler beim Hochladen des Profilbilds: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func saveProfileImageURLToFirestore(_ imageUrl: String) {
+        guard let userID = Auth.auth().currentUser?.uid else {
+            print("Kein eingeloggt Tierheim gefunden")
+            return
+        }
+        
+        let db = Firestore.firestore()
+        db.collection("users").document(userID).updateData([
+            "profileImageUrl": imageUrl
+        ]) { error in
+            if let error = error {
+                print("Fehler beim Speichern des Profilbildes: \(error.localizedDescription)")
+            } else {
+                print("Profilbild erfolgreich gespeichert")
+            }
+        }
+    }
+    
+    func deleteProfileImage() {
+        guard let tierheimID = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+        
+        db.collection("users").document(tierheimID).updateData([
+            "profileImageUrl": FieldValue.delete()
+        ]) { error in
+            if let error = error {
+                print("Fehler beim Löschen des Profilbildes: \(error.localizedDescription)")
+            } else {
+                print("Profilbild erfolgreich gelöscht")
+                self.profileImageUrl = nil
+            }
+        }
+    }
+    
+    
+    func updateUserDaten(firstName: String, lastName: String, email: String, postalCode: String, city: String) {
+        guard let userID = Auth.auth().currentUser?.uid else {
+            print("Kein User eingeloggt.")
+            return
+        }
+        
+        let db = Firestore.firestore()
+        let userRef = db.collection("users").document(userID)
+        
+        userRef.updateData([
+            "firstName": firstName,
+            "lastName": lastName,
+            "email": email,
+            "postalCode": postalCode,
+            "city": city
+        ]) { error in
+            if let error = error {
+                print("Fehler beim Aktualisieren der User-Daten: \(error.localizedDescription)")
+            } else {
+                print("User-Daten erfolgreich aktualisiert.")
+                
+                self.fireUser?.firstName = firstName
+                self.fireUser?.lastName = lastName
+                self.fireUser?.email = email
+                self.fireUser?.postalCode = postalCode
+                self.fireUser?.city = city
+            }
+        }
+    }
    
 
 //    func ladeUserKoordinaten() {
