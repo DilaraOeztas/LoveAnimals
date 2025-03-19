@@ -99,7 +99,6 @@ struct TierheimRegisterView: View {
                 .keyboardType(.asciiCapableNumberPad)
                 .padding(.horizontal)
                 
-//                VStack {
                     TextField("E-Mail", text: $email)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
@@ -125,7 +124,6 @@ struct TierheimRegisterView: View {
                             .font(.footnote)
                             .padding(.horizontal)
                     }
-//                }
                 
                 Group {
                     if showPassword {

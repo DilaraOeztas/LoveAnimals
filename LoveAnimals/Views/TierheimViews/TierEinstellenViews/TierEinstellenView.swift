@@ -86,9 +86,3 @@ struct TierEinstellenView: View {
 
 
 
-
-
-//#Preview {
-//    TierEinstellenView(selectedTab: .constant(1))
-//        .environmentObject(TierEinstellenViewModel())
-//}

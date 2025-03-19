@@ -95,7 +95,3 @@ struct RassenSheet: View {
     }
     
 }
-
-//#Preview {
-//    RassenSheet(rassen: .constant(["Mischling", "Schäferhund"]), ausgewaehlteRasse: .constant("Mischling"), showRasseSheet: .constant(true), tierartIstBenutzerdefiniert: true)
-//}

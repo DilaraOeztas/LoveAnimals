@@ -51,5 +51,5 @@ struct ThChatsView: View {
 
 
 #Preview {
-    ChatsView()
+    ThChatsView()
 }

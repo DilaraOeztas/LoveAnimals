@@ -147,11 +147,6 @@ struct AlterSheet: View {
     }
 }
 
-//#Preview {
-//    AlterSheet(ausgewaehlteAlter: .constant(""), ausgewaehltesGeburtsdatum: <#Binding<Date?>#>, showAlterSheet: .constant(true))
-//}
-
-
 
 
 

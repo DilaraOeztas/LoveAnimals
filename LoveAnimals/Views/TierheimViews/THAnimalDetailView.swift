@@ -206,12 +206,3 @@ struct THAnimalDetailView: View {
         }
     }
 }
-
-
-
-
-//
-//#Preview {
-//    THAnimalDetailView(animal: Animal(name: "Test", tierart: "Hund", rasse: "Mischling", alter: "2 Jahre", groesse: "Mittel", geschlecht: "weiblich", farbe: "schwarz", gesundheit: "gesund", beschreibung: "Sehr verspielt", schutzgebuehr: "250", bilder: ["https//placekitten.com/400/300"], erstelltAm: Date(), tierheimID: "12345"))
-//        .environmentObject(AnimalsViewModel())
-//}

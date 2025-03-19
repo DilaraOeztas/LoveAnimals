@@ -16,7 +16,7 @@ struct TierartSheet: View {
     @State private var showCustomAlert: Bool = false
     
     var tierarten: [String] {
-        let standardTierarten = ["Hund", "Katze", "Vogel", "Kaninchen", "Reptil", "Fisch"]
+        let standardTierarten = ["Hund", "Katze", "Vogel"]
         let gespeicherteTierarten = viewModel.benutzerdefinierteTierarten.keys.sorted()
         var liste = standardTierarten + gespeicherteTierarten
         if eigeneTierartGespeichert, !viewModel.neueTierart.isEmpty {
