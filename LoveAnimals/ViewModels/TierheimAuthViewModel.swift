@@ -137,6 +137,7 @@ final class TierheimAuthViewModel: ObservableObject {
             AuthManager.shared.saveLoginData(email: email, password: passwort)
             UserDefaults.standard.set(true, forKey: "isLoggedIn")
             UserDefaults.standard.set("tierheim", forKey: "loggedInUsertype")
+            await fetchTierheim(userId: result.user.uid)
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -175,7 +176,6 @@ final class TierheimAuthViewModel: ObservableObject {
                         signedUpOn: (data["signedUpOn"] as? Timestamp)?.dateValue() ?? Date(),
                         userType: UserType(rawValue: data["userType"] as? String ?? "") ?? .tierheim
                     )
-                    self.loadProfileImage()
                 }
             } else {
                 print("Fehler beim Laden der Tierheim-Daten: \(error?.localizedDescription ?? "Unbekannt")")
@@ -192,7 +192,9 @@ final class TierheimAuthViewModel: ObservableObject {
                 return
             }
             if let data = snapshot?.data(), let profileImageUrl = data["profileImageUrl"] as? String {
-                self.profileImageUrl = profileImageUrl
+                DispatchQueue.main.async {
+                    self.profileImageUrl = profileImageUrl
+                }
             }
         }
     }
@@ -233,6 +235,7 @@ final class TierheimAuthViewModel: ObservableObject {
                 self.profileImageUrl = imageUrl
             }
         }
+        checkAuth()
     }
     
     func deleteProfileImage() {

@@ -12,11 +12,13 @@ struct TierheimHomeView2: View {
     @State private var selectedAnimal: Animal? = nil
     @State private var navigateBack = false
     @EnvironmentObject var animalsViewModel: AnimalsViewModel
+    @EnvironmentObject var thAuthVM: TierheimAuthViewModel
     
     var body: some View {
             TabView(selection: $selectedTab) {
                 NavigationStack {
                     TierheimHomeView(selectedTab: $selectedTab)
+                        .environmentObject(thAuthVM)
                 }
                     .tabItem {
                         Label("Home", systemImage: "house")
@@ -54,4 +56,5 @@ struct TierheimHomeView2: View {
     TierheimHomeView2()
         .environmentObject(AnimalsViewModel())
         .environmentObject(UserAuthViewModel())
+        .environmentObject(TierheimAuthViewModel())
 }

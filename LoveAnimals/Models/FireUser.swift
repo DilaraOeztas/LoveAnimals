@@ -17,6 +17,7 @@ struct FireUser: Codable, Identifiable {
     var city: String
     var birthdate: Date
     var signedUpOn: Date
+    var profileImageUrl: String? = nil
     var userType: UserType
 }
 

@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct SplashScreenView: View {
+    @EnvironmentObject var userAuthVM: UserAuthViewModel
+    @EnvironmentObject var thAuthVM: TierheimAuthViewModel
     @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     @AppStorage("loggedInUsertype") private var loggedInUsertype: String = ""
     @State private var navigateToNextScreen = false
@@ -40,8 +42,10 @@ struct SplashScreenView: View {
                 if isLoggedIn {
                     if loggedInUsertype == "user" {
                         UserHomeView2()
+                            .environmentObject(userAuthVM)
                     } else if loggedInUsertype == "tierheim" {
                         TierheimHomeView2()
+                            .environmentObject(thAuthVM)
                     } else {
                         LoginView()
                     }
@@ -55,6 +59,8 @@ struct SplashScreenView: View {
 
 #Preview {
     SplashScreenView()
+        .environmentObject(UserAuthViewModel())
+        .environmentObject(TierheimAuthViewModel())
 }
 
 

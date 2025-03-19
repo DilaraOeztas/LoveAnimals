@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct UserHomeView2: View {
+    @EnvironmentObject var userAuthVM: UserAuthViewModel
     var body: some View {
         TabView {
             NavigationStack {
                 UserHomeView()
+                    .environmentObject(userAuthVM)
             }
                 .tabItem {
                     Label("Home", systemImage: "house")

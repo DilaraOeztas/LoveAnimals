@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct UserHeaderView: View {
     @ObservedObject var userAuthViewModel: UserAuthViewModel
@@ -16,23 +17,26 @@ struct UserHeaderView: View {
     
     var body: some View {
         HStack {
-            if !userAuthViewModel.profileImageUrl.isEmpty {
-                AsyncImage(url: URL(string: userAuthViewModel.profileImageUrl)) { image in
-                    image.resizable()
+            if let user = userAuthViewModel.fireUser {
+                if let profileImageUrl = user.profileImageUrl {
+                    AsyncImage(url: URL(string: profileImageUrl)) { image in
+                        image.resizable()
+                            .scaledToFill()
+                            .frame(width: 40, height: 40)
+                            .clipShape(Circle())
+                    } placeholder: {
+                        ProgressView()
+                    }
+                } else {
+                    Image(systemName: "person.circle.fill")
+                        .resizable()
                         .scaledToFill()
                         .frame(width: 40, height: 40)
                         .clipShape(Circle())
-                } placeholder: {
-                    ProgressView()
+                        .foregroundStyle(.gray)
                 }
-            } else {
-                Image(systemName: "person.circle.fill")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 40, height: 40)
-                    .clipShape(Circle())
-                    .foregroundStyle(.gray)
             }
+           
             
             TextField("Suche...", text: $searchText)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -64,7 +68,9 @@ struct UserHeaderView: View {
         }
         .padding()
         .onAppear {
-            userAuthViewModel.loadProfileImage()
+            Task {
+                await userAuthViewModel.fetchUser(userID: Auth.auth().currentUser?.uid ?? "")
+            }
         }
     }
 }

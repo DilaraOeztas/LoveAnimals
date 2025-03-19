@@ -152,6 +152,7 @@ final class UserAuthViewModel: ObservableObject {
             AuthManager.shared.saveLoginData(email: email, password: password)
             UserDefaults.standard.set(true, forKey: "isLoggedIn")
             UserDefaults.standard.set("user", forKey: "loggedInUsertype")
+            await fetchUser(userID: result.user.uid)
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -291,6 +292,7 @@ final class UserAuthViewModel: ObservableObject {
                 self.profileImageUrl = imageUrl
             }
         }
+        checkAuth()
     }
     
     func deleteProfileImage() {

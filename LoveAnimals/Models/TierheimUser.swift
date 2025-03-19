@@ -20,5 +20,6 @@ struct TierheimUser: Codable, Identifiable {
     var nimmtSpendenAn: Bool
     var signedUpOn: Date
     var userType: UserType
+    var profileImageUrl: String? = nil
 }
 

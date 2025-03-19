@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct ThHeaderView: View {
     @ObservedObject var tierheimAuthViewModel: TierheimAuthViewModel
@@ -16,22 +17,24 @@ struct ThHeaderView: View {
 
     var body: some View {
         HStack {
-            if !tierheimAuthViewModel.profileImageUrl.isEmpty {
-                AsyncImage(url: URL(string: tierheimAuthViewModel.profileImageUrl)) { image in
-                    image.resizable()
+            if let user = tierheimAuthViewModel.tierheim {
+                if let profileImageUrl = user.profileImageUrl {
+                    AsyncImage(url: URL(string: profileImageUrl)) { image in
+                        image.resizable()
+                            .scaledToFill()
+                            .frame(width: 40, height: 40)
+                            .clipShape(Circle())
+                    } placeholder: {
+                        ProgressView()
+                    }
+                } else {
+                    Image(systemName: "person.circle.fill")
+                        .resizable()
                         .scaledToFill()
                         .frame(width: 40, height: 40)
                         .clipShape(Circle())
-                } placeholder: {
-                    ProgressView()
+                        .foregroundStyle(.gray)
                 }
-            } else {
-                Image(systemName: "person.circle.fill")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 40, height: 40)
-                    .clipShape(Circle())
-                    .foregroundStyle(.gray)
             }
             
             TextField("Suche...", text: $searchText)
@@ -64,7 +67,9 @@ struct ThHeaderView: View {
         }
         .padding()
         .onAppear {
-            tierheimAuthViewModel.loadProfileImage()
+            Task {
+                await tierheimAuthViewModel.fetchTierheim(userId: Auth.auth().currentUser?.uid ?? "")
+            }
         }
     }
 }
